@@ -225,7 +225,9 @@ INSERT INTO `USERS` (`NAME`,`EMAIL`,`DEPARTMENT`,`DESIGNATION`) VALUES
 ('Guang Qi', 'guangqi.2019@smu.edu.sg','SCIS','Learner'),
 ('Tze Kiat', 'tzekiat.2019@smu.edu.sg','SOA', 'Trainer'),
 ('Jia Fang', 'jiafang.2019@smu.edu.sg','SOL','Learner'),
-('Wei Quan', 'weiquan.2019@smu.edu.sg','SOE','Trainer');
+('Wei Quan', 'weiquan.2019@smu.edu.sg','SOE','Trainer'),
+('Peter Grill', 'peter.2019@smu.edu.sg','SOB','Learner')
+;
 
 
 INSERT INTO `ADMINS` (`USERID`) VALUES
@@ -237,7 +239,8 @@ INSERT INTO `TRAINERS` (`USERID`) VALUES
 
 INSERT INTO `LEARNERS` (`USERID`) VALUES
 ('2'),
-('4');
+('4'),
+('6');
 
 INSERT INTO `COURSE` (`COURSE_NAME`, `COURSE_DESCRIPTION`,`STARTDATE`,`ENDDATE`,`STARTENROLLMENTDATE`,`ENDENROLLMENTDATE`) VALUES
 ('Dog walking course','A course to learn how to walk clients dog','2021-10-1','2021-11-28','2021-10-1','2021-10-8'),
@@ -325,6 +328,10 @@ INSERT INTO `QUIZ_SCORE` ( `QUIZ_ID`,`USERID`, `QUIZ_SCORE`) VALUES
 INSERT INTO `TRAINERASSIGNMENT` ( `COURSE_ID`,`CLASS_ID`, `USERID`) VALUES
 ('1','1','3'),
 ('2','1','5')
+;
+
+INSERT INTO `COURSE_ENROLLMENT` ( `COURSE_ID`,`USERID`, `CLASS_ID`, `IS_ENROLLED`) VALUES
+('1','6','1',FALSE)
 ;
 
 COMMIT;
