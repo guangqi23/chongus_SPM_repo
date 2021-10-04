@@ -14,6 +14,7 @@ CORS(app)
 class Course(db.Model):
     __tablename__ = 'course'
 
+    # this is equivalent to the __init__ statement for classes but a flask implementation of it
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100), nullable=False)
     course_description = db.Column(db.String(300), nullable=False)
@@ -22,14 +23,26 @@ class Course(db.Model):
     startenrollmentdate = db.Column(db.DateTime, nullable=False)
     endenrollmentdate = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, course_name, course_description, start_date, end_date, start_enrollment_date, end_enrollment_date):
-        self.course_name = course_name
-        self.course_description = course_description
-        self.startdate = start_date
-        self.enddate = end_date
-        self.startenrollmentdate = start_enrollment_date
-        self.endenrollmentdate = end_enrollment_date
-
-    def get_record_by_id(course_id):
+    def get_record_by_id(self, course_id):
         record = Course.query.filter_by(course_id=course_id).first()
         return record
+
+    def add_course(self):
+        # this should check if there is already an existing course in the database. To be added later
+        try: 
+            db.session.add(self)
+            db.session.commit()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while creating the course. " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The course has been successfully created"
+            }
+        ), 200
