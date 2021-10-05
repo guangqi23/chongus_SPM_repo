@@ -32,4 +32,4 @@ class Course(db.Model):
 
     def get_record_by_id(course_id):
         record = Course.query.filter_by(course_id=course_id).first()
-        return record
+        
