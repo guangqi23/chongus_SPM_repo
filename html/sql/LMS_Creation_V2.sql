@@ -132,6 +132,7 @@ CREATE TABLE IF NOT EXISTS `SECTIONS_MATERIALS` (
   `MATERIAL_ID` INT NOT NULL AUTO_INCREMENT,
   `MATERIAL_TITLE` TEXT,
   `MATERIAL_CONTENT` TEXT,
+  `IS_URL_LINK` BOOLEAN, 
   PRIMARY KEY ( `MATERIAL_ID` ),
   CONSTRAINT FK_SECTIONS_MATERIALS FOREIGN KEY (SECTION_ID) REFERENCES SECTIONS(SECTION_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -280,9 +281,9 @@ INSERT INTO `VIEWABLE_SECTION` ( `SECTION_ID`,`USERID`,`CLASS_ID`, `VIEWABLE`) V
 ('5','2','1',FALSE)
 ;
 
-INSERT INTO `SECTIONS_MATERIALS` (`SECTION_ID`, `MATERIAL_TITLE`, `MATERIAL_CONTENT`) VALUES
-('1','The title is king','In the morning, I drink coffee & stare at the morning sun while thinking of the one. Every star we see is actually dead, we are just view the light that took lights years to arrive.'),
-('2','Iphone', 'The iphone 13 is a new phone that at first glance look like the same as iphone 12 but the major upgrades are in the interior of the phone.')
+INSERT INTO `SECTIONS_MATERIALS` (`SECTION_ID`, `MATERIAL_TITLE`, `MATERIAL_CONTENT`,`IS_URL_LINK`) VALUES
+('1','The title is king','In the morning, I drink coffee & stare at the morning sun while thinking of the one. Every star we see is actually dead, we are just view the light that took lights years to arrive.', FALSE),
+('2','Iphone', 'The iphone 13 is a new phone that at first glance look like the same as iphone 12 but the major upgrades are in the interior of the phone.', FALSE)
 ;
 
 INSERT INTO `QUIZZES` ( `SECTION_ID`,`TIME_LIMIT`) VALUES
@@ -331,7 +332,8 @@ INSERT INTO `TRAINERASSIGNMENT` ( `COURSE_ID`,`CLASS_ID`, `USERID`) VALUES
 ;
 
 INSERT INTO `COURSE_ENROLLMENT` ( `COURSE_ID`,`USERID`, `CLASS_ID`, `IS_ENROLLED`) VALUES
-('1','6','1',FALSE)
+('1','6','1',FALSE),
+('1','4','1',TRUE)
 ;
 
 COMMIT;
