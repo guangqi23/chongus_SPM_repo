@@ -1,4 +1,4 @@
-+++823<!DOCTYPE html>
+<!DOCTYPE html>
     <html>
      
     <head>
@@ -46,7 +46,8 @@
                         <th>Section</th>
                         
                         <th>Section ID</th>
-                        <th>Section_title</th>
+                        <th>Section Title</th>
+                        <th>Action</th>
                         
                     </tr>
 
@@ -71,8 +72,8 @@
             // let params = new URLSearchParams(location.search);
             //var restaurantID = params.get('query');
             // console.log("restaurantID", restaurantID);
-            console.log('initializing sections')
-            $(async() => {           
+        console.log('initializing sections')
+        $(async() => {           
             // Change serviceURL to your own
             var serviceURL = "http://127.0.0.1:5001/view_class_sections?class_id=1";
     
@@ -94,14 +95,14 @@
                 var count =0;
                 index =1;
                 for (var section of sectionList) {
-                   eachRow =
-                            "<td> Section:" + index + "</td>" +
-                            "<td>" + section.section_id + "</td>" +
-                            "<td>" + section.section_title + "</td>" +
+                    eachRow ="<td>"+index.toString()+ "</td>" +"<td class = 'section_id'>"+ section.section_id.toString()+ "</td>" +"<td>" +section.section_title.toString()+ "</td>"+"<td>"+"<button class='view_materials' onclick='view_materials(this)'>view</button>"+"</td>" ;
+
+                    //eachRow ="<td>" + index.toString() + "</td>" +"<td>" + section.section_id.toString() + "</td>" +"<td>" + section.section_title.toString() + "</td>" 
                     //Adding on more rows
-                   rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
+                    rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                    index = index+1;
                 }
+                
                 //Set counter back to 0 
                
 
@@ -121,10 +122,16 @@
                 // Errors when calling the service; such as network error, 
                 // service offline, etc
                 showError
-    ('There is a problem retrieving menu data, please try again later.<br />' + error);
-            } // error
-    });
-
+                ('There is a problem retrieving menu data, please try again later.<br />' + error);
+                    } // error
+            });
+                function view_materials(row_id) {
+                    var $row = $(row_id).closest("tr");
+                    console.log('before')    // Find the row
+                    var section_id = $row.find(".section_id").text();
+                    console.log(section_id);
+                    window.location.href = "./section_add_materials?response=" + section_id;
+            }
           
     
         </script>
