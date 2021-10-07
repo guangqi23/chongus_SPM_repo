@@ -22,8 +22,15 @@ class Course(db.Model):
     enddate = db.Column(db.DateTime, nullable=False)
     startenrollmentdate = db.Column(db.DateTime, nullable=False)
     endenrollmentdate = db.Column(db.DateTime, nullable=False)
+    prerequisites = []
 
-    def get_record_by_id(self, course_id):
+    def add_prerequisites(self, course_id, prereq):
+        self.prerequisites.append(course_id, prereq)
+
+    def get_all_courses():
+        return Course.query.all()
+
+    def get_course_by_id(self, course_id):
         record = Course.query.filter_by(course_id=course_id).first()
         return record
 
@@ -64,5 +71,30 @@ class Course(db.Model):
             {
                 "code": 200,
                 "message": "The course has been successfully deleted"
+            }
+        ), 200
+
+class Course_Prerequisites(db.Model):
+    __tablename__ = 'course_prerequisites'
+
+    course_id = db.Column(db.Integer, primary_key=True)
+    prerequisites = db.Column(db.Integer, primary_key=True)
+
+    def add_prereq(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as error:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": "There was an error when adding the prerequisite. " + str(error)
+                }
+            )
+        
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The prerequisite has been successfully added"
             }
         ), 200
