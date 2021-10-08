@@ -98,3 +98,31 @@ class Course_Prerequisites(db.Model):
                 "message": "The prerequisite has been successfully added"
             }
         ), 200
+    def prereq_by_course(self,course_id):
+        record = Course_Prerequisites.query.filter_by(course_id=course_id).all()
+        return record
+
+@app.route("/prerequisitesbycourse", methods=['POST'])
+def prereq_by_course():
+    application = request.get_json()
+    user_id = application['course_id']
+    prereq = Course_Prerequisites()
+    record = prereq.prereq_by_course(user_id)
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+            {
+                "code": 404,
+                "message": "There are no prerequisites."
+            }
+        ), 404
+
+if __name__ == '__main__':
+    app.run(port=5003, debug=True)
