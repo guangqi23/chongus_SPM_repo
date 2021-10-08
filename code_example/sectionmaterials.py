@@ -16,6 +16,7 @@ class SectionMaterials(db.Model):
     material_title = db.Column(db.String(100), nullable=False)
     material_content =db.Column(db.String(500), nullable=False)
     material_type =db.Column(db.String(100), nullable=False)
+
     
     def json(self):
         return {"material_id": self.material_id,"section_id": self.section_id,"material_title":self.material_title, "material_content": self.material_content,"material_type":self.material_type}
@@ -58,4 +59,6 @@ class SectionMaterials(db.Model):
                 "message": "There are no materials in this section."
             }
         )
+
+    
     
