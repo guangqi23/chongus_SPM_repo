@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap CSS-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <title>Enrollment Status</title>
+    </head>
+    <body>
+        
+        <div id="maintainer" class="container">
+            <h1 class="display-4">Learner Enrollments</h1>
+            <table id="enrollmentTable" class="table table-striped" border='1'>
+                <thead class="thead-dark">
+                    <th scope="col">Enrollment ID</th>
+                    <th scope="col">Course ID</th>
+                    <th scope="col">User ID</th>
+                    <th scope="col">Class ID</th>
+                    <th scope="col">Enrollment Status</th>
+                    <th scope="col">Change Enrollment Status?</th>
+                </thead>
+            </table>
+        </div>
+
+
+
+        <script>
+        
+        // Method to display error messages
+        function showError(message) {
+            // Hide the table and button in the event of error
+            $('#booksTable').hide();
+            $('#addBookBtn').hide();
+     
+            // Display an error under the main container
+            $('#main-container')
+                .append("<label>"+message+"</label>");
+        }
+
+
+
+
+
+            $(async() => {
+                microServiceURL = "http://127.0.0.1:5005/allEnrollments";
+
+                try{
+                    const response = 
+                    await fetch(
+                        microServiceURL, {method: 'GET'}
+                    );
+                    const result = await response.json();
+                    if (response.status === 200)
+                    {
+                        console.log(result)
+                        var enrollmentRecords = result.data.enrollment_records;
+                        var rows = "";
+                        for (const record of enrollmentRecords)
+                        {
+                            eachRow = "<td class='enrol_id'>" + record.enrollment_id + "</td>" +
+                                      "<td>" + record.course_id + "</td>" + 
+                                      "<td>" + record.userid + "</td>" +
+                                      "<td>" + record.class_id + "</td>" + 
+                                      "<td>" + record.is_enrolled + "</td>" +
+                                      "<td>" + "<button type='button' class='btn btn-secondary' onclick='statusChange(this)'>Change</button>" + "</td>"
+                            rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
+                        }
+                        $('#enrollmentTable').append(rows);
+                    }
+                } catch (error)
+                {
+                    showError(error)
+                }
+            });
+
+        function statusChange(row_id)
+        {
+            var row = $(row_id).closest("tr");
+            enrollment_id = row[0].childNodes[0].childNodes[0].data
+            console.log("Enrollment ID: " + enrollment_id)
+
+            const Http = new XMLHttpRequest();
+            const url = 'http://localhost:5005/changeEnrollmentStatus/input?enrol_id=' + enrollment_id;
+            $(async() => {
+                fetch(url)
+                .then(data=>{return data.Json()})
+                .catch(error=>console.log(error))
+            });
+            
+
+        }
+
+
+
+        </script>
+
+    </body>
+
+    </html>
