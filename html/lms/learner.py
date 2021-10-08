@@ -10,7 +10,7 @@ from course import Course, Course_Prerequisites
 from sqlalchemy import Column, Integer
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -58,6 +58,10 @@ class Learner(User):
                     output.append(course_query)
                 
         return output
+    
+    def is_learner(self, user_id):
+        lrnr = Learner.query.filter_by(user_id=user_id).first()
+        return lrnr
 
 @app.route("/availcourses", methods=['POST'])
 def get_available_courses():

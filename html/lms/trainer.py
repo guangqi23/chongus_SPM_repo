@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from user import User
+from sqlalchemy.ext.declarative.api import declared_attr
+from sqlalchemy import Column, Integer
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
@@ -13,12 +16,21 @@ CORS(app)
 
 class Trainer(db.Model):
     __tablename__ = 'TRAINERS'
-
-    ## user attributes
+    
     userid = db.Column(db.Integer, primary_key=True)
+
+    # __mapper_args__ = {'polymorphic_identity': 'trainer'}
+
+    # @declared_attr
+    # def user_id(cls):
+    #     return User.__table__.c.get('user_id', Column(Integer))
 
     def json(self):
         return {"user_id": self.userid}
+    
+    def is_trainer(self, userid):
+        trnr = Trainer.query.filter_by(userid=userid).first()
+        return trnr
 
     def get_user_id(self):
         return self.userid
@@ -39,7 +51,7 @@ class Trainer(db.Model):
             count+=1
 
         return results_dict
-        #incomplete
+      
 
 
 
