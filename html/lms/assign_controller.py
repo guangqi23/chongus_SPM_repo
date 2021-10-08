@@ -20,10 +20,10 @@ CORS(app)
 class AssignController():
     def assign_trainer(self,userid,course_id,employee_id):
 
-        employee_da = EmployeeDataAccess()
+        usr = User()
 
         ## according to wq, subject to changes if employeedataaccess is changed
-        valid_hr = employee_da.validate_hr(userid)
+        valid_hr = userid.is_hr(userid)
 
         course_to_assign = request.get_json()
         print("Request to assign course to user is received")
