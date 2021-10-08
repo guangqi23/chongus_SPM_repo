@@ -15,9 +15,10 @@ class SectionMaterials(db.Model):
     section_id = db.Column(db.Integer)
     material_title = db.Column(db.String(100), nullable=False)
     material_content =db.Column(db.String(500), nullable=False)
+    material_type =db.Column(db.String(100), nullable=False)
     
     def json(self):
-        return {"material_id": self.material_id,"section_id": self.section_id,"material_title":self.material_title, "material_content": self.material_content}
+        return {"material_id": self.material_id,"section_id": self.section_id,"material_title":self.material_title, "material_content": self.material_content,"material_type":self.material_type}
 
     def get_material_id(self):
         return self.material_id
@@ -30,6 +31,9 @@ class SectionMaterials(db.Model):
 
     def get_section_material_content(self):
         return self.material_content
+
+    def get_section_material_type(self):
+        return self.material_type
 
     def get_materials_individual(self, material_id,section_id):
         material= SectionMaterials.query.filter_by(section_id=section_id, material_id = material_id).first()

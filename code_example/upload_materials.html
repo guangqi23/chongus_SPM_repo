@@ -143,8 +143,9 @@
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
+              material_type = 'pdf'
                $(async() => {           
-              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content;
+              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
               console.log('hehe');
               try {
                   const response =
@@ -200,8 +201,9 @@
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
+              material_type = 'doc'
                $(async() => {           
-              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content;
+              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
               console.log('hehe');
               try {
                   const response =
@@ -256,8 +258,9 @@
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
+              material_type ='ppt'
                $(async() => {           
-              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content;
+              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
               console.log('hehe');
               try {
                   const response =
@@ -284,6 +287,7 @@
 
             //======================Check if MP4=====================================================================================
             else if  (ft.toString() == 'video/mp4'){
+
                 const API_ENDPOINT = 'https://dufkmglikl.execute-api.us-east-1.amazonaws.com/default/happybucket-video'
                 const response = await axios({
                   method: 'GET',
@@ -312,8 +316,9 @@
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
+              material_type = 'mp4'
                $(async() => {           
-              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content;
+              var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
               console.log('hehe');
               try {
                   const response =

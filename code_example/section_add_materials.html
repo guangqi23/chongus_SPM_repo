@@ -49,6 +49,7 @@
                         <th>Material ID</th>
                         <th>Material Title</th>
                         <th>Material Content</th>
+                        <th>Material Type</th>
                         
                     </tr>
 
@@ -101,7 +102,7 @@
                 var count =0;
                 index =1;
                 for (var section of sectionList) {
-                    eachRow ="<td>"+section.material_id.toString()+ "</td>" +"<td class = 'section_id'>"+ section.material_title.toString()+ "</td>" +"<td>" +section.material_content.toString()+ "</td>";
+                    eachRow ="<td>"+section.material_id.toString()+ "</td>" +"<td class = 'section_id'>"+ section.material_title.toString()+ "</td>" +"<td>" +"<a href ="+section.material_content.toString()+ ">download materials</a>"+"</td>"+"<td>" +section.material_type.toString()+ "</td>";
 
                     //eachRow ="<td>" + index.toString() + "</td>" +"<td>" + section.section_id.toString() + "</td>" +"<td>" + section.section_title.toString() + "</td>" 
                     //Adding on more rows
