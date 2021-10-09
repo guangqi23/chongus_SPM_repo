@@ -28,6 +28,13 @@ class Classes(db.Model):
     def getSlots(cid):
         slots = Classes.query.filter_by(class_id = cid).first()
         return str(slots.slots)
+    
+    def get_classes_by_course(self, course_id):
+        record = Classes.query.filter_by(course_id=course_id).all()
+        return record
 
     def json(self):
         return {"class_id":self.class_id,"course_id":self.course_id,"slots":self.slots}
+    
+    
+    
