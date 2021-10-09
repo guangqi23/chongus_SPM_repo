@@ -69,6 +69,15 @@ class Course(db.Model):
                 "message": "The course has been successfully deleted"
             }
         ), 200
+    
+    def get_vacancies_by_courses(self, course_id):
+        class_by_course = Classes.get_classes_by_course(course_id)
+        course_vacancies = 0
+
+        for a_class in class_by_course:
+            course_vacancies += a_class.slots
+        
+        return course_vacancies
    
     def json(self):
         return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startdate": self.startdate, 
