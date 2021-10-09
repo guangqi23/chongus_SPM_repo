@@ -72,6 +72,7 @@ class Course(db.Model):
         ), 200
     
     def get_vacancies_by_courses(self, course_id):
+        vacant_classes = Classes()
         class_by_course = Classes.get_classes_by_course(course_id)
         course_vacancies = 0
 
