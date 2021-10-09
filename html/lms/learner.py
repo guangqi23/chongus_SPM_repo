@@ -28,6 +28,7 @@ class Learner(User):
         course_class = Course_Prerequisites()
         completedcourses = learner_badges.get_completed_courses(userid)
         all_courses = Course.get_all_courses()
+        courseinfo_class = Course()
         
         course_list = []
         course_to_not_take = []
