@@ -9,6 +9,7 @@ from user import User
 from course import Course
 from course_prerequisites import Course_Prerequisites
 from sqlalchemy import Column, Integer
+from course_enrollment import Course_Enrollment
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
@@ -87,7 +88,41 @@ def get_available_courses():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no avilable courses."
+            "message": "There are no available courses."
+            }
+        ), 404
+    
+    def get_enrolled_courses(self, user_id): 
+        enrolled_courses = Course_Enrollment()
+        courseinfo_class = Course()
+        output = []
+        enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)
+        for enrolled_course in enrolled_courses_list:
+            enrollment_status = enrolled_course.is_enrolled
+            if enrollment_status:
+                courseinfo = courseinfo_class.get_course_by_id(enrolled_course.course_id)
+                output.append(courseinfo)
+        return output
+
+@app.route("/enrolled_courses", methods=['POST'])
+def get_enrolled_courses():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner = Learner()
+    record = learner.get_enrolled_courses(user_id)
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no enrolled courses."
             }
         ), 404
 
