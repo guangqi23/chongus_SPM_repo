@@ -79,7 +79,7 @@ class Course(db.Model):
                 "enddate": self.enddate, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
 
 class Course_Prerequisites(db.Model):
-    __tablename__ = 'course_prerequisites'
+    __tablename__ = 'course_prerequisite'
 
     course_id = db.Column(db.Integer, primary_key=True)
     prereq_course_id = db.Column(db.Integer, primary_key=True)
