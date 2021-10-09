@@ -22,10 +22,6 @@ class Course(db.Model):
     enddate = db.Column(db.DateTime, nullable=False)
     startenrollmentdate = db.Column(db.DateTime, nullable=False)
     endenrollmentdate = db.Column(db.DateTime, nullable=False)
-    prerequisites = []
-
-    def add_prerequisites(self, course_id, prereq):
-        self.prerequisites.append(course_id, prereq)
 
     def get_all_courses():
         return Course.query.all()
@@ -78,59 +74,6 @@ class Course(db.Model):
         return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startdate": self.startdate, 
                 "enddate": self.enddate, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
 
-class Course_Prerequisites(db.Model):
-    __tablename__ = 'course_prerequisite'
-
-    course_id = db.Column(db.Integer, primary_key=True)
-    prereq_course_id = db.Column(db.Integer, primary_key=True)
-
-    def add_prereq(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception as error:
-            return jsonify(
-                {
-                    "code": 500,
-                    "message": "There was an error when adding the prerequisite. " + str(error)
-                }
-            )
         
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The prerequisite has been successfully added"
-            }
-        ), 200
-    
-   def json(self):
-        return {"course_id": self.course_id, "prereq_course_id": self.prereq_course_id}
-    
-    def prereq_by_course(self,course_id):
-        record = Course_Prerequisites.query.filter_by(course_id=course_id).all()
-        return record
-
-@app.route("/prerequisitesbycourse", methods=['POST'])
-def prereq_by_course():
-    application = request.get_json()
-    user_id = application['course_id']
-    prereq = Course_Prerequisites()
-    record = prereq.prereq_by_course(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-            {
-                "code": 404,
-                "message": "There are no prerequisites."
-            }
-        ), 404
-
 if __name__ == '__main__':
     app.run(port=5003, debug=True)
