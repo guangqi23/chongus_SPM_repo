@@ -38,3 +38,6 @@ class Course_Prerequisites(db.Model):
     def prereq_by_course(self,course_id):
         record = Course_Prerequisites.query.filter_by(course_id=course_id).all()
         return record
+    
+    def json(self):
+        return {"course_id": self.course_id, "prereq_course_id": self.prereq_course_id}
