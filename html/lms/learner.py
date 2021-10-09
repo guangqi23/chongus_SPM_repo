@@ -33,7 +33,6 @@ class Learner(User):
         course_to_not_take = []
         prereq = []
 
-        print(all_courses)
         for course in all_courses: 
             course_list.append(course.course_id)
 
@@ -53,7 +52,8 @@ class Learner(User):
                     if course not in completedcourses:
                         toadd= false 
                 if toadd:
-                    output.append(course_query)
+                    courseinfo = courseinfo_class.get_course_by_id(course_query)
+                    output.append(courseinfo)
                 
         return output
     
@@ -67,13 +67,12 @@ def get_available_courses():
     user_id = application['user_id']
     learner = Learner()
     record = learner.get_available_courses(user_id)
-    availcourses_json = json.dumps(record)
-    if len(availcourses_json):
+    if len(record):
             return jsonify(
                 {
                     "code": 200,
                     "data": {
-                        "avail_courses": availcourses_json
+                        "record": [a_record.json() for a_record in record]
                     }
                 }
             )
