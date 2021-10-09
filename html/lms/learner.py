@@ -19,6 +19,20 @@ db = SQLAlchemy(app)
 
 CORS(app) 
 
+class Learner_Assignment(db.Model):
+    __tablename__ = 'LEARNERASSIGNMENT'
+
+    course_id = db.Column(db.Integer, primary_key=True)
+    class_id = db.Column(db.Integer, primary_key=True, index=True)
+    userid = db.Column(db.Integer, primary_key=True, index=True)
+
+    def get_user_assigned_courses(self, userid): 
+        record = Learner_Assignment.query.filter_by(userid=userid).all()
+        return record
+    
+    def json(self):
+        return {"course_id":self.course_id,"class_id":self.class_id, "userid":self.userid}
+
 class Learner(User):
     __tablename__ = 'learners'
 
@@ -69,6 +83,28 @@ class Learner(User):
     def is_learner(self, user_id):
         lrnr = Learner.query.filter_by(userid=user_id).first()
         return lrnr
+    
+    def get_enrolled_courses(self, user_id): 
+        enrolled_courses = Course_Enrollment()
+        courseinfo_class = Course()
+        output = []
+        enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)
+        for enrolled_course in enrolled_courses_list:
+            enrollment_status = enrolled_course.is_enrolled
+            if enrollment_status:
+                courseinfo = courseinfo_class.get_course_by_id(enrolled_course.course_id)
+                output.append(courseinfo)
+        return output
+
+    def get_assigned_courses(self, user_id): 
+        assigned_courses = Learner_Assignment()
+        courseinfo_class = Course()
+        output = []
+        assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
+        for assigned_course in assigned_courses_list:
+            courseinfo = courseinfo_class.get_course_by_id(assigned_course.course_id)
+            output.append(courseinfo)
+        return output
 
 @app.route("/availcourses", methods=['POST'])
 def get_available_courses():
@@ -92,18 +128,6 @@ def get_available_courses():
             }
         ), 404
     
-    def get_enrolled_courses(self, user_id): 
-        enrolled_courses = Course_Enrollment()
-        courseinfo_class = Course()
-        output = []
-        enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)
-        for enrolled_course in enrolled_courses_list:
-            enrollment_status = enrolled_course.is_enrolled
-            if enrollment_status:
-                courseinfo = courseinfo_class.get_course_by_id(enrolled_course.course_id)
-                output.append(courseinfo)
-        return output
-
 @app.route("/enrolled_courses", methods=['POST'])
 def get_enrolled_courses():
     application = request.get_json()
@@ -123,6 +147,28 @@ def get_enrolled_courses():
         {
             "code": 404,
             "message": "There are no enrolled courses."
+            }
+        ), 404
+
+@app.route("/assigned_courses", methods=['POST'])
+def get_assigned_courses():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner = Learner()
+    record = learner.get_assigned_courses(user_id)
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no assigned courses."
             }
         ), 404
 
