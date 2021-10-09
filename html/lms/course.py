@@ -73,12 +73,16 @@ class Course(db.Model):
                 "message": "The course has been successfully deleted"
             }
         ), 200
+   
+    def json(self):
+        return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startdate": self.startdate, 
+                "enddate": self.enddate, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
 
 class Course_Prerequisites(db.Model):
     __tablename__ = 'course_prerequisites'
 
     course_id = db.Column(db.Integer, primary_key=True)
-    prerequisites = db.Column(db.Integer, primary_key=True)
+    prereq_course_id = db.Column(db.Integer, primary_key=True)
 
     def add_prereq(self):
         try:
@@ -98,6 +102,10 @@ class Course_Prerequisites(db.Model):
                 "message": "The prerequisite has been successfully added"
             }
         ), 200
+    
+   def json(self):
+        return {"course_id": self.course_id, "prereq_course_id": self.prereq_course_id}
+    
     def prereq_by_course(self,course_id):
         record = Course_Prerequisites.query.filter_by(course_id=course_id).all()
         return record
