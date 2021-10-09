@@ -27,7 +27,9 @@ class AssignController():
         trnr = Trainer()
 
         valid_hr = usr.is_hr(hr_id)
+
         valid_trnr = trnr.is_trainer(trainer_id)
+
         course_to_assign = request.get_json()
         print("Request to assign course to user is received")
 
@@ -74,14 +76,15 @@ class AssignController():
     def assign_learner(self,course_id,class_id,hr_id,learner_id):
 
         usr = User()
+
         lrnr = Learner()
 
         valid_hr = usr.is_hr(hr_id)
-        # valid_lrnr = lrnr.is_learner(learner_id)
+        valid_lrnr = lrnr.is_learner(learner_id)
 
         class_to_assign = request.get_json()
 
-        if valid_hr:
+        if valid_hr and valid_lrnr:
 
             print("HR is assigning and enrolling learner to a class of a course")
 

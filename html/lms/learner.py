@@ -19,11 +19,9 @@ CORS(app)
 
 class Learner(User):
     __tablename__ = 'learners'
+
     __mapper_args__ = {'polymorphic_identity': 'learner'}
 
-    @declared_attr
-    def user_id(cls):
-        return User.__table__.c.get('user_id', Column(Integer))
 
     def get_available_courses(self, userid):
         learner_badges = learnerbadges()
@@ -60,7 +58,7 @@ class Learner(User):
         return output
     
     def is_learner(self, user_id):
-        lrnr = Learner.query.filter_by(user_id=user_id).first()
+        lrnr = Learner.query.filter_by(userid=user_id).first()
         return lrnr
 
 @app.route("/availcourses", methods=['POST'])

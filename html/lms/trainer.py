@@ -14,12 +14,10 @@ db = SQLAlchemy(app)
 
 CORS(app) 
 
-class Trainer(db.Model):
+class Trainer(User):
     __tablename__ = 'TRAINERS'
-    
-    userid = db.Column(db.Integer, primary_key=True)
 
-    # __mapper_args__ = {'polymorphic_identity': 'trainer'}
+    __mapper_args__ = {'polymorphic_identity': 'trainer'}
 
     # @declared_attr
     # def user_id(cls):
