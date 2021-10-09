@@ -42,3 +42,10 @@ class Course_Enrollment(db.Model):
                 "message": "Learner has succesfully enrolled into a class by HR"
             }
         ), 200
+    
+    def get_user_enrolled_courses(self, userid):
+        record = Course_Enrollment.query.filter_by(userid=userid).all()
+        return record
+    
+    def json(self):
+        return {"enrollment_id":self.enrollment_id,"course_id":self.course_id,"userid":self.userid, "class_id":self.class_id, "is_enrolled":self.is_enrolled }
