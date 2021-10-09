@@ -120,9 +120,9 @@ def create_prerequisites():
 @app.route("/prerequisitesbycourse", methods=['GET'])
 def prereq_by_course():
     application = request.get_json()
-    user_id = application['course_id']
+    course_id = application['course_id']
     prereq = Course_Prerequisites()
-    record = prereq.prereq_by_course(user_id)
+    record = prereq.prereq_by_course(course_id)
     if len(record):
         return jsonify(
             {
