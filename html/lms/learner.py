@@ -6,7 +6,8 @@ from sqlalchemy.ext.declarative.api import declared_attr
 from sqlalchemy.sql.expression import false, true
 from learner_badges import learnerbadges
 from user import User
-from course import Course, Course_Prerequisites
+from course import Course
+from course_prerequisites import Course_Prerequisites
 from sqlalchemy import Column, Integer
 
 app = Flask(__name__)
@@ -29,6 +30,7 @@ class Learner(User):
         completedcourses = learner_badges.get_completed_courses(userid)
         all_courses = Course.get_all_courses()
         courseinfo_class = Course()
+        course_vacancies = Course()
         
         course_list = []
         course_to_not_take = []
@@ -46,16 +48,21 @@ class Learner(User):
 
         for course_query in avai_course: 
             prereqlist = course_class.prereq_by_course(course_query)
-            for course in prereqlist: 
-                prereq.append(course.prereq_course_id)
-                toadd = true
-                for course in prereq:
-                    if course not in completedcourses:
-                        toadd= false 
-                if toadd:
-                    courseinfo = courseinfo_class.get_course_by_id(course_query)
-                    output.append(courseinfo)
-                
+            vacancies = course_vacancies.get_vacancies_by_courses(course_query)
+            vacant = false
+            if vacancies > 0: 
+                vacant = true
+                if vacant: 
+                    vacant = true
+                    for course in prereqlist: 
+                        prereq.append(course.prereq_course_id)
+                        toadd = true
+                        for course in prereq:
+                            if course not in completedcourses:
+                                toadd= false 
+                        if toadd:
+                            courseinfo = courseinfo_class.get_course_by_id(course_query)
+                            output.append(courseinfo)
         return output
     
     def is_learner(self, user_id):
