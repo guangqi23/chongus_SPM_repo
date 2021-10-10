@@ -75,8 +75,8 @@ class SectionMaterialQuizDataAccess():
             }
         ), 200
 
-    def create_material(self,section_id,material_title,material_content):
-        material_entry = SectionMaterials(section_id=section_id,material_title=material_title,material_content=material_content)
+    def create_material(self,section_id,material_title,material_content,material_type):
+        material_entry = SectionMaterials(section_id=section_id,material_title=material_title,material_content=material_content,material_type=material_type)
 
         try: 
             db.session.add(material_entry)

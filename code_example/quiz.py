@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-
+from finalquiz import FinalQuiz
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -14,6 +14,8 @@ class Quiz(db.Model):
     quiz_id = db.Column(db.Integer, primary_key=True)
     section_id = db.Column(db.Integer)
     time_limit = db.Column(db.Integer)
+    
+
     def json(self):
         return {"quiz_id": self.quiz_id,"section_id": self.section_id, "time_limit": self.time_limit}
 
@@ -39,5 +41,6 @@ class Quiz(db.Model):
                 "message": "There are no quiz."
             }
         )
+
 
         

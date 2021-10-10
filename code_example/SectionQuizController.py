@@ -61,9 +61,9 @@ class SectionQuizController():
         return status
 
 #   Create Course Materials
-    def create_section_materials(self,section_id,material_title,material_content):
+    def create_section_materials(self,section_id,material_title,material_content,material_type):
         da = SectionMaterialQuizDataAccess()
-        status = da.create_material(section_id,material_title,material_content)
+        status = da.create_material(section_id,material_title,material_content,material_type)
         return status
 
 #   Download Course Materials
@@ -137,8 +137,9 @@ def create_section_materialss():
     section_id = int(request.args.get('section_id', None))
     material_title = str(request.args.get('material_title', None))
     material_content = str(request.args.get('material_content', None))
+    material_type = str(request.args.get('material_type', None))
     da = SectionQuizController()
-    status = da.create_section_materials(section_id,material_title,material_content)
+    status = da.create_section_materials(section_id,material_title,material_content,material_type)
     return status
 
 
