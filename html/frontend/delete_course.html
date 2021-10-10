@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
     <title>Delete Course</title>
 </head>
 <body>
@@ -21,31 +22,22 @@
             send_application();
         })
 
-        async function send_application(){
-            // add additional test cases later to check for missing values (or just do it in python)
+        function send_application(){
             var course_id = document.getElementById("course_id").value
-            
-            var application_url = "http://localhost:5000/delete_course"
 
-            var requestBody = {
-                "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
-                "course_id": course_id // have to be careful of which course to delete. You cannot delete a course that has been assigned as a prerequisite. Remove it as a prerequisite first before the course can be deleted
-            }
-
-            var requestParam = {
-                headers:{"content-type": "application/json; charset=UTF-8"},
-                mode: "cors",
-                method: "POST",
-                body: JSON.stringify(requestBody)
-            }
-
-            try{
-                const response = await fetch(application_url, requestParam);
-                data = await response.json()
-                console.log(data)
-            } catch (error){
-                console.error(error)
-            }
+            axios
+            .post("http://localhost:5000/delete_course",
+                {
+                    "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
+                    "course_id": course_id // have to be careful of which course to delete. You cannot delete a course that has been assigned as a prerequisite. Remove it as a prerequisite first before the course can be deleted
+                }
+            )
+            .then(res =>
+                {
+                    data = res.data
+                    console.log(data)
+                }
+            )
         }
     </script>
 </body>

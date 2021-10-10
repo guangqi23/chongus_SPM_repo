@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
     <title>Create Course</title>
 </head>
 <body>
@@ -31,7 +32,7 @@
             send_application();
         })
 
-        async function send_application(){
+        function send_application(){
             // add additional test cases later to check for missing values (or just do it in python)
             var course_name = document.getElementById("course_name").value
             var course_description = document.getElementById("course_description").value
@@ -39,35 +40,25 @@
             var end_datetime = document.getElementById("end_datetime").value
             var start_enrollment = document.getElementById("start_enrollment").value
             var end_enrollment = document.getElementById("end_enrollment").value
-            
-            var application_url = "http://localhost:5000/create_course"
 
-            var requestBody = {
-                "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
-                "course_name": course_name,
-                "course_description": course_description,
-                "start_date": start_datetime,
-                "end_date": end_datetime,
-                "start_enrollment_date": start_enrollment,
-                "end_enrollment_date": end_enrollment
-            }
-
-            var requestParam = {
-                headers:{"content-type": "application/json; charset=UTF-8"},
-                mode: "cors",
-                method: "POST",
-                body: JSON.stringify(requestBody)
-            }
-
-            try{
-                const response = await fetch(application_url, requestParam);
-                data = await response.json()
-                console.log(data)
-            } catch (error){
-                console.error(error)
-            }
-            
-
+            axios
+            .post('http://localhost:5000/create_course',
+                {
+                    "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
+                    "course_name": course_name,
+                    "course_description": course_description,
+                    "start_date": start_datetime,
+                    "end_date": end_datetime,
+                    "start_enrollment_date": start_enrollment,
+                    "end_enrollment_date": end_enrollment
+                }
+            )
+            .then(res =>
+                {
+                    data = res.data;
+                    console.log(data)
+                }
+            )
         }
 
     </script>
