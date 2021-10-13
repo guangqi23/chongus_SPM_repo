@@ -24,7 +24,7 @@ class Course(db.Model):
     startenrollmentdate = db.Column(db.DateTime, nullable=False)
     endenrollmentdate = db.Column(db.DateTime, nullable=False)
 
-    def get_all_courses():
+    def get_all_courses(self):
         return Course.query.all()
 
     def get_course_by_id(self, course_id):
