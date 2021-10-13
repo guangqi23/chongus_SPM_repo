@@ -9,7 +9,7 @@ db = SQLAlchemy(app)
 
 CORS(app) 
 
-class FinalQuiz(db.Model):
+class TrueFalse(db.Model):
     __tablename__ = 'truefalseq'
     question_id = db.Column(db.Integer, primary_key=True)
     answer = db.Column(db.Boolean)
@@ -26,5 +26,5 @@ class FinalQuiz(db.Model):
         return self.answer
 
     def get_true_false_options(self,question_id):
-        tf = FinalQuiz.query.filter_by(question_id=question_id).first()
+        tf = TrueFalse.query.filter_by(question_id=question_id).first()
         return tf

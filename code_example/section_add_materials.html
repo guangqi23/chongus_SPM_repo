@@ -35,8 +35,9 @@
 
     <body>
         <div id="main-container" class="container">
-            <h1 class="display-4">Simple UI to display sections</h1>
+            <h1 class="display-4">Materials and Quizzes</h1>
             <button onclick='upload_materials()'>upload_materials</button>
+            <button onclick='create_quiz()'>create quiz</button>
             <table id="menuTable" class='table table-striped' border='1'>
                 <thead class='thead-dark'>
                     <tr>
@@ -138,6 +139,12 @@
             console.log(section_id);
             console.log('initializing sections')    
             window.location.href = "./upload_materials?response=" + section_id;  
+        }
+        function create_quiz() {
+            section_id = params.get('response');
+            console.log(section_id);
+            console.log('initializing sections')    
+            window.location.href = "./create_quiz?response=" + section_id;  
         }
         </script>
 

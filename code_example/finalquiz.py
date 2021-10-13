@@ -27,3 +27,4 @@ class FinalQuiz(db.Model):
     def get_quiz(self,quiz_id):
         section = FinalQuiz.query.filter_by(quiz_id = quiz_id).first()
         return section
+

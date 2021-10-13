@@ -8,18 +8,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 CORS(app) 
-
-class multiplechoice(db.Model):
-    __tablename__ = 'mcq_options'
+class multiplechoiceoptions(db.Model):
+    __tablename__ = 'MCQ_OPTIONS'
+    answer = db.Column(db.Boolean)
     question_id= db.Column(db.Integer, primary_key=True)
     option_order = db.Column(db.Integer,primary_key=True)
     option_content = db.Column(db.String(100))
-    correct_option = db.Column(db.Boolean)
-    
-
     
     def json(self):
-        return {"question_id": self.question_id,"option_order": self.option_order,"option_content": self.option_content,"correct_option": self.correct_option}
+        return {"question_id": self.question_id,"option_order": self.option_order,"option_content": self.option_content,"answer": self.answer,"question_id":self.question_id}
         
     def get_question_id(self):
         return self.question_id
@@ -33,6 +30,21 @@ class multiplechoice(db.Model):
     def correct_option(self):
         return self.correct_option
         
-    def get_quiz(self,quiz_id):
-        option= multiplechoice.query.filter_by(quiz_id = quiz_id)
-        return option
+    def get_quiz(self,question_id):
+        option= multiplechoiceoptions.query.filter_by(question_id = question_id)
+       
+        count =0
+        for x in option:
+            count+=1
+        if count!=0:
+            return jsonify(
+                {
+                    
+                    "data": [question.json() for question in option]
+                })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no section."
+            }
+        )

@@ -17,7 +17,10 @@ class SectionQuizController():
         pass
 
 #   View all materials in a section
-
+    def view_all_materials(self,section_id):
+        da = SectionMaterialQuizDataAccess()
+        materials = da.get_material_record_by_section(section_id)
+        return materials
 
 
 #   View all sections in a class
@@ -32,12 +35,23 @@ class SectionQuizController():
         sections = da.get_section_quiz(section_id)
         return sections
 
+#   Create section
+    def create_section(self,class_id,section_title):
+        da = SectionMaterialQuizDataAccess()
+        status = da.create_section(class_id,section_title)
+        return status
 
 #   Create Quizzes
     def create_quiz(self,section_id,time_limit):
         da = SectionMaterialQuizDataAccess()
         status = da.create_quiz(section_id,time_limit)
         return status
+
+#   View Quiz Questions
+    def get_quiz_questions(self,quiz_id):
+        da = SectionMaterialQuizDataAccess()
+        questions = da.get_quiz_questions(quiz_id)
+        return questions
 
 
 #   Create Quiz Questions
@@ -52,24 +66,16 @@ class SectionQuizController():
         status = da.create_material(section_id,material_title,material_content,material_type)
         return status
 
+    
+
+
 #   Download Course Materials
     #tbu after initializing S3
-    def create_TrueFalse_qn(self,answer,quiz_id,qorder,question_type,question):
-        da = SectionMaterialQuizDataAccess()
-        status = da.create_TrueFalse(answer,quiz_id,qorder,question_type,question)
-        return status
-
-    def create_MCQ_qn(self,quiz_id,qorder,question_type,question):
-        da = SectionMaterialQuizDataAccess()
-        status = da.create_MCQ(quiz_id,qorder,question_type,question)
-        return status
-    
-    def create_MCQ_options(self,question_id,option_order,option_content,correct_option):
-        da = SectionMaterialQuizDataAccess()
-        status = da.create_MCQ_options(question_id,option_order,option_content,correct_option)
-        return status
 
         
+@app.route("/create_materials", methods=['GET'])
+def create_Materials(self):
+    pass
 
 
 ############## View Functions ###############################
@@ -95,6 +101,14 @@ def view_Quiz():
     quiz = da.view_section_quiz(section_id)
     return quiz
 
+
+@app.route("/create_section", methods=['GET'])
+def create_section():
+    class_id = int(request.args.get('class_id', None))
+    section_title = str(request.args.get('section_title', None))
+    da = SectionQuizController()
+    status = da.create_section(class_id,section_title)
+    return status
 
 @app.route("/create_quiz", methods=['GET'])
 def create_quiz():
@@ -139,39 +153,8 @@ def create_section_materials():
     status = da.create_section_materials(section_id,material_title,material_content,material_type)
     return status
 
-@app.route("/create_TrueFalse", methods=['GET', 'POST'])
-def create_TrueFalse():
-    answer = int(request.args.get('answer', None))
-    quiz_id = int(request.args.get('quiz_id', None))
-    qorder = int(request.args.get('qorder', None))
-    question_type = str(request.args.get('question_type', None))
-    question = str(request.args.get('question', None))
-    print(answer)
-    da = SectionQuizController()
-    status = da.create_TrueFalse_qn(answer,quiz_id,qorder,question_type,question)
-    return status
-
-@app.route("/create_MCQ_Question", methods=['GET'])
-def create_MCQ():
-    quiz_id = int(request.args.get('quiz_id', None))
-    qorder = int(request.args.get('qorder', None))
-    question_type = str(request.args.get('question_type', None))
-    question = str(request.args.get('question', None))
-    da = SectionQuizController()
-    status = da.create_MCQ_qn(quiz_id,qorder,question_type,question)
-    return status
-
-@app.route("/add_MCQ_Options", methods=['GET'])
-def add_MCQ_options():
-    question_id = int(request.args.get('question_id', None))
-    option_order = int(request.args.get('option_order', None))
-    option_content = str(request.args.get('option_content', None))
-    correct_option = bool(request.args.get('correct_option',None))
-    da = SectionQuizController()
-    status = da.create_MCQ_options(question_id,option_order,option_content,correct_option)
-    return status 
 
 
 
 if __name__ == '__main__':
-    app.run(port=5002, debug=True)
+    app.run(port=5001, debug=True)

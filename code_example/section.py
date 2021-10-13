@@ -15,6 +15,7 @@ class Section(db.Model):
     section_id = db.Column(db.Integer, primary_key=True)
     class_id = db.Column(db.Integer)
     section_title = db.Column(db.String(500))
+    
 
     def json(self):
         return {"section_id": self.section_id, "class_id": self.class_id,"section_title": self.section_title}
