@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS LMSDB;
+DROP DATABASE IF EXISTS LMSDB2;
 
-CREATE DATABASE LMSDB;
-USE LMSDB;
+CREATE DATABASE LMSDB2;
+USE LMSDB2;
 
 /* Table = USER */
 
@@ -258,9 +258,9 @@ INSERT INTO `LEARNERS` (`USERID`) VALUES
 ('4'),
 ('6');
 
-INSERT INTO `COURSE` (`COURSE_NAME`, `COURSE_DESCRIPTION`,`STARTDATE`,`ENDDATE`,`STARTENROLLMENTDATE`,`ENDENROLLMENTDATE`) VALUES
-('Dog walking course','A course to learn how to walk clients dog','2021-10-1','2021-11-28','2021-10-1','2021-10-8'),
-('Strong breathing course','A course to learn how to breathe','2021-10-6','2021-12-1','2021-10-2','2021-10-9');
+INSERT INTO `COURSE` (`COURSE_NAME`, `COURSE_DESCRIPTION`,`STARTENROLLMENTDATE`,`ENDENROLLMENTDATE`) VALUES
+('Dog walking course','A course to learn how to walk clients dog','2021-10-1','2021-10-8'),
+('Strong breathing course','A course to learn how to breathe','2021-10-2','2021-10-9');
 ;
 
 INSERT INTO `COURSE_PREREQUISITE` (`COURSE_ID`,`PREREQ_COURSE_ID`) VALUES
@@ -272,9 +272,9 @@ INSERT INTO `LEARNER_BADGES` (`USERID`,`COURSE_ID`) VALUES
 ('4','2')
 ;
 
-INSERT INTO `CLASSES` (`COURSE_ID`,`SLOTS`) VALUES
-('1','40'),
-('2','50')
+INSERT INTO `CLASSES` (`COURSE_ID`,`SLOTS`,`STARTDATE`,`ENDDATE`,`TRAINER_NAME`) VALUES
+('1','40','2021-10-1','2021-11-28','Tze Kiat'),
+('2','50','2021-10-6','2021-12-1','Wei Quan')
 ;
 
 INSERT INTO `SECTIONS` (`CLASS_ID`, `SECTION_TITLE`) VALUES
@@ -296,9 +296,9 @@ INSERT INTO `VIEWABLE_SECTION` ( `SECTION_ID`,`USERID`,`CLASS_ID`, `VIEWABLE`) V
 ('5','2','1',FALSE)
 ;
 
-INSERT INTO `SECTIONS_MATERIALS` (`SECTION_ID`, `MATERIAL_TITLE`, `MATERIAL_CONTENT`,`IS_URL_LINK`) VALUES
-('1','The title is king','In the morning, I drink coffee & stare at the morning sun while thinking of the one. Every star we see is actually dead, we are just view the light that took lights years to arrive.', FALSE),
-('2','Iphone', 'The iphone 13 is a new phone that at first glance look like the same as iphone 12 but the major upgrades are in the interior of the phone.', FALSE)
+INSERT INTO `SECTIONS_MATERIALS` (`SECTION_ID`, `MATERIAL_TITLE`, `MATERIAL_CONTENT`,`MATERIAL_TYPE`) VALUES
+('1','The title is king','In the morning, I drink coffee & stare at the morning sun while thinking of the one. Every star we see is actually dead, we are just view the light that took lights years to arrive.', 'ppt'),
+('2','Iphone', 'The iphone 13 is a new phone that at first glance look like the same as iphone 12 but the major upgrades are in the interior of the phone.', 'mp4')
 ;
 
 INSERT INTO `QUIZZES` ( `SECTION_ID`,`TIME_LIMIT`) VALUES
