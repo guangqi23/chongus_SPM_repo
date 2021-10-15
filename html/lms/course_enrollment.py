@@ -13,6 +13,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+
+## Allows HR to assign classes to learners
+
 class Course_Enrollment(db.Model):
 
     __tablename__ = 'COURSE_ENROLLMENT'

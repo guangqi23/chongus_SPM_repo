@@ -6,7 +6,7 @@ from trainer import Trainer_Assignment, Trainer
 from employee_data_access import EmployeeDataAccess
 from course import Course
 from user import User
-from learner import Learner
+from learner import Learner, Learner_Assignment
 from course_enrollment import Course_Enrollment
 
 
@@ -86,17 +86,17 @@ class AssignController():
 
         if valid_hr and valid_lrnr:
 
-            print("HR is assigning and enrolling learner to a class of a course")
+            print("HR is assigning learner to a class of a course")
 
 
             userid = class_to_assign['learner_id']
             course_id = class_to_assign['course_id']
             class_id = class_to_assign['class_id']
-            is_enrolled = 1
 
-            course_enrollment_entry = Course_Enrollment(course_id = course_id, userid = userid, class_id = class_id, is_enrolled = is_enrolled)
+            class_to_assign_entry =  Learner_Assignment(course_id= course_id, class_id = class_id, userid=userid)
 
-            return course_enrollment_entry.HR_enrol_course_for_learner()
+
+            return class_to_assign_entry.assign_class_learner()
 
 
 
@@ -124,8 +124,8 @@ def get_assigned_classes_trainer():
     assign_ctrl = AssignController()
     return assign_ctrl.get_assignment_trainer(userid)
 
-@app.route("/assign_course_learner", methods= ['POST'])
-def assign_course_learner():
+@app.route("/assign_class_learner", methods= ['POST'])
+def assign_class_learner():
     application = request.get_json(force=True)
     course_id = application['course_id']
     class_id = application['class_id']
