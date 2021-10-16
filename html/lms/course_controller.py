@@ -4,6 +4,7 @@ from flask_cors import CORS
 from employee_data_access import EmployeeDataAccess
 from course import Course
 from course_prerequisites import Course_Prerequisites
+from course_enrollment_DAO import CourseEnrollmentDataAccess
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
@@ -85,6 +86,17 @@ class CourseController():
             # later on this will return which prerequisites were duplicates and which were added as new prerequisites
             return status
 
+    #Xing Jie parts
+    def retrieveAllEnrollment(self):
+        enrollmentDA = CourseEnrollmentDataAccess()
+        enrollments = enrollmentDA.retrieveAllEnrollments()
+        return enrollments
+
+    def changeEnrollmentStatus(self, enrollment_id):
+        enrollmentDA = CourseEnrollmentDataAccess()
+        output = enrollmentDA.changeEnrollmentStatus(enrollment_id)
+        return output
+
 # front end request
 @app.route("/create_course", methods=['POST'])
 def create_course():
@@ -138,6 +150,20 @@ def prereq_by_course():
                 "message": "There are no prerequisites."
             }
         ), 404
+
+@app.route("/allEnrollments", methods=['GET'])
+def getAllEnrollments():
+    da = CourseController()
+    enrollments = da.retrieveAllEnrollment()
+    return enrollments
+
+@app.route("/changeEnrollmentStatus/input")
+def changeEnrollStatus():
+    da = CourseController()
+    enrollId = int(request.args.get('enrol_id', None))
+    output = da.changeEnrollmentStatus(enrollId)
+    return output
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
