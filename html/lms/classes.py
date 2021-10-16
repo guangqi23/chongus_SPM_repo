@@ -25,7 +25,7 @@ class Classes(db.Model):
         self.class_id = class_id
         self.slots = slots
     
-    def getSlots(cid):
+    def getSlots(self, cid):
         slots = Classes.query.filter_by(class_id = cid).first()
         return str(slots.slots)
     
