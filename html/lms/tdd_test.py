@@ -1,5 +1,7 @@
 import unittest
+from flask.json import jsonify
 import requests
+from course_controller import CourseController
 
 class TestCourseController(unittest.TestCase):
     API_URL = "http://127.0.0.1:5000/create_course"
@@ -17,5 +19,6 @@ class TestCourseController(unittest.TestCase):
         r = requests.post(TestCourseController.API_URL, json=TestCourseController.application)
         self.assertEqual(r.status_code, 200)
 
+# https://www.youtube.com/watch?v=iQVvpnRYl-w
 if __name__ == "__main__":
     unittest.main()

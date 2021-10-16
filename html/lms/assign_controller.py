@@ -96,7 +96,7 @@ class AssignController():
 
             course_enrollment_entry = Course_Enrollment(course_id = course_id, userid = userid, class_id = class_id, is_enrolled = is_enrolled)
 
-            return course_enrollment_entry.HR_enrol_course_for_learner()
+            return course_enrollment_entry.add_enrollment_record()
 
 
 

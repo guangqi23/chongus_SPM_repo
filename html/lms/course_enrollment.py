@@ -23,8 +23,7 @@ class Course_Enrollment(db.Model):
     class_id = db.Column(db.Integer, nullable = False)
     is_enrolled = db.Column(db.Boolean, nullable = False)
 
-    def HR_enrol_course_for_learner(self):
-
+    def add_enrollment_record(self):
         try:
             db.session.add(self)
             db.session.commit()
