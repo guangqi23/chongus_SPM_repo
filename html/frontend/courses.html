@@ -24,13 +24,15 @@
     <script>
       function viewAvailableCourses(userId) {
         axios
-          .post('http://127.0.0.1:5002/available_courses', {user_id: userId
+          .post('http://127.0.0.1:5002/availcourses', {user_id: userId
           })
           .then(res => 
             {
                 records = res.data.data.record;
+                console.log(res.data)
                 let value = '';
                     for(course of records) {
+                      let courseid = course.course_id
                       let coursename = course.course_name
                       let coursedescription = course.course_description
                       let startdate = course.startdate
@@ -38,6 +40,8 @@
                       let startenrollmentdate = course.startenrollmentdate
                       let endenrollmentdate = course.endenrollmentdate
                       
+                      // this needs to include a check that the end enrollment date is not before today's date
+
                       value += `<div class="card" style="width: 18rem;">
                                 <div class="card-body">
                                 <h5 class="card-title">${coursename}</h5>
@@ -46,12 +50,18 @@
                                   <p><strong>Enrollment Period:</strong> ${startenrollmentdate} - ${endenrollmentdate}</p>
                                   <p><strong>Course Period:</strong> ${startdate} - ${enddate}</p>
                                 </ul>
-                                <a href="#" class="btn btn-primary">Enroll</a>
+                                <p>Available Classes</p>
+                                <ul id='${course_id}_classes'></ul>
+                                <a href="#" class="btn btn-primary" id="${courseid}">Enroll</a>
                               </div>
                             </div>`;
-                              
+
                       let body = document.getElementById('available_courses');
                       body.innerHTML = value; 
+
+                      document.getElementById(courseid).addEventListener('click', function(event){
+                        viewClasses(courseid);
+                      })
                     }
             }
           )
@@ -90,7 +100,7 @@
           .catch(error => console.error(error.response.data));
       }
 
-    function viewEnrolledCourses(userId) {
+      function viewEnrolledCourses(userId) {
         axios
           .post('http://127.0.0.1:5002/enrolled_courses', {user_id: userId
           })
@@ -123,10 +133,25 @@
           )
           .catch(error => console.error(error.response.data));
       }
+
+      function viewClasses(courseid){
+        axios
+          .post(
+            'http://127.0.0.1:5011/get_classes/' + courseid
+          )
+          .then(res =>
+            {
+              console.log("Success")
+              class_records = res.data.data.record;
+              
+            }
+          )
+          .catch(error => console.error(error.response.data));
+      }
       
       viewAvailableCourses(2);
-      viewAssignedCourses(4);
-      viewEnrolledCourses(6);
+      // viewAssignedCourses(4);
+      // viewEnrolledCourses(6);
 
       // function test() {
       //   const request = new XMLHttpRequest();

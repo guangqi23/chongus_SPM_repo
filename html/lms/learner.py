@@ -12,7 +12,7 @@ from sqlalchemy import Column, Integer
 from course_enrollment import Course_Enrollment
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -41,15 +41,14 @@ class Learner(User):
 
     def get_available_courses(self, userid):
         learner_badges = learnerbadges()
-        course_class = Course_Prerequisites()
+        prereq_class = Course_Prerequisites()
+        course_class = Course()
+
         completedcourses = learner_badges.get_completed_courses(userid)
-        all_courses = Course.get_all_courses()
-        courseinfo_class = Course()
-        course_vacancies = Course()
+        all_courses = course_class.get_all_courses()
         
         course_list = []
         course_to_not_take = []
-        prereq = []
 
         for course in all_courses: 
             course_list.append(course.course_id)
@@ -57,27 +56,19 @@ class Learner(User):
         for course in completedcourses: 
             course_to_not_take.append(course.course_id)
         
-        avai_course = [course for course in course_list if course not in course_to_not_take]
+        avail_course = [course for course in course_list if course not in course_to_not_take]
 
         output = []
 
-        for course_query in avai_course: 
-            prereqlist = course_class.prereq_by_course(course_query)
-            vacancies = course_vacancies.get_vacancies_by_courses(course_query)
-            vacant = false
+        for course_query in avail_course: 
+            prereqlist = prereq_class.prereq_by_course(course_query)
+            vacancies = course_class.get_vacancies_by_courses(course_query)
             if vacancies > 0: 
-                vacant = true
-                if vacant: 
-                    vacant = true
-                    for course in prereqlist: 
-                        prereq.append(course.prereq_course_id)
-                        toadd = true
-                        for course in prereq:
-                            if course not in completedcourses:
-                                toadd= false 
-                        if toadd:
-                            courseinfo = courseinfo_class.get_course_by_id(course_query)
-                            output.append(courseinfo)
+                for course in prereqlist: 
+                    if course.prereq_course_id not in completedcourses:
+                        courseinfo = course_class.get_course_by_id(course_query)
+                        output.append(courseinfo)
+
         return output
     
     def is_learner(self, user_id):
@@ -86,23 +77,23 @@ class Learner(User):
     
     def get_enrolled_courses(self, user_id): 
         enrolled_courses = Course_Enrollment()
-        courseinfo_class = Course()
+        course_class = Course()
         output = []
         enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)
         for enrolled_course in enrolled_courses_list:
             enrollment_status = enrolled_course.is_enrolled
             if enrollment_status:
-                courseinfo = courseinfo_class.get_course_by_id(enrolled_course.course_id)
+                courseinfo = course_class.get_course_by_id(enrolled_course.course_id)
                 output.append(courseinfo)
         return output
 
     def get_assigned_courses(self, user_id): 
         assigned_courses = Learner_Assignment()
-        courseinfo_class = Course()
+        course_class = Course()
         output = []
         assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
         for assigned_course in assigned_courses_list:
-            courseinfo = courseinfo_class.get_course_by_id(assigned_course.course_id)
+            courseinfo = course_class.get_course_by_id(assigned_course.course_id)
             output.append(courseinfo)
         return output
 
