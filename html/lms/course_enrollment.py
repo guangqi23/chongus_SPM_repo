@@ -43,7 +43,7 @@ class Course_Enrollment(db.Model):
         ), 200
     
     def delete_enrollment_record(self, user_id, class_id, course_id):
-        enrollment_record = self.query.filter_by(userid = user_id, class_id = class_id, course_id = course_id).first()
+        enrollment_record = self.query.filter_by(userid = user_id, class_id = class_id, course_id = course_id, is_enrolled = 1).first()
         try:
             db.session.delete(enrollment_record)
             db.session.commit()
