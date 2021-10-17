@@ -29,9 +29,9 @@ def get_all_classes(course_id):
         )
     
     return jsonify(
-        {
-            "code": 404,
-            "message": "There are no classes available"
+    {
+        "code": 404,
+        "message": "There are no classes."
         }
     ), 404
 
