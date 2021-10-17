@@ -76,15 +76,25 @@ class Learner(User):
         return lrnr
     
     def get_enrolled_courses(self, user_id): 
-        enrolled_courses = Course_Enrollment()
+        enrolled_courses_list = self.get_enrolled_classes(user_id)
         course_class = Course()
         output = []
-        enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)
+
         for enrolled_course in enrolled_courses_list:
-            enrollment_status = enrolled_course.is_enrolled
-            if enrollment_status:
-                courseinfo = course_class.get_course_by_id(enrolled_course.course_id)
-                output.append(courseinfo)
+            courseinfo = course_class.get_course_by_id(enrolled_course.course_id)
+            output.append(courseinfo)
+
+        return output
+
+    def get_enrolled_classes(self, user_id):
+        enrolled_courses = Course_Enrollment()
+        enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)
+        
+        output = []
+        for enrolled_course in enrolled_courses_list:
+            if enrolled_course.is_enrolled == 1:
+                output.append(enrolled_course)
+
         return output
 
     def get_assigned_courses(self, user_id): 
@@ -140,6 +150,29 @@ def get_enrolled_courses():
             "message": "There are no enrolled courses."
             }
         ), 404
+
+@app.route("/enrolled_classes", methods=["POST"])
+def get_enrolled_classes():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner = Learner()
+    record = learner.get_enrolled_classes(user_id)
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no enrolled classes."
+            }
+        ), 404
+
 
 @app.route("/assigned_courses", methods=['POST'])
 def get_assigned_courses():
