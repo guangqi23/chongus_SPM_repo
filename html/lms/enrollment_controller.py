@@ -53,6 +53,14 @@ class EnrollmentController():
 
         course_enrollment_ctrl = Course_Enrollment(course_id = course_id, userid = userid, class_id = class_id, is_enrolled = is_enrolled)
         return course_enrollment_ctrl.add_enrollment_record()
+    
+    def drop_class(self, application):
+        user_id = application['user_id']
+        class_id = application['class_id']
+        course_id = application['course_id']
+
+        course_enrollment_ctrl = Course_Enrollment()
+        return course_enrollment_ctrl.delete_enrollment_record(user_id, class_id, course_id)
         
 
 @app.route("/enroll", methods=['POST'])
@@ -60,6 +68,12 @@ def apply_class():
     application = request.get_json()
     enroll_ctrl = EnrollmentController()
     return enroll_ctrl.apply_class(application)
+
+@app.route("/drop_class", methods=['POST'])
+def drop_class():
+    application = request.get_json()
+    enroll_ctrl = EnrollmentController()
+    return enroll_ctrl.drop_class(application)
 
 if __name__ == '__main__':
     app.run(port=5010, debug=True)
