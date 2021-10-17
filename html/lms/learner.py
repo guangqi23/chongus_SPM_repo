@@ -1,18 +1,14 @@
 from flask import Flask, request, jsonify
-import json
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from sqlalchemy.ext.declarative.api import declared_attr
 from sqlalchemy.sql.expression import false, true
 from learner_badges import learnerbadges
 from user import User
 from course import Course
-from course_prerequisites import Course_Prerequisites
-from sqlalchemy import Column, Integer
 from course_enrollment import Course_Enrollment
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -38,36 +34,24 @@ class Learner(User):
 
     __mapper_args__ = {'polymorphic_identity': 'learner'}
 
-
-    def get_available_courses(self, userid):
+    def get_remaining_courses(self, userid):
         learner_badges = learnerbadges()
-        prereq_class = Course_Prerequisites()
         course_class = Course()
 
-        completedcourses = learner_badges.get_completed_courses(userid)
-        all_courses = course_class.get_all_courses()
-        
-        course_list = []
-        course_to_not_take = []
-
-        for course in all_courses: 
-            course_list.append(course.course_id)
-
-        for course in completedcourses: 
-            course_to_not_take.append(course.course_id)
-        
-        avail_course = [course for course in course_list if course not in course_to_not_take]
+        course_list = [course.course_id for course in course_class.get_all_courses()]
+        completed_courses = [course.course_id for course in learner_badges.get_completed_courses(userid)]
+        enrolled_courses = [course.course_id for course in self.get_enrolled_courses(userid)]
+        assigned_courses = [course.course_id for course in self.get_assigned_courses(userid)]
+        completed_enrolled_assigned_courses = completed_courses + enrolled_courses + assigned_courses
+        remaining_course = [course for course in course_list if course not in completed_enrolled_assigned_courses]
 
         output = []
 
-        for course_query in avail_course: 
-            prereqlist = prereq_class.prereq_by_course(course_query)
+        for course_query in remaining_course: 
             vacancies = course_class.get_vacancies_by_courses(course_query)
             if vacancies > 0: 
-                for course in prereqlist: 
-                    if course.prereq_course_id not in completedcourses:
-                        courseinfo = course_class.get_course_by_id(course_query)
-                        output.append(courseinfo)
+                    courseinfo = course_class.get_course_by_id(course_query)
+                    output.append(courseinfo)
 
         return output
     
@@ -89,6 +73,7 @@ class Learner(User):
     def get_enrolled_classes(self, user_id):
         enrolled_courses = Course_Enrollment()
         enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)
+        print(enrolled_courses_list)
         
         output = []
         for enrolled_course in enrolled_courses_list:
@@ -107,12 +92,12 @@ class Learner(User):
             output.append(courseinfo)
         return output
 
-@app.route("/availcourses", methods=['POST'])
-def get_available_courses():
+@app.route("/remaining_courses", methods=['POST'])
+def get_remaining_courses():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_available_courses(user_id)
+    record = learner.get_remaining_courses(user_id)
     if len(record):
             return jsonify(
                 {
@@ -125,7 +110,7 @@ def get_available_courses():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no available courses."
+            "message": "There are no remaining courses."
             }
         ), 404
     
