@@ -11,14 +11,17 @@
     <title>View Courses</title>
   </head>
   <body>
-    <h1>View Courses</h1>
-    <div class='container'>
-      <div id='available_courses'>
-      </div>
+    <h1>View Assigned Courses</h1>
+    <div class='container'></div>
       <div id='assigned_courses'>
       </div>
+    <h1>View Enrolled Courses</h1>
+    <div class='container'></div>
       <div id='enrolled_courses'>
-      </div>
+    </div>
+    <h1>View Other Courses</h1>
+    <div class='container'></div>
+      <div id='other_courses'>
     </div>
   
     <script>
@@ -134,6 +137,40 @@
           .catch(error => console.error(error.response.data));
       }
 
+      function viewOtherCourses(userId) {
+        axios
+          .post('http://127.0.0.1:5002/remaining_courses', {user_id: userId
+          })
+          .then(res => 
+            {
+                records = res.data.data.record;
+                let value = '';
+                    for(course of records) {
+                      let coursename = course.course_name
+                      let coursedescription = course.course_description
+                      let startdate = course.startdate
+                      let enddate = course.enddate
+                      let startenrollmentdate = course.startenrollmentdate
+                      let endenrollmentdate = course.endenrollmentdate
+                      
+                      value += `<div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                <h5 class="card-title">${coursename}</h5>
+                                <ul class="list-group list-group-flush">
+                                  <p> <strong>${coursedescription}</strong></p>
+                                  <p><strong>Course Period:</strong> ${startdate} - ${enddate}</p>
+                                </ul>
+                              </div>
+                            </div>`;
+                              
+                      let body = document.getElementById('other_courses');
+                      body.innerHTML = value; 
+                    }
+            }
+          )
+          .catch(error => console.error(error.response.data));
+      }
+
       function viewClasses(courseid, userId){
         axios
           .post(
@@ -177,9 +214,9 @@
           .catch(error => console.error(error.response.data))
       }
       
-      viewAvailableCourses(2);
-      // viewAssignedCourses(4);
-      // viewEnrolledCourses(6);
+      viewAssignedCourses(4);
+      viewEnrolledCourses(6);
+      viewOtherCourses(6);
 
       // function test() {
       //   const request = new XMLHttpRequest();
