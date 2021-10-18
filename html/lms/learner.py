@@ -6,6 +6,7 @@ from learner_badges import learnerbadges
 from user import User
 from course import Course
 from course_enrollment import Course_Enrollment
+from course_prerequisites import Course_Prerequisites
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
@@ -54,6 +55,44 @@ class Learner(User):
                     output.append(courseinfo)
 
         return output
+
+    def get_eligible_courses(self, userid):
+        course_class = Course()
+        course_pre_req = Course_Prerequisites()
+        learner_badges = learnerbadges()
+        completedcourses = learner_badges.get_completed_courses(userid)
+
+        course_list = [course.course_id for course in self.get_remaining_courses(userid)]
+        
+        output = []
+
+        for course_query in course_list: 
+            prereqlist = course_pre_req.prereq_by_course(course_query)
+            if len(prereqlist) == 0: 
+                courseinfo = course_class.get_course_by_id(course_query)
+                output.append(courseinfo)
+            else: 
+                for course in prereqlist: 
+                    if course.prereq_course_id in completedcourses:
+                        courseinfo = course_class.get_course_by_id(course_query)
+                        output.append(courseinfo)
+        
+        return output
+
+    def get_uneligible_courses(self, userid):
+        course_class = Course()
+
+        course_list = [course.course_id for course in self.get_remaining_courses(userid)]
+        eligible_courses = [course.course_id for course in self.get_eligible_courses(userid)]
+        other_courses = [course for course in course_list if course not in eligible_courses]
+
+        output = []
+      
+        for course_query in other_courses: 
+            courseinfo = course_class.get_course_by_id(course_query)
+            output.append(courseinfo)
+
+        return output
     
     def is_learner(self, user_id):
         lrnr = Learner.query.filter_by(userid=user_id).first()
@@ -92,12 +131,12 @@ class Learner(User):
             output.append(courseinfo)
         return output
 
-@app.route("/remaining_courses", methods=['POST'])
-def get_remaining_courses():
+@app.route("/eligible_courses", methods=['POST'])
+def get_eligible_courses():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_remaining_courses(user_id)
+    record = learner.get_eligible_courses(user_id)
     if len(record):
             return jsonify(
                 {
@@ -110,7 +149,29 @@ def get_remaining_courses():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no remaining courses."
+            "message": "There are no eligible courses."
+            }
+        ), 404
+
+@app.route("/uneligible_courses", methods=['POST'])
+def get_uneligible_courses():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner = Learner()
+    record = learner.get_uneligible_courses(user_id)
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no uneligible courses."
             }
         ), 404
     
