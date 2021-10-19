@@ -23,6 +23,8 @@ class Trainer(User):
     # def user_id(cls):
     #     return User.__table__.c.get('user_id', Column(Integer))
 
+    
+
     def json(self):
         return {"user_id": self.userid}
     

@@ -4,7 +4,8 @@ from flask_cors import CORS
 from classes import Classes
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -24,7 +25,7 @@ class Course(db.Model):
     startenrollmentdate = db.Column(db.DateTime, nullable=False)
     endenrollmentdate = db.Column(db.DateTime, nullable=False)
 
-    def get_all_courses():
+    def get_all_courses(self):
         return Course.query.all()
 
     def get_course_by_id(self, course_id):

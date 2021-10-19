@@ -7,7 +7,7 @@ from course_prerequisites import Course_Prerequisites
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -85,6 +85,8 @@ class CourseController():
             # later on this will return which prerequisites were duplicates and which were added as new prerequisites
             return status
 
+
+
 # front end request
 @app.route("/create_course", methods=['POST'])
 def create_course():
@@ -107,7 +109,22 @@ def delete_course():
 @app.route("/courses", methods=['GET'])
 def get_courses():
     courses = Course()
-    return courses.get_all_courses()
+    record =  courses.get_all_courses()
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no enrolled courses."
+            }
+        ), 404
 
 @app.route("/add_prerequisites", methods=["POST"])
 def create_prerequisites():
@@ -117,9 +134,10 @@ def create_prerequisites():
     course_ctrl = CourseController()
     return course_ctrl.create_prerequisites(user_id, course_id, application)
 
-@app.route("/prerequisitesbycourse", methods=['GET'])
+@app.route("/prerequisitesbycourse", methods=['POST'])
 def prereq_by_course():
     application = request.get_json()
+    print(request)
     course_id = application['course_id']
     prereq = Course_Prerequisites()
     record = prereq.prereq_by_course(course_id)

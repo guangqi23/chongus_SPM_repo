@@ -58,6 +58,10 @@ class Learner(User):
 
     __mapper_args__ = {'polymorphic_identity': 'learner'}
 
+    def get_all_learners(self):
+        lrnr = Learner()
+        return lrnr.query.filter_by(designation = "Learner").all()
+
 
     def get_available_courses(self, userid):
         learner_badges = learnerbadges()
@@ -147,6 +151,26 @@ def get_available_courses():
             "message": "There are no available courses."
             }
         ), 404
+
+@app.route("/get_all_learners", methods=['GET'])
+def get_all_learners():
+    learner = Learner()
+    record = learner.get_all_learners()
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no learners."
+            }
+    ),404
     
 @app.route("/enrolled_courses", methods=['POST'])
 def get_enrolled_courses():
