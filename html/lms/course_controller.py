@@ -4,7 +4,7 @@ from flask_cors import CORS
 from employee_data_access import EmployeeDataAccess
 from course import Course
 from course_prerequisites import Course_Prerequisites
-from course_enrollment_DAO import CourseEnrollmentDataAccess
+from course_enrollment import Course_Enrollment
 import sys
 import requests
 from datetime import datetime
@@ -75,18 +75,18 @@ class CourseController():
             return status
 
     #Xing Jie parts
-    def retrieveAllEnrollment(self):
-        enrollmentDA = CourseEnrollmentDataAccess()
-        enrollments = enrollmentDA.retrieveAllEnrollments()
-        return enrollments
+    # def retrieveAllEnrollment(self):
+    #     enrollmentDA = CourseEnrollmentDataAccess()
+    #     enrollments = enrollmentDA.retrieveAllEnrollments()
+    #     return enrollments
 
     def changeEnrollmentStatus(self, enrollment_id):
-        enrollmentDA = CourseEnrollmentDataAccess()
-        output = enrollmentDA.changeEnrollmentStatus(enrollment_id)
+        enrollmentDA = Course_Enrollment()
+        output = enrollmentDA.set_enrollment_status(enrollment_id)
         return output
 
     def retrieveEnrollmentsBeforeStart(self):
-        enrollmentDA = CourseEnrollmentDataAccess()
+        enrollmentDA = Course_Enrollment()
         output = enrollmentDA.retrieveEnrollmentsBeforeStart()
         return output
      
@@ -145,11 +145,6 @@ def prereq_by_course():
             }
         ), 404
 
-@app.route("/allEnrollments", methods=['GET'])
-def getAllEnrollments():
-    da = CourseController()
-    enrollments = da.retrieveAllEnrollment()
-    return enrollments
 
 @app.route("/changeEnrollmentStatus/input")
 def changeEnrollStatus():
@@ -160,8 +155,8 @@ def changeEnrollStatus():
 
 @app.route("/allEnrollmentsPending", methods=['GET'])
 def getAllPendingEnrollment():
-    da = CourseController()
-    enrollments = da.retrieveEnrollmentsBeforeStart()
+    da = Course_Enrollment()
+    enrollments = da.get_all_enrollments()
     astuff = json.loads(enrollments.data.decode('utf-8'))
     enrollment_list = astuff["data"]["enrollment_records"]
 
