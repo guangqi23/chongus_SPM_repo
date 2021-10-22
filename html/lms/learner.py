@@ -9,7 +9,7 @@ from course_enrollment import Course_Enrollment
 from course_prerequisites import Course_Prerequisites
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -30,10 +30,41 @@ class Learner_Assignment(db.Model):
     def json(self):
         return {"course_id":self.course_id,"class_id":self.class_id, "userid":self.userid}
 
+    def assign_class(self):
+
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while assigning the class " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The class has been successfully assigned to the Learner"
+            }
+        ), 200
+    
+
 class Learner(User):
     __tablename__ = 'learners'
 
     __mapper_args__ = {'polymorphic_identity': 'learner'}
+
+    def get_all_learners(self):
+        lrnr = Learner()
+        return lrnr.query.filter_by(designation='Learner').all()
+
+    def get_all_learners_id(self):
+        lrnr = Learner()
+        records = Learner.query.with_entities(Learner.userid).all()
+        print(records)
+        return records
 
     def get_remaining_courses(self, userid):
         learner_badges = learnerbadges()
@@ -241,6 +272,33 @@ def get_assigned_courses():
             "message": "There are no assigned courses."
             }
         ), 404
+
+@app.route("/get_all_learner_id",methods = ['GET'])
+def get_all_learner_ids():
+    lrnr = Learner()
+    records = lrnr.get_all_learners_id()
+    return records
+
+@app.route("/get_all_learners",methods = ['GET'])
+def get_all_learner():
+    lrnr = Learner()
+    record = lrnr.get_all_learners()
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no assigned courses."
+            }
+        ), 404
+    
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
+    <title>View Learners</title>
+  </head>
+  <body>
+    <h1>View Learners</h1>
+    <div class='container'>
+      <div id='all_learners'>
+      </div>
+
+      <div id = 'displayEligibleCourses'>
+
+      </div>
+      <div id = 'displayClassOfEligibleCourses'>
+
+      </div>
+    </div>
+  
+    <script>
+        userid = 3
+      function getAllLearners() {
+        axios
+
+          .get('http://127.0.0.1:5002/get_all_learners',{}
+          )
+          .then(res => 
+            {
+                records = res.data.data.record;
+                console.log(records);
+                lrnr_id_arr = [];
+                let value = `<table class = 'table'>
+                            <thead class = 'thead-dark'>
+                            <tr>
+                                <th>Department</th>
+                                <th>designation</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>User ID</th>
+                            </tr></thead><tbody>`;
+                
+                for(learner of records){
+                    let department = learner.department;
+                    let designation = learner.designation;
+                    let email = learner.email;
+                    let name = learner.name;
+                    let user_id = learner.user_id;  
+                    lrnr_id_arr.push(user_id);
+
+                    let buttonToAssign = 'buttonToAssignUser_' + user_id;
+
+                    value += `<tr>
+                            <td>${department}</td>
+                            <td>${designation}</td>
+                            <td>${email}</td>
+                            <td>${name}</td>
+                            <td>${user_id}</td>
+                            <td><button value = ${user_id} id = ${buttonToAssign}> Assign</button><td>
+                            </tr>`;
+
+                }
+
+                value+= `</tbody></table>`;
+                let body = document.getElementById('all_learners');
+                body.innerHTML = value; 
+                // console.log(lrnr_id_arr);
+                for(let lrnr_id of lrnr_id_arr){
+                  console.log(lrnr_id);
+                  buttonToAssign = 'buttonToAssignUser_' + lrnr_id;
+                  el = document.getElementById(buttonToAssign);
+                  // console.log(el)
+                  el.addEventListener('click',function(event){
+                    getEligibleCoursesForLearner(lrnr_id);
+                  })
+                  
+                }
+
+            }
+          )
+          .catch(error => console.error(error.response.data));
+      }
+      
+      function getEligibleCoursesForLearner(userid){
+        document.getElementById("displayEligibleCourses").innerHTML = '';
+        console.log(userid);
+        axios
+        .post('http://127.0.0.1:5002/eligible_courses',{user_id:userid})
+        .then(res =>{
+        
+                  records = res.data.data.record;
+                  console.log(res);
+                  buttonIdArr = []
+                  value = `<table class = 'table'>
+                            <thead class = 'thead-dark'>
+                              <tr>
+                                <th colspan = '4'>Assigning to User ${userid}</th>
+                              </tr>
+                              <tr>
+                                  <th>Course ID</th>
+                                  <th>Course Name</th>
+                                  <th>Course Description</th>
+                                  <th>Assign</th>
+                              </tr></thead><tbody>`;
+                  for(record of records){
+                    console.log(record);
+                    let course_description = record.course_description;
+                    let course_id = record.course_id;
+                    let course_name = record.course_name;
+                    let endDate = record.enddate;
+                    let endenrollmentdate = record.endenrollmentdate;
+                    let startdate = record.startdate;
+                    let startenrollmentdate = record.startenrollmentdate;
+                    
+                    let buttonId = 'buttonAssignCourse_' + course_id;
+                    buttonIdArr.push(course_id);
+                    value += `<tr>
+                              <td>${course_id}</td>
+                              <td>${course_name}</td>
+                              <td>${course_description}</td>
+                              <td><button id = ${buttonId}>Assign</button><td>
+                              </tr>`;
+
+
+                  }
+                  value+= `</tbody></table>`;
+                  document.getElementById("displayEligibleCourses").innerHTML = value;
+
+                  for(let c_id of buttonIdArr){
+                    b_id =  'buttonAssignCourse_' + c_id;
+                    el = document.getElementById(b_id);
+                    // console.log(el)
+                    el.addEventListener('click',function(event){
+                      getClassesForEligibleCourses(c_id,userid);
+                    })
+                  
+                }
+              
+                
+
+        })
+        .catch(error => console.error(error.response.data))
+
+      }
+      
+
+      function getClassesForEligibleCourses(courseid,user_id){
+        axios
+        .post("http://127.0.0.1:5011/get_classes/" + courseid)
+        .then(res=>{
+                  records = res.data.data.record;
+                  console.log(records);
+                  classId_arr = [];
+
+                  value = `<table class = 'table'>
+                            <thead class = 'thead-dark'>
+                              <tr>
+                                <th colspan = '4'>Assigning user to Course ${courseid}</th>
+                              </tr>
+                              <tr>
+                                  <th>Course ID</th>
+                                  <th>Class ID</th>
+                                  <th>Slots</th>
+                                  <th>Assign</th>
+                              </tr></thead><tbody>`;
+
+                  for(record of records){
+                    console.log(record);
+                    let course_id = record.course_id;
+                    let class_id = record.class_id;
+                    let slots = record.slots;
+                    classId_arr.push(class_id);
+                    buttonId = 'buttonAssignClass_' + class_id;
+                    value += `<tr>
+                              <td>${course_id}</td>
+                              <td>${class_id}</td>
+                              <td>${slots}</td>
+                              <td><button id = ${buttonId} >Assign</button><td>
+                              </tr>`;
+                  }
+
+                  value+= `</tbody></table>`;
+                  let body = document.getElementById('displayClassOfEligibleCourses');
+                  body.innerHTML = value; 
+                  
+                  for(let c_id of classId_arr){
+                    b_id =  'buttonAssignClass_' + c_id;
+                    el = document.getElementById(b_id);
+                    el.addEventListener('click',function(event){
+                      send_application(courseid,c_id,user_id);
+                    })
+                  }
+
+
+                  
+
+        })
+        .catch(error => console.error(error.response.data))
+      }
+
+      function send_application(course_id,class_id,lrnr_id){
+            // add additional test cases later to check for missing values (or just do it in python)
+            console.log(course_id, class_id, lrnr_id);
+            axios
+            .post('http://localhost:5001/assign_course_learner',
+                {
+                  "hr_id" : "1",
+                  "course_id" : course_id,
+                  "class_id" : class_id,
+                  "learner_id" : lrnr_id
+                }
+            )
+            .then(res =>
+                {
+                    data = res.data;
+                    console.log(data)
+                }
+            )
+        }
+
+      getAllLearners();
+
+
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+  </body>
+</html>
