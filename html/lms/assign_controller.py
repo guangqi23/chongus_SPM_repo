@@ -8,6 +8,7 @@ from course import Course
 from user import User
 from learner import Learner, Learner_Assignment
 from course_enrollment import Course_Enrollment
+from learner_assignment import Learner_Assignment
 
 
 app = Flask(__name__)

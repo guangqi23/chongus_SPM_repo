@@ -46,5 +46,3 @@ def get_completed_courses():
         ), 404
 
 
-if __name__ == '__main__':
-    app.run(port=5001, debug=True)

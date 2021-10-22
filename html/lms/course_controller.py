@@ -41,7 +41,7 @@ class CourseController():
             if all(field is not None for field in [course_name, course_description, start_date, end_date, start_enrollment_date, end_enrollment_date]):
                 course_entry = Course(course_name=course_name, course_description=course_description, startdate=start_date, enddate=end_date, startenrollmentdate=start_enrollment_date, endenrollmentdate=end_enrollment_date)
                 
-                return course_#
+                return course_entry
             print("HR is requesting to delete an existing course")
             course_id = application["course_id"]
             course_entry = Course()
