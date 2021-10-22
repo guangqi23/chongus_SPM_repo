@@ -4,10 +4,16 @@ from flask_cors import CORS
 from employee_data_access import EmployeeDataAccess
 from course import Course
 from course_prerequisites import Course_Prerequisites
+from course_enrollment_DAO import CourseEnrollmentDataAccess
+import sys
+import requests
+from datetime import datetime
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb2'
+
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -35,24 +41,7 @@ class CourseController():
             if all(field is not None for field in [course_name, course_description, start_date, end_date, start_enrollment_date, end_enrollment_date]):
                 course_entry = Course(course_name=course_name, course_description=course_description, startdate=start_date, enddate=end_date, startenrollmentdate=start_enrollment_date, endenrollmentdate=end_enrollment_date)
                 
-                return course_entry.add_course()
-
-            else:
-                return jsonify(
-                    {
-                        "code": 400,
-                        "message": "There are some fields that are empty"
-                    }
-                ), 400
-            
-    def delete_course(self, user_id):
-        employee_da = EmployeeDataAccess()
-        application = request.get_json()
-        print("Request to create a course received")
-
-        # call validate_hr in employee data access class
-        valid_hr = employee_da.validate_hr(user_id)
-        if valid_hr:
+                return course_#
             print("HR is requesting to delete an existing course")
             course_id = application["course_id"]
             course_entry = Course()
@@ -84,6 +73,23 @@ class CourseController():
 
             # later on this will return which prerequisites were duplicates and which were added as new prerequisites
             return status
+
+    #Xing Jie parts
+    def retrieveAllEnrollment(self):
+        enrollmentDA = CourseEnrollmentDataAccess()
+        enrollments = enrollmentDA.retrieveAllEnrollments()
+        return enrollments
+
+    def changeEnrollmentStatus(self, enrollment_id):
+        enrollmentDA = CourseEnrollmentDataAccess()
+        output = enrollmentDA.changeEnrollmentStatus(enrollment_id)
+        return output
+
+    def retrieveEnrollmentsBeforeStart(self):
+        enrollmentDA = CourseEnrollmentDataAccess()
+        output = enrollmentDA.retrieveEnrollmentsBeforeStart()
+        return output
+     
 
 # front end request
 @app.route("/create_course", methods=['POST'])
@@ -138,6 +144,66 @@ def prereq_by_course():
                 "message": "There are no prerequisites."
             }
         ), 404
+
+@app.route("/allEnrollments", methods=['GET'])
+def getAllEnrollments():
+    da = CourseController()
+    enrollments = da.retrieveAllEnrollment()
+    return enrollments
+
+@app.route("/changeEnrollmentStatus/input")
+def changeEnrollStatus():
+    da = CourseController()
+    enrollId = int(request.args.get('enrol_id', None))
+    output = da.changeEnrollmentStatus(enrollId)
+    return output
+
+@app.route("/allEnrollmentsPending", methods=['GET'])
+def getAllPendingEnrollment():
+    da = CourseController()
+    enrollments = da.retrieveEnrollmentsBeforeStart()
+    astuff = json.loads(enrollments.data.decode('utf-8'))
+    enrollment_list = astuff["data"]["enrollment_records"]
+
+     #For logging purposes
+    class_ids = []
+    final_enrollmentList = []
+    # for x in enrollment_list: #Replace with sending a list of class_id instead
+    #     print(x["class_id"], file=sys.stderr)
+    #     class_id = x["class_id"]
+    #     r = requests.get('http://localhost:5011/get_startDate/'+ str(class_id))
+    #     print(r.text, file=sys.stderr)
+    #     dateToCompare =datetime.strptime(r.text, '%Y-%m-%d %H:%M:%S')
+    #     if datetime.now() < dateToCompare:
+    #         print("Ok", file=sys.stderr)
+    #         final_enrollmentList.append(x)
+    #     else:
+    #         print("No", file=sys.stderr)
+    # return final_enrollmentList
+
+    for x in enrollment_list: #Replace with sending a list of class_id instead
+        class_ids.append(x["class_id"])
+    dataObj = {'ids': class_ids}
+    #r = requests.post('http://localhost:5011/get_startDate/', data = json.dumps(dataObj))
+    r = requests.post('http://localhost:5011/get_startDate/', data = json.dumps(dataObj))
+    dataReceived = r.text
+    dataReceived = dataReceived[1:]
+    dataReceived = dataReceived[:-1]
+    #print(type(dataReceived), file=sys.stderr)
+    enrolled_list = dataReceived.split(",")
+    #print(type(enrolled_list), file=sys.stderr)
+    #print(enrolled_list, file=sys.stderr)
+
+    
+    counter = 0
+    for x in enrollment_list:
+        if str(counter) in enrolled_list:
+            final_enrollmentList.append(x)
+        counter += 1
+    return jsonify(final_enrollmentList)
+
+
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

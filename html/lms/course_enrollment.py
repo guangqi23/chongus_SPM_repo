@@ -7,8 +7,8 @@ from user import User
 from sqlalchemy import Column, Integer
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -38,7 +38,7 @@ class Course_Enrollment(db.Model):
         return jsonify(
             {
                 "code": 200,
-                "message": "Learner has succesfully enrolled into a class by HR"
+                "message": "Learner has succesSfully enrolled into a class by HR"
             }
         ), 200
     
@@ -68,3 +68,33 @@ class Course_Enrollment(db.Model):
     
     def json(self):
         return {"enrollment_id":self.enrollment_id,"course_id":self.course_id,"userid":self.userid, "class_id":self.class_id, "is_enrolled":self.is_enrolled }
+
+    def get_all_enrollments(self):
+        all_enrollments = Course_Enrollment.query.all()
+        if len(all_enrollments):
+            return jsonify(
+                {
+                    "code":200,
+                    "data": {
+                        "enrollment_records" : [records.json() for records in all_enrollments]
+                    }
+                }
+            )
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There is no enrollment records!"
+            }
+        ),404
+
+
+    def set_enrollment_status(self,selectedEnrollId):
+        courseEnrollRecord = Course_Enrollment.query.filter_by(enrollment_id = selectedEnrollId).first()
+        if courseEnrollRecord.is_enrolled == False:
+            courseEnrollRecord.is_enrolled = True
+            db.session.commit()
+            return "Changed enrollment status to True!"
+        else:
+            courseEnrollRecord.is_enrolled = False
+            db.session.commit()
+            return "Changed enrollment status to False!"
