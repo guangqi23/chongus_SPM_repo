@@ -52,8 +52,8 @@
 
 
             $(async() => {
-                microServiceURL = "http://127.0.0.1:5000/allEnrollments";
-
+                //microServiceURL = "http://127.0.0.1:5000/allEnrollments";
+                microServiceURL = "http://127.0.0.1:5000/allEnrollmentsPending";
                 try{
                     const response = 
                     await fetch(
@@ -63,7 +63,8 @@
                     if (response.status === 200)
                     {
                         console.log(result)
-                        var enrollmentRecords = result.data.enrollment_records;
+                        console.log("Hi")
+                        var enrollmentRecords = result;
                         var rows = "";
                         for (const record of enrollmentRecords)
                         {
@@ -95,7 +96,13 @@
                 fetch(url)
                 .then(data=>{return data.Json()})
                 .catch(error=>console.log(error))
+                
             });
+            
+            window.setTimeout(() => {
+                location.reload();
+            }, 3000);
+            console.log("Waited for 3 seconds!")
             
 
         }
