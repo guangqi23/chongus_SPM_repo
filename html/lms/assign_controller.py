@@ -6,7 +6,7 @@ from trainer import Trainer_Assignment, Trainer
 from employee_data_access import EmployeeDataAccess
 from course import Course
 from user import User
-from learner import Learner
+from learner import Learner, Learner_Assignment
 from course_enrollment import Course_Enrollment
 
 
@@ -92,11 +92,10 @@ class AssignController():
             userid = class_to_assign['learner_id']
             course_id = class_to_assign['course_id']
             class_id = class_to_assign['class_id']
-            is_enrolled = 1
 
-            course_enrollment_entry = Course_Enrollment(course_id = course_id, userid = userid, class_id = class_id, is_enrolled = is_enrolled)
+            course_enrollment_entry = Learner_Assignment(course_id = course_id, userid = userid, class_id = class_id)
 
-            return course_enrollment_entry.add_enrollment_record()
+            return course_enrollment_entry.assign_class()
 
 
 

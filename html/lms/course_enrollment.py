@@ -42,6 +42,26 @@ class Course_Enrollment(db.Model):
             }
         ), 200
     
+    def delete_enrollment_record(self, user_id, class_id, course_id):
+        enrollment_record = self.query.filter_by(userid = user_id, class_id = class_id, course_id = course_id, is_enrolled = 1).first()
+        try:
+            db.session.delete(enrollment_record)
+            db.session.commit()
+        except Exception as error:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": "An error occured while deleting the enrollment record. " + str(error)
+                }
+            )
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The enrollment record has been successfully deleted"
+            }
+        ), 200
+
     def get_user_enrolled_courses(self, userid):
         record = Course_Enrollment.query.filter_by(userid=userid).all()
         return record

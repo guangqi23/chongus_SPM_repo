@@ -11,62 +11,24 @@
     <title>View Courses</title>
   </head>
   <body>
-    <h1>View Courses</h1>
-    <div class='container'>
-      <div id='available_courses'>
-      </div>
+    <h1>View Assigned Courses</h1>
+    <div class='container'></div>
       <div id='assigned_courses'>
       </div>
+    <h1>View Enrolled Courses</h1>
+    <div class='container'></div>
       <div id='enrolled_courses'>
-      </div>
+    </div>
+    <h1>View Eligible Courses</h1>
+    <div class='container'></div>
+      <div id='eligible_courses'>
+    </div>
+    <h1>View Other Courses</h1>
+    <div class='container'></div>
+      <div id='uneligible_courses'>
     </div>
   
     <script>
-      function viewAvailableCourses(userId) {
-        axios
-          .post('http://127.0.0.1:5002/availcourses', {user_id: userId
-          })
-          .then(res => 
-            {
-                records = res.data.data.record;
-                console.log(res.data)
-                let value = '';
-                    for(course of records) {
-                      let courseid = course.course_id
-                      let coursename = course.course_name
-                      let coursedescription = course.course_description
-                      let startdate = course.startdate
-                      let enddate = course.enddate
-                      let startenrollmentdate = course.startenrollmentdate
-                      let endenrollmentdate = course.endenrollmentdate
-                      
-                      // this needs to include a check that the end enrollment date is not before today's date
-
-                      value += `<div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                <h5 class="card-title">${coursename}</h5>
-                                <ul class="list-group list-group-flush">
-                                  <p> <strong>${coursedescription}</strong></p>
-                                  <p><strong>Enrollment Period:</strong> ${startenrollmentdate} - ${endenrollmentdate}</p>
-                                  <p><strong>Course Period:</strong> ${startdate} - ${enddate}</p>
-                                </ul>
-                                <p>Available Classes</p>
-                                <ul id='${course_id}_classes'></ul>
-                                <a href="#" class="btn btn-primary" id="${courseid}">Enroll</a>
-                              </div>
-                            </div>`;
-
-                      let body = document.getElementById('available_courses');
-                      body.innerHTML = value; 
-
-                      document.getElementById(courseid).addEventListener('click', function(event){
-                        viewClasses(courseid);
-                      })
-                    }
-            }
-          )
-          .catch(error => console.error(error.response.data));
-      }
       
       function viewAssignedCourses(userId) {
         axios
@@ -134,24 +96,133 @@
           .catch(error => console.error(error.response.data));
       }
 
-      function viewClasses(courseid){
+      function viewEligibleCourses(userId) {
+        axios
+          .post('http://127.0.0.1:5002/eligible_courses', {user_id: userId
+          })
+          .then(res => 
+            {
+                records = res.data.data.record;
+                // console.log(res.data)
+                let value = '';
+                    for(course of records) {
+                      let courseid = course.course_id
+                      let coursename = course.course_name
+                      let coursedescription = course.course_description
+                      let startdate = course.startdate
+                      let enddate = course.enddate
+                      let startenrollmentdate = course.startenrollmentdate
+                      let endenrollmentdate = course.endenrollmentdate
+
+                      // this needs to include a check that the end enrollment date is not before today's date
+
+                      value += `<div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                <h5 class="card-title">${coursename}</h5>
+                                <ul class="list-group list-group-flush">
+                                  <p> <strong>${coursedescription}</strong></p>
+                                  <p><strong>Enrollment Period:</strong> ${startenrollmentdate} - ${endenrollmentdate}</p>
+                                  <p><strong>Course Period:</strong> ${startdate} - ${enddate}</p>
+                                </ul>
+                                <p>Available Classes</p>
+                                <ul style='list-style: none; padding-left: 0;' id='${courseid}_classes'></ul>
+                                <a href="#" class="btn btn-primary" id="${courseid}">View classes</a>
+                              </div>
+                            </div>`;
+
+                      let body = document.getElementById('eligible_courses');
+                      body.innerHTML = value; 
+
+                      document.getElementById(courseid).addEventListener('click', function(event){
+                        viewClasses(courseid, userId);
+                      })
+                    }
+            }
+          )
+          .catch(error => console.error(error.response.data));
+      }
+
+      function viewUneligibleCourses(userId) {
+        axios
+          .post('http://127.0.0.1:5002/uneligible_courses', {user_id: userId
+          })
+          .then(res => 
+            {
+                records = res.data.data.record;
+                let value = '';
+                    for(course of records) {
+                      let coursename = course.course_name
+                      let coursedescription = course.course_description
+                      let startdate = course.startdate
+                      let enddate = course.enddate
+                      let startenrollmentdate = course.startenrollmentdate
+                      let endenrollmentdate = course.endenrollmentdate
+                      
+                      value += `<div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                <h5 class="card-title">${coursename}</h5>
+                                <ul class="list-group list-group-flush">
+                                  <p> <strong>${coursedescription}</strong></p>
+                                  <p><strong>Course Period:</strong> ${startdate} - ${enddate}</p>
+                                </ul>
+                              </div>
+                            </div>`;
+                              
+                      let body = document.getElementById('uneligible_courses');
+                      body.innerHTML = value; 
+                    }
+            }
+          )
+          .catch(error => console.error(error.response.data));
+      }
+
+      function viewClasses(courseid, userId){
         axios
           .post(
             'http://127.0.0.1:5011/get_classes/' + courseid
           )
           .then(res =>
             {
-              console.log("Success")
               class_records = res.data.data.record;
-              
+              // console.log(res.data)
+              string = ""
+              for(record of class_records){
+                let class_id = record.class_id;
+                let capacity = record.slots;
+                  string += `<li>Class ${class_id} - Capacity: ${capacity} <button type="submit" id="${courseid}_course">Enroll</button></li>`;
+                
+                document.getElementById(courseid + "_classes").innerHTML = string;
+                document.getElementById(courseid + "_course").addEventListener('click', function(event){
+                  enroll_into_class(courseid, class_id, userId);
+                })
+              }
             }
           )
           .catch(error => console.error(error.response.data));
       }
+
+      function enroll_into_class(courseid, class_id, userId){
+        // console.log(courseid)
+        // console.log(class_id)
+        // console.log(userId)
+        axios
+          .post(
+            'http://127.0.0.1:5010/enroll', {user_id: userId, course_id: courseid, class_id: class_id
+          }
+          )
+          .then(res =>
+            {
+              enroll_status = res;
+              console.log("Success")
+            }
+          )
+          .catch(error => console.error(error.response.data))
+      }
       
-      viewAvailableCourses(2);
-      // viewAssignedCourses(4);
-      // viewEnrolledCourses(6);
+      viewAssignedCourses(4);
+      viewEnrolledCourses(4);
+      viewEligibleCourses(6);
+      viewUneligibleCourses(6);
 
       // function test() {
       //   const request = new XMLHttpRequest();
