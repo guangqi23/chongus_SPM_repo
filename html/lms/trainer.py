@@ -19,13 +19,6 @@ class Trainer(User):
     __tablename__ = 'TRAINERS'
 
     __mapper_args__ = {'polymorphic_identity': 'trainer'}
-
-    # @declared_attr
-    # def user_id(cls):
-    #     return User.__table__.c.get('user_id', Column(Integer))
-
-    def json(self):
-        return {"user_id": self.userid}
     
     def is_trainer(self, userid):
         trnr = Trainer.query.filter_by(userid=userid).first()
@@ -33,6 +26,10 @@ class Trainer(User):
 
     def get_user_id(self):
         return self.userid
+    
+    def get_all_trainers(self):
+        trnr = Trainer()
+        return trnr.query.filter_by(designation='Trainer').all()
 
     def get_assigned_classes(self,userid):
         

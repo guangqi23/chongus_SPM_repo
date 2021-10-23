@@ -43,6 +43,8 @@ class Trainer_Assignment(db.Model):
     def get_user_id(self):
         return self.userid
     
+    def get_all_trainer_assignments(self):
+        return Trainer_Assignment.query.all()
 
     def assign_class(self):
 
