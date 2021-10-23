@@ -31,6 +31,7 @@ class Course(db.Model):
         record = Course.query.filter_by(course_id=course_id).first()
         return record
 
+
     def add_course(self):
         # this should check if there is already an existing course in the database. To be added later
         try: 
