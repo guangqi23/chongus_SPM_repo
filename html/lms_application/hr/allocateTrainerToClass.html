@@ -5,9 +5,12 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Contact - Mentor Bootstrap Template</title>
+  <title>Trainers - Mentor Bootstrap Template</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+  
+  <!-- Axios Functionalities -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
 
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
@@ -27,7 +30,6 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <!-- =======================================================
   * Template Name: Mentor - v4.6.0
@@ -63,78 +65,65 @@
     </div>
   </header><!-- End Header -->
 
-  <main id="main">
+  <main id="main" data-aos="fade-in">
 
     <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs" data-aos="fade-in">
+    <div class="breadcrumbs">
       <div class="container">
-        <h2>Create Course</h2>
-        <p>Please enter the Course Name, Course Description, Start Enrollment Date and End Enrollment Date before submitting the creation request </p>
+        <h2>Trainers</h2>
+        <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
       </div>
     </div><!-- End Breadcrumbs -->
 
-    <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
-      <!-- <div data-aos="fade-up">
-        <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" allowfullscreen></iframe>
-      </div> -->
+    <!-- ======= Trainers Section ======= -->
+    <section id="trainers" class="trainers">
+      <div class="container" data-aos="fade-up" >
 
-      <div class="container" data-aos="fade-up">
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id ='all_trainers' >
+          
 
-        <div class="row mt-5">
-
-          <!-- <div class="col-lg-4">
-            <div class="info">
-              <div class="address">
-                <i class="bi bi-geo-alt"></i>
-                <h4>Location:</h4>
-                <p>A108 Adam Street, New York, NY 535022</p>
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+            <div class="member">
+              <img src="assets/img/trainers/trainer-2.jpg" class="img-fluid" alt="">
+              <div class="member-content">
+                <h4>Sarah Jhinson</h4>
+                <span>Marketing</span>
+                <p>
+                  Repellat fugiat adipisci nemo illum nesciunt voluptas repellendus. In architecto rerum rerum temporibus
+                </p>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
               </div>
-
-              <div class="email">
-                <i class="bi bi-envelope"></i>
-                <h4>Email:</h4>
-                <p>info@example.com</p>
-              </div>
-
-              <div class="phone">
-                <i class="bi bi-phone"></i>
-                <h4>Call:</h4>
-                <p>+1 5589 55488 55s</p>
-              </div>
-
             </div>
+          </div>
 
-          </div> -->
-
-          <div class="col-lg-8 mt-5 mt-lg-0">
-
-            <form action="" method="post" role="form" class="php-email-form" id="create_course_form">
-              <div class="form-group mt-3">
-                <input type="text" class="form-control" name="course_name" id="course_name" placeholder="Course Name" required>
-              </div>
-              <div class="row">
-                <div class="col-md-6 form-group">
-                  <input type="datetime" name="start_enrollment" class="form-control" id="start_enrollment" placeholder="Start Enrollment Date" required>
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+            <div class="member">
+              <img src="assets/img/trainers/trainer-3.jpg" class="img-fluid" alt="">
+              <div class="member-content">
+                <h4>William Anderson</h4>
+                <span>Content</span>
+                <p>
+                  Voluptas necessitatibus occaecati quia. Earum totam consequuntur qui porro et laborum toro des clara
+                </p>
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
                 </div>
-                <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="datetime" class="form-control" name="end_enrollment" id="end_enrollment" placeholder="End Enrollment Date" required>
-                </div>
               </div>
-              <div class="form-group mt-3">
-                <textarea class="form-control" name="course_description" id="course_description" rows="5" placeholder="Course Details" required></textarea>
-              </div>
-              <div class="my-3" id="status_output">
-              </div>
-              <div class="text-center"><button type="submit">Create Course</button></div>
-            </form>
-
+            </div>
           </div>
 
         </div>
 
       </div>
-    </section><!-- End Contact Section -->
+    </section><!-- End Trainers Section -->
 
   </main><!-- End #main -->
 
@@ -220,58 +209,95 @@
   <!-- Vendor JS Files -->
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/purecounter/purecounter.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Main Functionalities -->
   <script>
-    create_course_form = document.getElementById("create_course_form")
-
-    create_course_form.addEventListener('submit', function(event){
-        event.preventDefault();
-        send_application();
-    })
-
-    function send_application(){
-        // add additional test cases later to check for missing values (or just do it in python)
-        var course_name = document.getElementById("course_name").value
-        var course_description = document.getElementById("course_description").value
-        var start_enrollment = document.getElementById("start_enrollment").value
-        var end_enrollment = document.getElementById("end_enrollment").value
-
+    const course_id = new URLSearchParams(window.location.search).get('course_id');
+    console.log(course_id);
+    const class_id = new URLSearchParams(window.location.search).get('class_id');
+    console.log(class_id);
+    function get_all_trainers(){
         axios
-        .post('http://localhost:5000/create_course',
-            {
-                "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
-                "course_name": course_name,
-                "course_description": course_description,
-                "start_enrollment_date": start_enrollment,
-                "end_enrollment_date": end_enrollment
-            }
-        )
-        .then(res =>
-            {
-              data = res.data;
-              console.log(data)
-              if(data["code"] == 200){
-                output = `<div class="alert alert-success" role="alert">
-                  ${data["message"]}
-                </div>`
-              }
-              else{
-                output = `<div class="alert alert-danger" role="alert">
-                  ${data["message"]}
-                </div>`
-              }
-              
-              document.getElementById("status_output").innerHTML = output
+        .get('http://127.0.0.1:5002/get_all_trainers',{})
+        .then(res =>{
+            records = res.data.data.record;
+                console.log(records);
+                trnr_id_arr = [];
+                let value = ``;
+
+                for(trnr of records){
+                    let department = trnr.department;
+                    let designation = trnr.designation;
+                    let email = trnr.email;
+                    let name = trnr.name;
+                    let user_id = trnr.user_id;  
+                    trnr_id_arr.push(user_id);
+
+                    let buttonToAssign = 'buttonToAssignUser_' + user_id;
+
+                    value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                                <div class="member">
+                                  <div class="member-content">
+                                    <h4>${name}</h4>
+                                    <span>${department}</span>
+                                    <span>${designation}</span>
+                                    <p>${email}</p>
+                                    <button value = ${user_id} id = ${buttonToAssign}> Assign</button>
+                                  </div>
+                                </div>
+                              </div>`;
+
+                }
+
                 
-            }
-        )
+                let body = document.getElementById('all_trainers');
+                body.innerHTML = value; 
+
+
+                for(let trnr_id of trnr_id_arr){
+
+                  buttonToAssign = 'buttonToAssignUser_' + trnr_id;
+                  el = document.getElementById(buttonToAssign);
+                  // console.log(el)
+                  el.addEventListener('click',function(event){
+                    assignTrainer(course_id,class_id,trnr_id);
+                  }) 
+                  
+                }
+
+                
+
+        })
+        .catch(error => console.error(error.response.data));
     }
 
-</script>
+    function assignTrainer(course_id,class_id,trnr_id){
+        axios
+        .post('http://localhost:5001/assign_course_trainer',
+                {
+                  "hr_id" : "1",
+                  "course_id" : course_id,
+                  "class_id" : class_id,
+                  "trainer_id" : trnr_id
+                }
+            )
+        .then(res =>{
+                    data = res.data;
+                    console.log(data);
+                    alert("This Trainer has successfully been assigned a Class " + class_id +" of Course " + course_id);
+                    window.location = ('./assignTrainer.html')
+        })
+        .catch(error => console.error(error.response.data))
+    }
+
+    get_all_trainers();
+  </script>
 
 </body>
 

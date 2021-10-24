@@ -29,8 +29,6 @@
                         let course_id = course.course_id
                         let coursename = course.course_name
                         let coursedescription = course.course_description
-                        let startdate = course.startdate
-                        let enddate = course.enddate
                         c_id_arr.push(course_id)
                         let button_id = 'buttonToView_' + course_id;
                         
@@ -39,7 +37,6 @@
                                     <h5 class="card-title">${coursename}</h5>
                                     <ul class="list-group list-group-flush">
                                     <p> <strong>${coursedescription}</strong></p>
-                                    <p><strong>Course Period:</strong> ${startdate} - ${enddate}</p>
                                     <p>Classes with no Trainers</p>
                                     <ul style='list-style: none; padding-left: 0;' id='${course_id}_classes'></ul>
                                     <button id = ${button_id}>View Classes</button>
@@ -55,7 +52,7 @@
 
                 
                     for(let c_id of c_id_arr){
-                        b_id =  'buttonToView_' + c_id;
+                        let b_id =  'buttonToView_' + c_id;
                         el = document.getElementById(b_id);
                         // console.log(el)
                         el.addEventListener('click',function(event){
@@ -84,9 +81,9 @@
                   id_arr.push(class_id);
                 }
 
-                for(cl_id of id_arr){
+                for(let cl_id of id_arr){
 
-                  b_id = course_id + "_class_" + cl_id;
+                  let b_id = course_id + "_class_" + cl_id;
                   el = document.getElementById(b_id);
                   el.addEventListener('click',function(event){
                     send_form(course_id,cl_id);
