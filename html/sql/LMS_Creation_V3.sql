@@ -287,7 +287,7 @@ INSERT INTO `COURSE` (`COURSE_NAME`, `COURSE_DESCRIPTION`,`STARTENROLLMENTDATE`,
 ('P201','Advanced lessons on printing lessons for Printer Model XR10301','2021-10-2','2021-10-9'),
 ('P202','Advanced lessons on printing lessons for Printer Model CL29231','2021-10-2','2021-10-9'),
 ('IL102','Fundamentals of ink replacement lessons for Printer Model CL29231','2021-10-2','2021-10-9'),
-('IL201','Advanced lessons on ink replacement lessons for Printer Model XR10301','2021-10-2','2021-10-9'),
+('IL201','Advanced lessons on ink replacement lessons for Printer Model XR10301','2021-10-2','2021-10-9')
 ;
 
 INSERT INTO `COURSE_PREREQUISITE` (`COURSE_ID`,`PREREQ_COURSE_ID`) VALUES
@@ -314,7 +314,7 @@ INSERT INTO `CLASSES` (`COURSE_ID`,`SLOTS`,`STARTDATE`,`ENDDATE`,`TRAINER_NAME`)
 ('2','6','2021-10-13','2021-12-1','Wei Quan'),
 ('5','5','2021-12-13','2022-1-1',''),
 ('6','2','2021-10-13','2021-12-1','Foxtrot'),
-('6','3','2021-12-13','2022-1-1',''),
+('6','3','2021-12-13','2022-1-1','')
 ;
 
 INSERT INTO `SECTIONS` (`CLASS_ID`, `SECTION_TITLE`) VALUES
