@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
     <title>Delete Course</title>
 </head>
-<body>
+<body onload="retrieve_all_courses()">
     <form action="" id="delete_course_form">
         <label for="course_id">Course ID</label><input type="number" name="course_id" id="course_id" placeholder="Enter course Id to delete"><br>
 
@@ -32,6 +32,17 @@
                     "course_id": course_id // have to be careful of which course to delete. You cannot delete a course that has been assigned as a prerequisite. Remove it as a prerequisite first before the course can be deleted
                 }
             )
+            .then(res =>
+                {
+                    data = res.data
+                    console.log(data)
+                }
+            )
+        }
+
+        function retrieve_all_courses(){
+            axios
+            .get("http://localhost:5000/courses")
             .then(res =>
                 {
                     data = res.data

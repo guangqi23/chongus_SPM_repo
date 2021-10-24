@@ -10,8 +10,8 @@ import requests
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb2'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb2'
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -22,30 +22,32 @@ CORS(app)
 
 class CourseController():
     def create_course(self, user_id, application):
-        employee_da = EmployeeDataAccess()
+        # employee_da = EmployeeDataAccess()
         print("Request to create a course received")
 
         # call validate_hr in employee data access class
-        valid_hr = employee_da.validate_hr(user_id)
+        # valid_hr = employee_da.validate_hr(user_id)
 
-        if valid_hr: # boolean return
-            print("HR is requesting to create a new course")
-            course_name = application["course_name"]
-            course_description = application["course_description"]
-            start_date = application["start_date"]
-            end_date = application["end_date"]
-            start_enrollment_date = application["start_enrollment_date"]
-            end_enrollment_date = application["end_enrollment_date"]
+        # if valid_hr: # boolean return
+        print("HR is requesting to create a new course")
+        course_name = application["course_name"]
+        course_description = application["course_description"]
+        start_enrollment_date = application["start_enrollment_date"]
+        end_enrollment_date = application["end_enrollment_date"]
 
-            # check that all fields are not empty
-            if all(field is not None for field in [course_name, course_description, start_date, end_date, start_enrollment_date, end_enrollment_date]):
-                course_entry = Course(course_name=course_name, course_description=course_description, startdate=start_date, enddate=end_date, startenrollmentdate=start_enrollment_date, endenrollmentdate=end_enrollment_date)
-                
-                return course_entry
-            print("HR is requesting to delete an existing course")
-            course_id = application["course_id"]
-            course_entry = Course()
-            return course_entry.del_course(course_id)
+        # check that all fields are not empty
+        if all(field is not None for field in [course_name, course_description, start_enrollment_date, end_enrollment_date]):
+            course_entry = Course(course_name=course_name, course_description=course_description, startenrollmentdate=start_enrollment_date, endenrollmentdate=end_enrollment_date)
+            
+            status = course_entry.add_course()
+            # print(status["code"])
+            return status
+
+    def delete_course(self, user_id, application):
+        print("HR is requesting to delete an existing course")
+        course_id = application["course_id"]
+        course_entry = Course()
+        return course_entry.del_course(course_id)
 
     def create_prerequisites(self, user_id, course_id, application):
         employee_da = EmployeeDataAccess()
@@ -108,12 +110,27 @@ def delete_course():
     application = request.get_json()
     user_id = application['user_id']
     course_ctrl = CourseController()
-    return course_ctrl.delete_course(user_id)
+    return course_ctrl.delete_course(user_id,application)
 
 @app.route("/courses", methods=['GET'])
 def get_courses():
     courses = Course()
-    return courses.get_all_courses()
+    record = courses.get_all_courses()
+    if len(record):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record.json() for a_record in record]
+                }
+            }
+        )
+    return jsonify(
+            {
+                "code": 404,
+                "message": "There are no prerequisites."
+            }
+        ), 404
 
 @app.route("/add_prerequisites", methods=["POST"])
 def create_prerequisites():

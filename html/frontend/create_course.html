@@ -13,10 +13,6 @@
 
         <label for="course_description">Course Description</label><textarea name="course_description" id="course_description" placeholder="Enter course description"></textarea><br>
 
-        <label for="start_datetime">Start Datetime</label><input type="text" name="start_datetime" id="start_datetime" placeholder="dd-mm-yyyy 00:00:00"><br>
-        
-        <label for="end_datetime">End Datetime</label><input type="text" name="end_datetime" id="end_datetime" placeholder="dd-mm-yyyy 00:00:00"><br>
-
         <label for="start_enrollment">Start Enrollment Datetime</label><input type="text" name="start_enrollment" id="start_enrollment" placeholder="dd-mm-yyyy 00:00:00"><br>
 
         <label for="end_enrollment">End Enrollment Datetime</label><input type="text" name="end_enrollment" id="end_enrollment" placeholder="dd-mm-yyyy 00:00:00"><br>
@@ -36,8 +32,6 @@
             // add additional test cases later to check for missing values (or just do it in python)
             var course_name = document.getElementById("course_name").value
             var course_description = document.getElementById("course_description").value
-            var start_datetime = document.getElementById("start_datetime").value
-            var end_datetime = document.getElementById("end_datetime").value
             var start_enrollment = document.getElementById("start_enrollment").value
             var end_enrollment = document.getElementById("end_enrollment").value
 
@@ -47,8 +41,6 @@
                     "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
                     "course_name": course_name,
                     "course_description": course_description,
-                    "start_date": start_datetime,
-                    "end_date": end_datetime,
                     "start_enrollment_date": start_enrollment,
                     "end_enrollment_date": end_enrollment
                 }

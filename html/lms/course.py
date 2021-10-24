@@ -83,6 +83,5 @@ class Course(db.Model):
         return course_vacancies
    
     def json(self):
-        return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startdate": self.startdate, 
-                "enddate": self.enddate, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
+        return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
 
