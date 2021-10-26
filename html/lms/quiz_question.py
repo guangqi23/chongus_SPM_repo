@@ -3,14 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 CORS(app) 
 
 class QuizQuestions(db.Model):
-    __tablename__ = 'quiz_question'
+    __tablename__ = 'QUIZ_QUESTIONS'
     question_id= db.Column(db.Integer, primary_key=True)
     quiz_id = db.Column(db.Integer)
     qorder = db.Column(db.Integer)
@@ -60,9 +60,9 @@ class QuizQuestions(db.Model):
 
         
 class TrueFalse(QuizQuestions):
-    __tablename__ = 'truefalseq'
+    __tablename__ = 'TRUEFALSEQ'
     
-    question_id = db.Column(db.Integer, db.ForeignKey('quiz_question.question_id'), primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('QUIZ_QUESTIONS.question_id'), primary_key=True)
     answer = db.Column(db.Boolean)
     __mapper_args__ = {'polymorphic_identity': 'TF','inherit_condition': (question_id == QuizQuestions.question_id)}
     
@@ -103,8 +103,8 @@ class TrueFalse(QuizQuestions):
 
 
 class multiplechoice(QuizQuestions):
-    __tablename__ = 'mcq'
-    question_id= db.Column(db.Integer,db.ForeignKey('quiz_question.question_id'), primary_key=True)
+    __tablename__ = 'MCQ'
+    question_id= db.Column(db.Integer,db.ForeignKey('QUIZ_QUESTIONS.question_id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity': 'MCQ','inherit_condition': (question_id == QuizQuestions.question_id)}
 
     def json(self):

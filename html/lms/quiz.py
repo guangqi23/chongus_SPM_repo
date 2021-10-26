@@ -4,14 +4,14 @@ from flask_cors import CORS
 from finalquiz import FinalQuiz
 from quiz_question import QuizQuestions
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 CORS(app) 
 
 class Quiz(db.Model):
-    __tablename__ = 'quizzes'
+    __tablename__ = 'QUIZZES'
     quiz_id = db.Column(db.Integer, primary_key=True)
     section_id = db.Column(db.Integer)
     time_limit = db.Column(db.Integer)

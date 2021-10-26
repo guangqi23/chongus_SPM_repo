@@ -13,7 +13,7 @@ CORS(app)
 
 # flask implementation
 class Course(db.Model):
-    __tablename__ = 'course'
+    __tablename__ = 'COURSE'
 
     # this is equivalent to the __init__ statement for classes but a flask implementation of it
     course_id = db.Column(db.Integer, primary_key=True)
