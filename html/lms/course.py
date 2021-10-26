@@ -32,6 +32,7 @@ class Course(db.Model):
         return record
 
 
+
     def add_course(self):
         # this should check if there is already an existing course in the database. To be added later
         try: 
