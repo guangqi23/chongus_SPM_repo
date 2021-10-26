@@ -46,3 +46,4 @@ class Course(db.Model):
                 "message": "The course has been successfully created"
             }
         ), 200
+        

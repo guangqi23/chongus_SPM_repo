@@ -1,0 +1,399 @@
+<html>
+     
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+     
+        <title>Create quiz</title>
+
+        <!-- Bootstrap libraries -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" 
+        crossorigin="anonymous">
+     
+        <!-- Latest compiled and minified JavaScript -->
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+        
+        <script 
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        
+        <h2 style='text-align:center; margin-top:50px;margin-bottom:30px;'>Add a question</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                </div>
+                <div class="col-10">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary"data-toggle="modal" data-target="#MCQ" >Add Multiple Choice Question</button>
+                        <div style = 'margin:20px;'> </div>
+                        <button type="button" class="btn btn-primary" onclick = ''id = 'create_TrueFalse'data-toggle="modal" data-target="#TrueFalse" >Add True False Question</button>
+                    </div>
+                </div>
+                <div class="col">
+                </div>
+            <table class="table table-borderless" id = 'question_table'>
+             <thead>
+                <th scope="col" style ='text-align:center'>Questions</th>
+             </thead>
+
+            </table>
+            <div style = "width: 100%;display: inline;overflow: auto;white-space: nowrap; -right: 50px;">
+                <div style = "float:right">
+                    <button type="button" class="btn btn-danger" onclick = 'create_qns()'>Create Questions</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="modal fade" id="TrueFalse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id ='tf_form'>
+                <div class="form-group" >
+                    
+                    <label for="tf_question1" class="col-form-label">Question:</label>
+                    <textarea class="form-control" id="tf_question1" ></textarea>
+                    <label class="radio-inline" for='tf_options1'>
+                    <br>Select answer: True / False</br>
+                    <input type="radio" name="inlineRadioOptions" id="tf_options1" value="True"> True
+                    </label>
+                    <label class="radio-inline" for='tf_options2'>
+                    <input type="radio" name="inlineRadioOptions" id="tf_options2" value="False"> False
+                    </label>
+                    <br>                    
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id ='tf_button' onclick="create_truefalse()"  data-dismiss="modal">Create True False Question</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+
+        <div class="modal fade" id="MCQ" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id ='tf_form'>
+                <div class="form-group" >
+                    
+                    <label for="mcq_question1" class="col-form-label">Question:</label>
+                    <textarea class="form-control" id="mcq_question1" ></textarea>
+                    <br>Check right answer:</br>
+                    <label class="radio-inline" for='mcq_options1'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options1" value="mcq_options1"> Option 1</label>
+                    <input type = 'text' class="form-control"  id = "mcq_text1" placeholder = 'Enter Answer'>
+                    
+                    <br>
+                    <label class="radio-inline" for='mcq_options2'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options2" value="mcq_options2"> Option 2</label>
+                    <input type = 'text'class="form-control" id = "mcq_text2" placeholder = 'Enter Answer'>
+                   
+                    <br> 
+                    <label class="radio-inline" for='mcq_options3'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options3" value="mcq_options3"> Option 3</label>
+                    <input type = 'text' class="form-control"  id = "mcq_text3" placeholder = 'Enter Answer'>
+                  
+                    <br>    
+                    <label class="radio-inline" for='mcq_options4'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options4" value="mcq_options4"> Option 4</label>
+                    <input type = 'text' class="form-control"  id = "mcq_text4" placeholder = 'Enter Answer'>
+               
+                                        
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id ='tf_button' onclick="create_mcq()"  data-dismiss="modal">Create True False Question</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+
+        
+
+
+        <div class="modal fade" id="CreateQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                    <div class="form-group">
+                        <label for="time_limit" class="col-form-label">Time Limit (Seconds):</label>
+                        <input type="text" class="form-control" id="time_limit">
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button!-->
+                    <button type="button" class="btn btn-primary" id = 'create_quiz' onclick = 'create_quiz()'>Create quiz</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </body>
+
+    <script>
+        
+        //get values from previous params.get
+        let params = new URLSearchParams(location.search);
+        console.log('getting section_id...')
+        section_id = params.get('response');
+        console.log(section_id);
+        var counter = 0;
+        //$('#TrueFalse').on('hidden.bs.modal', '.modal', function () {
+            //console.log("modal closed");
+            //$(this).remove();
+        //});
+                //make modal appear onload
+
+        $(window).on('load', function() {
+        $('#CreateQuiz').modal('show');
+        });
+        
+        
+        //modal onload settings
+        $('#CreateQuiz').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) 
+        var modal = $(this)
+        var recipient = button.data('whatever')
+        modal.find('.modal-title').text('Create a quiz for section_id '+section_id )
+        modal.find('.modal-body input').val(recipient)
+        })
+
+        $('#TrueFalse').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
+
+        $('#MCQ').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
+        /*
+        $('#TrueFalse').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('.modal-body input').val(recipient)
+        })*/
+        
+        //ccreate question true False
+        function create_truefalse()
+        {
+            counter +=1;
+            var question =$('#tf_question1').val();
+            console.log(question);
+            //alert($('input[name=tf-options]:checked').val());
+            //var selected =document.querySelector('input[name="tf-options"]:checked').value
+            //console.log(selected);
+            var answer ;
+            var choice;
+            var  selected = $("#tf_options1");
+
+            if (selected[0].checked == 0){
+                console.log('answer is: False')
+                choice = 0;
+                answer = 'False'
+            }
+            else
+            {
+                console.log('answer is: True')
+                choice = 1;
+                answer = 'True'
+            }
+            card_type = 'TF';
+            card = `<tr><td><div class="card"> <h5 class="card-header">Question (True/False) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`+question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
+            $("#question_table").append(card);
+            console.log('appended');
+        }
+
+      
+
+        function create_qns(){
+            //get first table (only)
+            var table = document.getElementById('question_table')[0];
+            console.log(table);
+            var row = document.getElementsByTagName('tr');
+                var serviceURL="http://localhost:5002/create_TrueFalse?answer=False&quiz_id=12&question=faketest&question_type=TF&qorder=69";
+                //console.log(serviceURL);
+                /*var newHTTP = new XMLHttpRequest();
+                newHTTP.open("GET",serviceURL,true);
+                newHTTP.send(null);
+                console.log(newHTTP.responseText);
+                response=JSON.parse(newHTTP.responseText);
+                document.getElementById("response").textContent=response["message"];
+                responseMsg=response["message"];
+                */
+                var theRequest = $.ajax({
+                    url: serviceURL,
+                    method: 'GET',
+                }).done(function(data){
+                        console.log(data);
+                        console.log(theRequest.responseText);
+                });
+            }
+        
+        function create_mcq(){
+            counter +=1;
+            var question =$('#mcq_question1').val();
+            console.log(question);
+            //alert($('input[name=tf-options]:checked').val());
+            //var selected =document.querySelector('input[name="tf-options"]:checked').value
+            //console.log(selected);
+            var opt_text1 =$('#mcq_text1').val();
+            var opt_text2 =$('#mcq_text2').val();
+            var opt_text3 =$('#mcq_text3').val();
+            var opt_text4 =$('#mcq_text4').val();
+            console.log(opt_text4);
+            var answer ;
+            var choice;
+            var  opt1 = $("#mcq_options1");
+            var  opt2 = $("#mcq_options2");
+            var  opt3 = $("#mcq_options3");
+            var  opt4 = $("#mcq_options4");
+
+            if (opt1[0].checked == 1){
+                
+                choice = 0;
+                answer = '1';
+            }
+            else if (opt2[0].checked == 1)
+            {
+                
+                choice = 1;
+                answer = '2';
+            }
+            else if (opt3[0].checked == 1)
+            {
+                choice = 1;
+                answer = '3';
+            }
+            else if (opt4[0].checked == 1){
+                choice = 1;
+                answer = '4';
+            }
+            card_type = 'MCQ';
+            card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
+            card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
+            $("#question_table").append(card);
+            console.log('appended');
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //when click create quiz
+        function create_quiz()
+        {
+            var time_limit = $('#time_limit').val()
+            console.log(time_limit);
+            ///create_quiz 
+            $(async() => {          
+            // Change serviceURL to your own
+            var serviceURL = "http://127.0.0.1:5001/create_quiz?section_id="+section_id+"&time_limit="+time_limit;
+            try {
+                const response =
+                await fetch(
+                serviceURL, { method: 'GET' }
+                );
+                const result = await response.json();
+                // Data is present,see it on console
+                // console.log(result);
+               
+             if (response.status === 200) {
+                console.log("quiz module created");
+                $('#CreateQuiz').modal('hide');
+                    throw response.status;
+                } else if (response.status == 404) {
+                    // No reservation
+                    showError(result.message);
+                } else {
+                    // unexpected outcome, throw the error
+                    throw response.status;
+                };
+                
+            } catch (error) {
+                // Errors when calling the service; such as network error, 
+                // service offline, etc
+                showError
+                ('There is an error creating the quiz, please try again later.<br />' + error);
+                    } // error
+            });
+        }
+
+    </script>
+
+    
+</html>

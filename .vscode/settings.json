@@ -3,6 +3,7 @@
         "-v",
         "-s",
         "./html",
+        "./code_example",
         "-p",
         "*_test.py"
     ],
