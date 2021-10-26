@@ -148,7 +148,8 @@ class SectionMaterialQuizDataAccess():
         return jsonify(
             {
                 "code": 200,
-                "message": "The question has been successfully created"
+                "message": "The question has been successfully created",
+                "id": question_entry.get_question_id()
             }
         ), 200
 
