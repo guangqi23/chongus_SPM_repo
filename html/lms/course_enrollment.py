@@ -72,6 +72,11 @@ class Course_Enrollment(db.Model):
     def get_all_enrollments(self):
         all_enrollments = Course_Enrollment.query.all()
         if len(all_enrollments):
+
+            for records in all_enrollments:
+                if records.is_enrolled == False:
+                    records.is_enrolled = "Pending"
+
             return jsonify(
                 {
                     "code":200,
@@ -98,3 +103,8 @@ class Course_Enrollment(db.Model):
             courseEnrollRecord.is_enrolled = False
             db.session.commit()
             return "Changed enrollment status to False!"
+    
+    def rejectEnrollment(self, rejectedEnrollId):
+        Course_Enrollment.query.filter_by(enrollment_id = rejectedEnrollId).delete()
+        db.session.commit()
+        return "200"

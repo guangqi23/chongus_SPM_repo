@@ -1,6 +1,7 @@
 from flask import Flask, json, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from sqlalchemy.sql.elements import Null
 from employee_data_access import EmployeeDataAccess
 from course import Course
 from course_prerequisites import Course_Prerequisites
@@ -10,8 +11,8 @@ import requests
 from datetime import datetime
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb2'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb2'
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -92,6 +93,10 @@ class CourseController():
         output = enrollmentDA.retrieveEnrollmentsBeforeStart()
         return output
      
+    def rejectEnrollment(self, enrollment_id):
+        enrollmentDA = Course_Enrollment()
+        output = enrollmentDA.rejectEnrollment(enrollment_id)
+        return output
 
 # front end request
 @app.route("/create_course", methods=['POST'])
@@ -174,48 +179,57 @@ def changeEnrollStatus():
 def getAllPendingEnrollment():
     da = Course_Enrollment()
     enrollments = da.get_all_enrollments()
-    astuff = json.loads(enrollments.data.decode('utf-8'))
-    enrollment_list = astuff["data"]["enrollment_records"]
+    if enrollments == Null:
+        return enrollments
+    else:
+        astuff = json.loads(enrollments.data.decode('utf-8'))
+        enrollment_list = astuff["data"]["enrollment_records"]
+        print(enrollment_list, file=sys.stderr)
+        #For logging purposes
+        class_ids = []
+        final_enrollmentList = []
+        # for x in enrollment_list: #Replace with sending a list of class_id instead
+        #     print(x["class_id"], file=sys.stderr)
+        #     class_id = x["class_id"]
+        #     r = requests.get('http://localhost:5011/get_startDate/'+ str(class_id))
+        #     print(r.text, file=sys.stderr)
+        #     dateToCompare =datetime.strptime(r.text, '%Y-%m-%d %H:%M:%S')
+        #     if datetime.now() < dateToCompare:
+        #         print("Ok", file=sys.stderr)
+        #         final_enrollmentList.append(x)
+        #     else:
+        #         print("No", file=sys.stderr)
+        # return final_enrollmentList
 
-     #For logging purposes
-    class_ids = []
-    final_enrollmentList = []
-    # for x in enrollment_list: #Replace with sending a list of class_id instead
-    #     print(x["class_id"], file=sys.stderr)
-    #     class_id = x["class_id"]
-    #     r = requests.get('http://localhost:5011/get_startDate/'+ str(class_id))
-    #     print(r.text, file=sys.stderr)
-    #     dateToCompare =datetime.strptime(r.text, '%Y-%m-%d %H:%M:%S')
-    #     if datetime.now() < dateToCompare:
-    #         print("Ok", file=sys.stderr)
-    #         final_enrollmentList.append(x)
-    #     else:
-    #         print("No", file=sys.stderr)
-    # return final_enrollmentList
+        for x in enrollment_list: #Replace with sending a list of class_id instead
+            class_ids.append(x["class_id"])
+        dataObj = {'ids': class_ids}
+        r = requests.post('http://localhost:5011/get_startDate/', data = json.dumps(dataObj))
+        dataReceived = r.text
+        dataReceived = dataReceived[1:]
+        dataReceived = dataReceived[:-1]
+        enrolled_list = dataReceived.split(", ")
 
-    for x in enrollment_list: #Replace with sending a list of class_id instead
-        class_ids.append(x["class_id"])
-    dataObj = {'ids': class_ids}
-    #r = requests.post('http://localhost:5011/get_startDate/', data = json.dumps(dataObj))
-    r = requests.post('http://localhost:5011/get_startDate/', data = json.dumps(dataObj))
-    dataReceived = r.text
-    dataReceived = dataReceived[1:]
-    dataReceived = dataReceived[:-1]
-    #print(type(dataReceived), file=sys.stderr)
-    enrolled_list = dataReceived.split(",")
-    #print(type(enrolled_list), file=sys.stderr)
-    #print(enrolled_list, file=sys.stderr)
+        
+        counter = 0
+        for x in enrollment_list:
+            #print("Current item: " + str(x), file=sys.stderr)
+            if str(counter) in enrolled_list:
+
+                final_enrollmentList.append(x)
+            counter += 1
+        
+        return jsonify(final_enrollmentList)
 
     
-    counter = 0
-    for x in enrollment_list:
-        if str(counter) in enrolled_list:
-            final_enrollmentList.append(x)
-        counter += 1
-    return jsonify(final_enrollmentList)
 
 
-
+@app.route("/rejectEnrollment/input", methods=['GET'])
+def rejectEnrollment():
+    da = Course_Enrollment()
+    enrollId = int(request.args.get('enrol_id', None))
+    result = da.rejectEnrollment(enrollId)
+    return result
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
