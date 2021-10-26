@@ -442,16 +442,16 @@
             });
             
         function upload_materials() {
-            section_id = params.get('response');
+            section_id = params.get('section_id');
             console.log(section_id);
             console.log('initializing sections')    
             window.location.href = "./upload_materials2?response=" + section_id;  
         }
         function create_quiz() {
-            section_id = params.get('response');
+            section_id = params.get('section_id');
             console.log(section_id);
             console.log('initializing sections')    
-            window.location.href = "./create_quiz?response=" + section_id;  
+            window.location.href = "./create_quiz2?class_id="+class_id+"&section_id=" + section_id;  
         }
         
     

@@ -10,13 +10,13 @@ db = SQLAlchemy(app)
 CORS(app) 
 class multiplechoiceoptions(db.Model):
     __tablename__ = 'MCQ_OPTIONS'
-    answer = db.Column(db.Boolean)
+    correct_option = db.Column(db.Boolean)
     question_id= db.Column(db.Integer, primary_key=True)
     option_order = db.Column(db.Integer,primary_key=True)
     option_content = db.Column(db.String(100))
     
     def json(self):
-        return {"question_id": self.question_id,"option_order": self.option_order,"option_content": self.option_content,"answer": self.answer,"question_id":self.question_id}
+        return {"question_id": self.question_id,"option_order": self.option_order,"option_content": self.option_content,"correct_option": self.correct_option,"question_id":self.question_id}
         
     def get_question_id(self):
         return self.question_id

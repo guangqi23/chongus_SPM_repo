@@ -10,7 +10,7 @@ db = SQLAlchemy(app)
 CORS(app) 
 
 class QuizQuestions(db.Model):
-    __tablename__ = 'QUIZ_QUESTIONS'
+    __tablename__ = 'QUIZ_QUESTION'
     question_id= db.Column(db.Integer, primary_key=True)
     quiz_id = db.Column(db.Integer)
     qorder = db.Column(db.Integer)
@@ -62,7 +62,7 @@ class QuizQuestions(db.Model):
 class TrueFalse(QuizQuestions):
     __tablename__ = 'TRUEFALSEQ'
     
-    question_id = db.Column(db.Integer, db.ForeignKey('QUIZ_QUESTIONS.question_id'), primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('QUIZ_QUESTION.question_id'), primary_key=True)
     answer = db.Column(db.Boolean)
     __mapper_args__ = {'polymorphic_identity': 'TF','inherit_condition': (question_id == QuizQuestions.question_id)}
     
@@ -104,7 +104,7 @@ class TrueFalse(QuizQuestions):
 
 class multiplechoice(QuizQuestions):
     __tablename__ = 'MCQ'
-    question_id= db.Column(db.Integer,db.ForeignKey('QUIZ_QUESTIONS.question_id'), primary_key=True)
+    question_id= db.Column(db.Integer,db.ForeignKey('QUIZ_QUESTION.question_id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity': 'MCQ','inherit_condition': (question_id == QuizQuestions.question_id)}
 
     def json(self):

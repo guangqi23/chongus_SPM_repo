@@ -85,7 +85,8 @@ class SectionMaterialQuizDataAccess():
         return jsonify(
             {
                 "code": 200,
-                "message": "The section has been successfully created"
+                "message": "The section has been successfully created",
+                "quiz_id": quiz_entry.get_quiz_id()
             }
         ), 200
 
@@ -132,7 +133,7 @@ class SectionMaterialQuizDataAccess():
         ), 200
 
     def create_MCQ(self,quiz_id,qorder,question_type,question):
-        question_entry = multiplechoice(quiz_id=quiz_id,qorder=qorder,question_type=question_type,question=question)
+        question_entry = QuizQuestions(quiz_id=quiz_id,question_type=question_type,qorder=qorder,question=question)
         try: 
             db.session.add(question_entry)
             db.session.commit()
@@ -153,7 +154,7 @@ class SectionMaterialQuizDataAccess():
 
     def create_MCQ_options(self,question_id,option_order,option_content,correct_option):
         print(correct_option,'correct option')
-        option_entry = multiplechoiceoptions(question_id = question_id, answer = correct_option, option_order = option_order, option_content = option_content)
+        option_entry = multiplechoiceoptions(question_id = question_id, correct_option = correct_option, option_order = option_order, option_content = option_content)
         try: 
             db.session.add(option_entry)
             db.session.commit()
