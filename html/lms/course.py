@@ -31,6 +31,7 @@ class Course(db.Model):
         record = Course.query.filter_by(course_id=course_id).first()
         return record
 
+
     def add_course(self):
         # this should check if there is already an existing course in the database. To be added later
         try: 
@@ -82,9 +83,5 @@ class Course(db.Model):
         return course_vacancies
    
     def json(self):
-        return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startdate": self.startdate, 
-                "enddate": self.enddate, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
+        return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
 
-        
-if __name__ == '__main__':
-    app.run(port=5003, debug=True)

@@ -11,6 +11,7 @@ db = SQLAlchemy(app)
 
 CORS(app) 
 
+# shouldnt be used anymore
 class EmployeeDataAccess():
     def validate_hr(self, user_id):
         user = User()

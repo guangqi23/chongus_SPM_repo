@@ -7,6 +7,7 @@ from user import User
 from course import Course
 from course_enrollment import Course_Enrollment
 from course_prerequisites import Course_Prerequisites
+from learner_assignment import Learner_Assignment
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
@@ -15,41 +16,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 CORS(app) 
-
-class Learner_Assignment(db.Model):
-    __tablename__ = 'LEARNERASSIGNMENT'
-
-    course_id = db.Column(db.Integer, primary_key=True)
-    class_id = db.Column(db.Integer, primary_key=True, index=True)
-    userid = db.Column(db.Integer, primary_key=True, index=True)
-
-    def get_user_assigned_courses(self, userid): 
-        record = Learner_Assignment.query.filter_by(userid=userid).all()
-        return record
-    
-    def json(self):
-        return {"course_id":self.course_id,"class_id":self.class_id, "userid":self.userid}
-
-    def assign_class(self):
-
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while assigning the class " + str(error)
-                }
-            ), 500
-
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The class has been successfully assigned to the Learner"
-            }
-        ), 200
-    
 
 class Learner(User):
     __tablename__ = 'learners'
@@ -162,143 +128,4 @@ class Learner(User):
             output.append(courseinfo)
         return output
 
-@app.route("/eligible_courses", methods=['POST'])
-def get_eligible_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_eligible_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no eligible courses."
-            }
-        ), 404
 
-@app.route("/uneligible_courses", methods=['POST'])
-def get_uneligible_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_uneligible_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no uneligible courses."
-            }
-        ), 404
-    
-@app.route("/enrolled_courses", methods=['POST'])
-def get_enrolled_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_enrolled_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no enrolled courses."
-            }
-        ), 404
-
-@app.route("/enrolled_classes", methods=["POST"])
-def get_enrolled_classes():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_enrolled_classes(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no enrolled classes."
-            }
-        ), 404
-
-
-@app.route("/assigned_courses", methods=['POST'])
-def get_assigned_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_assigned_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no assigned courses."
-            }
-        ), 404
-
-@app.route("/get_all_learner_id",methods = ['GET'])
-def get_all_learner_ids():
-    lrnr = Learner()
-    records = lrnr.get_all_learners_id()
-    return records
-
-@app.route("/get_all_learners",methods = ['GET'])
-def get_all_learner():
-    lrnr = Learner()
-    record = lrnr.get_all_learners()
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no assigned courses."
-            }
-        ), 404
-    
-
-if __name__ == '__main__':
-    app.run(port=5002, debug=True)
