@@ -72,10 +72,12 @@
             // let params = new URLSearchParams(location.search);
             //var restaurantID = params.get('query');
             // console.log("restaurantID", restaurantID);
-        console.log('initializing sections')
+        let params = new URLSearchParams(location.search);
+        class_id = params.get('response');
+        console.log(class_id);
         $(async() => {           
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_class_sections?class_id=1";
+            var serviceURL = "http://127.0.0.1:5001/view_class_sections?class_id="+class_id;
     
             try {
                 const response =
@@ -125,7 +127,73 @@
                 ('There is a problem retrieving menu data, please try again later.<br />' + error);
                     } // error
             });
-                function view_materials(row_id) {
+
+            
+        $(async() => {     
+            console.log(section_id)      
+            // Change serviceURL to your own
+            var serviceURL = "http://127.0.0.1:5001/view_section_materials?section_id="+section_id;
+            console.log('hehe');
+            try {
+                const response =
+                await fetch(
+                serviceURL, { method: 'GET' }
+                );
+                const result = await response.json();
+                // Data is present,see it on console
+                // console.log(result);
+               
+             if (response.status === 200) {
+                // Data is present,see it on console
+                sectionList = result.data;
+                console.log(sectionList)
+                // console.log(menuList);
+                var rows = "";
+                var count =0;
+                index =1;
+                for (var section of sectionList) {
+                    eachRow ="<td>"+section.material_id.toString()+ "</td>" +"<td class = 'section_id'>"+ section.material_title.toString()+ "</td>" +"<td>" +"<a href ="+section.material_content.toString()+ ">download materials</a>"+"</td>"+"<td>" +section.material_type.toString()+ "</td>";
+
+                    //eachRow ="<td>" + index.toString() + "</td>" +"<td>" + section.section_id.toString() + "</td>" +"<td>" + section.section_title.toString() + "</td>" 
+                    //Adding on more rows
+                    rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
+                   index = index+1;
+                }
+                
+                //Set counter back to 0 
+                
+                // add all the rows to the table
+                $('#menuTable').append(rows);
+
+                } else if (response.status == 404) {
+                    // No reservation
+                    showError(result.message);
+                } else {
+                    // unexpected outcome, throw the error
+                    throw response.status;
+                };
+                
+            } catch (error) {
+                // Errors when calling the service; such as network error, 
+                // service offline, etc
+                showError
+                ('There is a problem retrieving menu data, please try again later.<br />' + error);
+                    } // error
+            });
+            
+            function upload_materials() {
+            section_id = params.get('response');
+            console.log(section_id);
+            console.log('initializing sections')    
+            window.location.href = "./upload_materials?response=" + section_id;  
+        }
+        function create_quiz() {
+            section_id = params.get('response');
+            console.log(section_id);
+            console.log('initializing sections')    
+            window.location.href = "./create_quiz?response=" + section_id;  
+        }
+        function view_materials(row_id) {
                     var $row = $(row_id).closest("tr");
                     console.log('before')    // Find the row
                     var section_id = $row.find(".section_id").text();
@@ -135,6 +203,7 @@
           
     
         </script>
+        
 
 </body>
 </html>
