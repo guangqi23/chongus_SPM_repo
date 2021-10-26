@@ -60,7 +60,7 @@ def getClassStartDate():
         if datetime.now() < dateToCompare:
             approvedEnrollments.append(counter)
         counter += 1
-    #print(approvedEnrollments, file=sys.stderr)
+    print(approvedEnrollments, file=sys.stderr)
     return json.dumps(approvedEnrollments)
 
 

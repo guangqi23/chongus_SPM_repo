@@ -18,17 +18,17 @@ class Classes(db.Model):
     class_id = db.Column(db.Integer, primary_key=True)
     course_id= db.Column(db.Integer)
     slots = db.Column(db.Integer)
-    # startdate = db.Column(db.DateTime)
-    # enddate = db.Column(db.DateTime)
-    # trainer_name = db.Column(db.String(64))
+    startdate = db.Column(db.DateTime)
+    enddate = db.Column(db.DateTime)
+    trainer_name = db.Column(db.String(64))
 
     def init(self, course_id, class_id, slots, start_date, end_date, trainer_name):
         self.course_id = course_id
         self.class_id = class_id
         self.slots = slots
-        # self.startdate = start_date
-        # self.enddate = end_date
-        # self.trainer_name = trainer_name
+        self.startdate = start_date
+        self.enddate = end_date
+        self.trainer_name = trainer_name
     
 
     def getSlots(self, cid):

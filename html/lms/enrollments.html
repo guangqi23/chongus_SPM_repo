@@ -52,7 +52,7 @@
 
 
             $(async() => {
-                microServiceURL = "http://127.0.0.1:5005/allEnrollments";
+                microServiceURL = "http://127.0.0.1:5000/allEnrollmentsPending";
 
                 try{
                     const response = 
@@ -63,16 +63,17 @@
                     if (response.status === 200)
                     {
                         console.log(result)
-                        var enrollmentRecords = result.data.enrollment_records;
+                        var enrollmentRecords = result;
                         var rows = "";
                         for (const record of enrollmentRecords)
                         {
+                            console.log("Adding to table")
                             eachRow = "<td class='enrol_id'>" + record.enrollment_id + "</td>" +
                                       "<td>" + record.course_id + "</td>" + 
                                       "<td>" + record.userid + "</td>" +
                                       "<td>" + record.class_id + "</td>" + 
                                       "<td>" + record.is_enrolled + "</td>" +
-                                      "<td>" + "<button type='button' class='btn btn-secondary' onclick='statusChange(this)'>Change</button>" + "</td>"
+                                      "<td>" + "<button type='button' class='btn btn-secondary' onclick='statusChange(this)'>Accept</button>" + "</td>"
                             rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                         }
                         $('#enrollmentTable').append(rows);
@@ -90,13 +91,13 @@
             console.log("Enrollment ID: " + enrollment_id)
 
             const Http = new XMLHttpRequest();
-            const url = 'http://localhost:5005/changeEnrollmentStatus/input?enrol_id=' + enrollment_id;
+            const url = 'http://localhost:5000/changeEnrollmentStatus/input?enrol_id=' + enrollment_id;
             $(async() => {
-                fetch(url)
+                fetch(url, {method: 'GET'})
                 .then(data=>{return data.Json()})
                 .catch(error=>console.log(error))
             });
-            
+            setTimeout(location.reload.bind(location), 5000);
 
         }
 
