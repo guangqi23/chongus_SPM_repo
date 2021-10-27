@@ -154,8 +154,9 @@ class SectionMaterialQuizDataAccess():
         ), 200
 
     def create_MCQ_options(self,question_id,option_order,option_content,correct_option):
-        print(correct_option,'correct option')
-        option_entry = multiplechoiceoptions(question_id = question_id, correct_option = correct_option, option_order = option_order, option_content = option_content)
+        
+        option_entry = multiplechoiceoptions(question_id = question_id,option_order =option_order,option_content = option_content,correct_option = correct_option)
+        print('entry c-option is ',option_entry.get_correct_option())
         try: 
             db.session.add(option_entry)
             db.session.commit()
@@ -170,7 +171,8 @@ class SectionMaterialQuizDataAccess():
         return jsonify(
             {
                 "code": 200,
-                "message": "The option has been successfully created"
+                "message": "The option has been successfully created",
+                "data":option_entry.json()
             }
         ), 200
 

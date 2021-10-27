@@ -166,9 +166,11 @@ def add_MCQ_options():
     question_id = int(request.args.get('question_id', None))
     option_order = int(request.args.get('option_order', None))
     option_content = str(request.args.get('option_content', None))
-    correct_option = bool(request.args.get('correct_option',None))
+    correct_option = int(request.args.get('correct_option',None))
+    print('controller option',correct_option)
     da = SectionQuizController()
     status = da.create_MCQ_options(question_id,option_order,option_content,correct_option)
+    
     return status 
 
 

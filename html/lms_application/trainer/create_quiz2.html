@@ -536,8 +536,9 @@
                                 }
                                 
                                 opt_order = y+1;
-                                console.log('qn-id',qn_id);
+                                console.log('co',correct_option);
                                 var serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
+                                console.log(serviceURL);
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',

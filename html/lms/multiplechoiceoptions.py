@@ -3,20 +3,21 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 CORS(app) 
 class multiplechoiceoptions(db.Model):
     __tablename__ = 'MCQ_OPTIONS'
-    correct_option = db.Column(db.Boolean)
     question_id= db.Column(db.Integer, primary_key=True)
-    option_order = db.Column(db.Integer,primary_key=True)
-    option_content = db.Column(db.String(100))
+    option_order = db.Column(db.Integer, primary_key=True)
+    option_content = db.Column(db.String(500))
+    correct_option = db.Column(db.Boolean)
+    
     
     def json(self):
-        return {"question_id": self.question_id,"option_order": self.option_order,"option_content": self.option_content,"correct_option": self.correct_option,"question_id":self.question_id}
+       return {"question_id": self.question_id,"option_order": self.option_order,"option_content": self.option_content,"correct_option": self.correct_option}
         
     def get_question_id(self):
         return self.question_id
@@ -27,7 +28,7 @@ class multiplechoiceoptions(db.Model):
     def get_option_content(self):
         return self.option_content
 
-    def correct_option(self):
+    def get_correct_option(self):
         return self.correct_option
         
     def get_quiz(self,question_id):
