@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from trainer import Trainer
 from learner import Learner
 from trainer_assignment import Trainer_Assignment
+from learner_badges import learnerbadges
 from course import Course
 from classes import Classes
 
@@ -175,6 +176,28 @@ def get_assigned_courses():
         {
             "code": 404,
             "message": "There are no assigned courses."
+            }
+        ), 404
+
+@app.route("/learnerbadges", methods=['POST'])
+def get_completed_courses():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner_badges = learnerbadges()
+    record = learner_badges.get_completed_courses(user_id)
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no completed courses."
             }
         ), 404
 

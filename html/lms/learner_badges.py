@@ -11,7 +11,7 @@ db = SQLAlchemy(app)
 CORS(app) 
 
 class learnerbadges(db.Model):
-    __tablename__ = 'learner_badges'
+    __tablename__ = 'LEARNER_BADGES'
 
     userid = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, primary_key=True)
@@ -22,27 +22,4 @@ class learnerbadges(db.Model):
     def get_completed_courses(self, userid):
         record = learnerbadges.query.filter_by(userid=userid).all()
         return record
-
-@app.route("/learnerbadges", methods=['POST'])
-def get_completed_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner_badges = learnerbadges()
-    record = learner_badges.get_completed_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no completed courses."
-            }
-        ), 404
-
 
