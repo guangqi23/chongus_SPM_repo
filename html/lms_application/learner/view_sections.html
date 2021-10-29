@@ -179,8 +179,7 @@
   </main><!-- End #main -->
     <body>
         <div id="c1" class="container" style = 'margin-top: 50px;margin-bottom:50px;'>
-          <a onclick = 'upload_materials()' class="get-started-btn" style = 'color:white;'>Upload_materials</a>
-          <a onclick = 'create_quiz()' class="get-started-btn" style = 'color:white;'>Create Quiz</a>
+          
           <h3 style = 'margin-top:20px; align:right'>Section Materials</h3>
             <!--table id="menuTable" class='table table-striped' border='1'>
             </table-->
@@ -496,19 +495,7 @@
                     } // error
             });
             
-        function upload_materials() {
-            section_id = params.get('section_id');
-            console.log(section_id);
-            console.log('initializing sections')    
-            window.location.href = "./upload_materials2?response=" + section_id;  
-        }
-        function create_quiz() {
-            section_id = params.get('section_id');
-            console.log(section_id);
-            console.log('initializing sections')    
-            window.location.href = "./create_quiz2?class_id="+class_id+"&section_id=" + section_id;  
-        }
-        
+    
     
         </script>
         <script src="drpdown/js/jquery-3.3.1.min.js"></script>
