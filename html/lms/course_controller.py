@@ -50,32 +50,32 @@ class CourseController():
         course_entry = Course()
         return course_entry.del_course(course_id)
 
-    def create_prerequisites(self, user_id, course_id, application):
-        employee_da = EmployeeDataAccess()
-        course = Course()
-        print("Request to create a course received")
+    # def create_prerequisites(self, user_id, course_id, application):
+    #     employee_da = EmployeeDataAccess()
+    #     course = Course()
+    #     print("Request to create a course received")
 
-        # call validate_hr in employee data access class
-        valid_hr = employee_da.validate_hr(user_id)
-        # check if the course exists on the database
-        valid_course = course.get_course_by_id(course_id)
+    #     # call validate_hr in employee data access class
+    #     valid_hr = employee_da.validate_hr(user_id)
+    #     # check if the course exists on the database
+    #     valid_course = course.get_course_by_id(course_id)
 
-        if valid_hr and valid_course: # boolean return
-            print("HR is requesting to add prerequisites to a course")
-            prerequisites = application["prerequisites"]
-            for prerequisite in prerequisites:
-                # need to check if the prerequisite course exists in the database
-                prereq = Course_Prerequisites(course_id=course_id, prereq_course_id=prerequisite)
-                status = prereq.add_prerequisites()
-                print(status)
-                if status == 500:
-                    return status
+    #     if valid_hr and valid_course: # boolean return
+    #         print("HR is requesting to add prerequisites to a course")
+    #         prerequisites = application["prerequisites"]
+    #         for prerequisite in prerequisites:
+    #             # need to check if the prerequisite course exists in the database
+    #             prereq = Course_Prerequisites(course_id=course_id, prereq_course_id=prerequisite)
+    #             status = prereq.add_prerequisites()
+    #             print(status)
+    #             if status == 500:
+    #                 return status
         
-                # perform a check if prerequisites already existed and store them in an array
-                # if the prerequisite is not a duplicate, store it in a separate array
+    #             # perform a check if prerequisites already existed and store them in an array
+    #             # if the prerequisite is not a duplicate, store it in a separate array
 
-            # later on this will return which prerequisites were duplicates and which were added as new prerequisites
-            return status
+    #         # later on this will return which prerequisites were duplicates and which were added as new prerequisites
+    #         return status
 
     #Xing Jie parts
     # def retrieveAllEnrollment(self):
@@ -173,7 +173,12 @@ def changeEnrollStatus():
     da = CourseController()
     enrollId = int(request.args.get('enrol_id', None))
     output = da.changeEnrollmentStatus(enrollId)
-    return output
+    return jsonify(
+        {
+            'code': 200,
+            'message': output
+        }
+    )
 
 @app.route("/allEnrollmentsPending", methods=['GET'])
 def getAllPendingEnrollment():

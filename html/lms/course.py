@@ -19,8 +19,6 @@ class Course(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100), nullable=False)
     course_description = db.Column(db.String(300), nullable=False)
-    startdate = db.Column(db.DateTime, nullable=False)
-    enddate = db.Column(db.DateTime, nullable=False)
     startenrollmentdate = db.Column(db.DateTime, nullable=False)
     endenrollmentdate = db.Column(db.DateTime, nullable=False)
 
