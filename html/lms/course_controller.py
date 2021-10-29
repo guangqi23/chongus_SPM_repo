@@ -236,5 +236,15 @@ def rejectEnrollment():
     result = da.rejectEnrollment(enrollId)
     return result
 
+@app.route("/change_course_start_end_date", methods=['POST'])
+def change_course_start_end_date():
+    application = request.get_json()
+    course_ctrl = Course()
+    course_id = application['course_id']
+    start_date = application['start_date']
+    end_date = application['end_date']
+    status = course_ctrl.change_start_end_date(course_id, start_date, end_date)
+    return status
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
