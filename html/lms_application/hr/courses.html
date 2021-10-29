@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Mentor Bootstrap Template - Index</title>
+  <title>Courses - Mentor Bootstrap Template</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -27,6 +27,7 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <!-- =======================================================
   * Template Name: Mentor - v4.6.0
@@ -36,7 +37,7 @@
   ======================================================== -->
 </head>
 
-<body>
+<body onload="retrieve_all_courses()">
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -63,126 +64,23 @@
     </div>
   </header><!-- End Header -->
 
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex justify-content-center align-items-center">
-    <div class="container position-relative" data-aos="zoom-in" data-aos-delay="100">
-      <h1>Learning Today,<br>Leading Tomorrow</h1>
-      <h2>We are team of talented designers making websites with Bootstrap</h2>
-      <a href="courses.html" class="btn-get-started">Get Started</a>
-    </div>
-  </section><!-- End Hero -->
+  <main id="main" data-aos="fade-in">
 
-  <main id="main">
-
-    <!-- ======= About Section ======= -->
-    <section id="about" class="about">
-    </section><!-- End About Section -->
-
-    <!-- ======= Features Section ======= -->
-    <section id="features" class="features">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Features</h2>
-          <p>Shortcuts</p>
-        </div>
-
-        <div class="row" data-aos="zoom-in" data-aos-delay="100">
-          <div class="col-lg-3 col-md-4">
-            <div class="icon-box">
-              <i class="ri-store-line" style="color: #ffbb2c;"></i>
-              <h3><a href="create_course.html">Create Course</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
-            <div class="icon-box">
-              <i class="ri-bar-chart-box-line" style="color: #5578ff;"></i>
-              <h3><a href="delete_course.html">Delete Course</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
-            <div class="icon-box">
-              <i class="ri-calendar-todo-line" style="color: #e80368;"></i>
-              <h3><a href="assignLearners.html">Assign Learner</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4 mt-lg-0">
-            <div class="icon-box">
-              <i class="ri-paint-brush-line" style="color: #e361ff;"></i>
-              <h3><a href="assignTrainer.html">Assign Trainer</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-database-2-line" style="color: #47aeff;"></i>
-              <h3><a href="">Withdraw Learner</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-store-line" style="color: #93b4cc;"></i>
-              <h3><a href="enrollment_Approval.html">Approve Enrollments</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-gradienter-line" style="color: #ffa76e;"></i>
-              <h3><a href="courses.html">View All Courses</a></h3>
-            </div>
-          </div>
-          <!-- <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-file-list-3-line" style="color: #11dbcf;"></i>
-              <h3><a href="">Midela Teren</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-price-tag-2-line" style="color: #4233ff;"></i>
-              <h3><a href="">Pira Neve</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-anchor-line" style="color: #b2904f;"></i>
-              <h3><a href="">Dirada Pack</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-disc-line" style="color: #b20969;"></i>
-              <h3><a href="">Moton Ideal</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-base-station-line" style="color: #ff5828;"></i>
-              <h3><a href="">Verdo Park</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box">
-              <i class="ri-fingerprint-line" style="color: #29cc61;"></i>
-              <h3><a href="">Flavor Nivelanda</a></h3>
-            </div>
-          </div>
-        </div> -->
-
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs">
+      <div class="container">
+        <h2>Courses</h2>
+        <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
       </div>
-    </section><!-- End Features Section -->
+    </div><!-- End Breadcrumbs -->
 
-    <!-- ======= Popular Courses Section ======= -->
-    <section id="popular-courses" class="courses">
+    <!-- ======= Courses Section ======= -->
+    <section id="courses" class="courses">
       <div class="container" data-aos="fade-up">
 
-        <div class="section-title">
-          <h2>Courses</h2>
-          <p>Popular Courses</p>
-        </div>
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="all_courses">
 
-        <div class="row" data-aos="zoom-in" data-aos-delay="100">
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+          <!-- <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
             <div class="course-item">
               <img src="assets/img/course-1.jpg" class="img-fluid" alt="...">
               <div class="course-content">
@@ -206,7 +104,7 @@
                 </div>
               </div>
             </div>
-          </div> <!-- End Course Item-->
+          </div> 
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
             <div class="course-item">
@@ -232,7 +130,7 @@
                 </div>
               </div>
             </div>
-          </div> <!-- End Course Item-->
+          </div> 
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
             <div class="course-item">
@@ -258,79 +156,12 @@
                 </div>
               </div>
             </div>
-          </div> <!-- End Course Item-->
+          </div> End Course Item
 
-        </div>
-
-      </div>
-    </section><!-- End Popular Courses Section -->
-
-    <!-- ======= Trainers Section ======= -->
-    <section id="trainers" class="trainers">
-      <div class="container" data-aos="fade-up">
-
-        <div class="row" data-aos="zoom-in" data-aos-delay="100">
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-            <div class="member">
-              <img src="assets/img/trainers/trainer-1.jpg" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>Walter White</h4>
-                <span>Web Development</span>
-                <p>
-                  Magni qui quod omnis unde et eos fuga et exercitationem. Odio veritatis perspiciatis quaerat qui aut aut aut
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-            <div class="member">
-              <img src="assets/img/trainers/trainer-2.jpg" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>Sarah Jhinson</h4>
-                <span>Marketing</span>
-                <p>
-                  Repellat fugiat adipisci nemo illum nesciunt voluptas repellendus. In architecto rerum rerum temporibus
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-            <div class="member">
-              <img src="assets/img/trainers/trainer-3.jpg" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>William Anderson</h4>
-                <span>Content</span>
-                <p>
-                  Voluptas necessitatibus occaecati quia. Earum totam consequuntur qui porro et laborum toro des clara
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        </div> -->
 
       </div>
-    </section><!-- End Trainers Section -->
+    </section><!-- End Courses Section -->
 
   </main><!-- End #main -->
 
@@ -357,13 +188,13 @@
             <ul>
               <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <!-- <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li> -->
-              <!-- <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li> -->
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
             </ul>
           </div>
 
-          <!-- <div class="col-lg-3 col-md-6 footer-links">
+          <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Services</h4>
             <ul>
               <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
@@ -372,7 +203,7 @@
               <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
             </ul>
-          </div> -->
+          </div>
 
           <div class="col-lg-4 col-md-6 footer-newsletter">
             <h4>Join Our Newsletter</h4>
@@ -389,16 +220,16 @@
     <div class="container d-md-flex py-4">
 
       <div class="me-md-auto text-center text-md-start">
-        <!-- <div class="copyright">
+        <div class="copyright">
           &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
         </div>
         <div class="credits">
-          All the links in the footer should remain intact.
-          You can delete the links only if you purchased the pro version.
-          Licensing information: https://bootstrapmade.com/license/
-          Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
           Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div> -->
+        </div>
       </div>
       <div class="social-links text-center text-md-right pt-3 pt-md-0">
         <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
@@ -422,6 +253,102 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script>
+     function retrieve_all_courses(){
+        axios
+        .get("http://localhost:5000/courses")
+        .then(res =>
+            {
+                records = res.data.data.record
+                // console.log(records)
+                course_output = ""
+                for(record of records){
+                  course_output += `
+                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch" id="card_${record.course_id}">
+                      <div class="course-item">
+                        <img src="assets/img/course-1.jpg" class="img-fluid" alt="...">
+                        <div class="course-content">
+                          <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 id="${record.course_id}">Edit Course Information</h4>
+                          </div>
+
+                          <h3><a href="course-details.html">${record.course_name}</a></h3>
+                          <p>${record.course_description}</p>
+                          <p>Start Enrollment Date: <span id="${record.course_id}_start">${record.startenrollmentdate}</span></p>
+                          <p>End Enrollment Date: <span id="${record.course_id}_end">${record.endenrollmentdate}</span></p>
+                          <div id="${record.course_id}_change_date"></div>
+                        </div>
+                      </div>
+                    </div>
+                    `                   
+                }
+
+                document.getElementById("all_courses").innerHTML = course_output
+                
+                for(record of records){
+                  let course_id = record.course_id
+                  document.getElementById(course_id).addEventListener('click', function(){
+                    change_date(course_id)
+                  })
+                }
+            }
+        )
+    }
+
+    function change_date(course_id){
+      start = document.getElementById(course_id + "_start")
+      end = document.getElementById(course_id + "_end")
+
+      ori_start_date = start.innerHTML
+      ori_end_date = end.innerHTML
+
+      // console.log(ori_start_date)
+      // console.log(ori_end_date)
+
+      start.innerHTML = '<input type="date" id="' + course_id + '_start_enrollment" placeholder="Start Enrollment Date">'
+      end.innerHTML = '<input type="date" id="' + course_id + '_end_enrollment" placeholder="End Enrollment Date">'
+      document.getElementById(course_id + "_change_date").innerHTML = '<button id="' + course_id + '_submit" type="submit">Confirm Changes</button>'
+
+      document.getElementById(course_id + "_submit").addEventListener('click', function(event){
+        event.preventDefault();
+        submit_date_changes(course_id, ori_start_date, ori_end_date);
+      })
+    }
+
+    function submit_date_changes(course_id, ori_start_date, ori_end_date){
+      start_date = document.getElementById(course_id + "_start_enrollment").value
+      end_date = document.getElementById(course_id + "_end_enrollment").value
+
+      // console.log(course_id)
+      // console.log(start_date)
+      // console.log(end_date)
+
+      axios
+      .post("http://localhost:5000/change_course_start_end_date",
+        {
+          "course_id": course_id,
+          "start_date": start_date,
+          "end_date": end_date
+        }
+      )
+      .then( res=>
+        {
+          data = res.data
+          if(data['code'] == 200){
+            document.getElementById(course_id + "_start").innerHTML = start_date
+            document.getElementById(course_id + "_end").innerHTML = end_date
+            document.getElementById(course_id + "_change_date").innerHTML = '<div class="alert alert-success" role="alert">' + data['message']
+          }
+          else{
+            document.getElementById(course_id + "_start").innerHTML = ori_start_date
+            document.getElementById(course_id + "_end").innerHTML = ori_end_date
+            document.getElementById(course_id + "_change_date").innerHTML = '<div class="alert alert-danger" role="alert">' + data['message']
+          }
+        }
+      )
+    }
+    
+  </script>
 
 </body>
 

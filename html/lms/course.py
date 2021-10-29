@@ -29,8 +29,6 @@ class Course(db.Model):
         record = Course.query.filter_by(course_id=course_id).first()
         return record
 
-
-
     def add_course(self):
         # this should check if there is already an existing course in the database. To be added later
         try: 
@@ -80,6 +78,28 @@ class Course(db.Model):
             course_vacancies += a_class.slots
         
         return course_vacancies
+
+    def change_start_end_date(self, course_id, start_date, end_date):
+        record = Course.query.filter_by(course_id = course_id)
+        record.startenrollmentdate = start_date
+        record.endenrollmentdate = end_date
+        try:
+            db.session.commit()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "A database error occured while changing the start and end date of the course " + str(error)
+                }
+            ), 500
+
+        return jsonify (
+                {
+                    "code": 200,
+                    "message": "The start and end date of the course has been successfully changed"
+                }
+            ), 200
+        
    
     def json(self):
         return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   
