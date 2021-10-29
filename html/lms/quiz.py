@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from finalquiz import FinalQuiz
 from quiz_question import QuizQuestions
+from sqlalchemy import desc
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -31,11 +33,14 @@ class Quiz(db.Model):
         return self.time_limit
 
     def get_quiz(self,section_id):
-        quizzes = Quiz.query.filter_by(section_id=section_id).first()
+        qid = self.quiz_id
+        quizzes = Quiz.query.filter_by(section_id=section_id)
+        #get last value
+        last_id = quizzes[-1]
         return jsonify(
             {
                 "code": 200,
-                "data": quizzes.json()
+                "data": last_id.json()
             })
         return jsonify(
             {
