@@ -8,9 +8,10 @@ from trainer_assignment import Trainer_Assignment
 from learner_badges import learnerbadges
 from course import Course
 from classes import Classes
+from learner_badges import Learner_Badges
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -179,12 +180,21 @@ def get_assigned_courses():
             }
         ), 404
 
+<<<<<<< Updated upstream
 @app.route("/learnerbadges", methods=['POST'])
 def get_completed_courses():
     application = request.get_json()
     user_id = application['user_id']
     learner_badges = learnerbadges()
     record = learner_badges.get_completed_courses(user_id)
+=======
+@app.route("/completed_courses", methods=['POST'])
+def get_completed_courses():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner = Learner()
+    record = learner.get_completed_courses(user_id)
+>>>>>>> Stashed changes
     if len(record):
             return jsonify(
                 {

@@ -10,8 +10,13 @@ db = SQLAlchemy(app)
 
 CORS(app) 
 
+<<<<<<< Updated upstream
 class learnerbadges(db.Model):
     __tablename__ = 'LEARNER_BADGES'
+=======
+class Learner_Badges(db.Model):
+    __tablename__ = 'learner_badges'
+>>>>>>> Stashed changes
 
     userid = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, primary_key=True)
@@ -19,7 +24,7 @@ class learnerbadges(db.Model):
     def json(self):
         return {"user_id": self.userid, "course_id": self.course_id}
 
-    def get_completed_courses(self, userid):
-        record = learnerbadges.query.filter_by(userid=userid).all()
+    def get_learner_badges(self, userid):
+        record = self.query.filter_by(userid=userid).all()
         return record
 

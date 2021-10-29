@@ -2,12 +2,12 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy.sql.expression import false, true
-from learner_badges import learnerbadges
 from user import User
 from course import Course
 from course_enrollment import Course_Enrollment
 from course_prerequisites import Course_Prerequisites
 from learner_assignment import Learner_Assignment
+from learner_badges import Learner_Badges
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
@@ -33,11 +33,11 @@ class Learner(User):
         return records
 
     def get_remaining_courses(self, userid):
-        learner_badges = learnerbadges()
+        learner_badges = Learner_Badges()
         course_class = Course()
 
         course_list = [course.course_id for course in course_class.get_all_courses()]
-        completed_courses = [course.course_id for course in learner_badges.get_completed_courses(userid)]
+        completed_courses = [course.course_id for course in learner_badges.get_learner_badges(userid)]
         enrolled_courses = [course.course_id for course in self.get_enrolled_courses(userid)]
         assigned_courses = [course.course_id for course in self.get_assigned_courses(userid)]
         completed_enrolled_assigned_courses = completed_courses + enrolled_courses + assigned_courses
@@ -56,8 +56,8 @@ class Learner(User):
     def get_eligible_courses(self, userid):
         course_class = Course()
         course_pre_req = Course_Prerequisites()
-        learner_badges = learnerbadges()
-        completedcourses = learner_badges.get_completed_courses(userid)
+        learner_badges = Learner_Badges()
+        completedcourses = learner_badges.get_learner_badges(userid)
 
         course_list = [course.course_id for course in self.get_remaining_courses(userid)]
         
@@ -127,5 +127,16 @@ class Learner(User):
             courseinfo = course_class.get_course_by_id(assigned_course.course_id)
             output.append(courseinfo)
         return output
+    
+    def get_completed_courses(self, user_id):
+        completed_courses = Learner_Badges()
+        course_class = Course()
+        output = []
+        completed_courses_list = completed_courses.get_learner_badges(user_id)
+        for completed_course in completed_courses_list:
+            courseinfo = course_class.get_course_by_id(completed_course.course_id)
+            output.append(courseinfo)
+        return output
+
 
 
