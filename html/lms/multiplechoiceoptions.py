@@ -31,7 +31,7 @@ class multiplechoiceoptions(db.Model):
     def get_correct_option(self):
         return self.correct_option
         
-    def get_quiz(self,question_id):
+    def get_options_by_question_id(self,question_id):
         option= multiplechoiceoptions.query.filter_by(question_id = question_id)
        
         count =0

@@ -31,7 +31,7 @@ class SectionQuizController():
         da = SectionMaterialQuizDataAccess()
         sections = da.get_section_quiz(section_id)
         return sections
-
+    
 
 #   Create Quizzes
     def create_quiz(self,section_id,time_limit):
@@ -69,6 +69,20 @@ class SectionQuizController():
         status = da.create_MCQ_options(question_id,option_order,option_content,correct_option)
         return status
 
+    def get_Quiz_Questions(self,quiz_id):
+        da = SectionMaterialQuizDataAccess()
+        status = da.get_quiz_questions(quiz_id)
+        return status
+
+    def get_TrueFalse(self,question_id):
+        da = SectionMaterialQuizDataAccess()
+        status = da.get_TrueFalse(question_id)
+        return status
+
+    def get_MCQ(self,question_id):
+        da = SectionMaterialQuizDataAccess()
+        status = da.get_MCQ(question_id)
+        return status
         
 
 
@@ -173,6 +187,26 @@ def add_MCQ_options():
     
     return status 
 
+@app.route("/get_Quiz_Questions", methods=['GET'])
+def get_Quiz_Questions():
+    quiz_id = int(request.args.get('quiz_id', None))
+    da = SectionQuizController()
+    status = da.get_Quiz_Questions(quiz_id)
+    return status
+
+@app.route("/get_MCQ", methods=['GET'])
+def get_MCQ():
+    question_id = int(request.args.get('question_id', None))
+    da = SectionQuizController()
+    status = da.get_MCQ(question_id)
+    return status
+
+@app.route("/get_TrueFalse", methods=['GET'])
+def get_TrueFalse():
+    question_id = int(request.args.get('question_id', None))
+    da = SectionQuizController()
+    status = da.get_TrueFalse(question_id)
+    return status
 
 
 if __name__ == '__main__':
