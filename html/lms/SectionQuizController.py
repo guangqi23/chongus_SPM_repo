@@ -2,7 +2,7 @@ from flask import Flask, json, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from  section_material_quiz_data_access import SectionMaterialQuizDataAccess
-
+import sys
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
@@ -187,12 +187,16 @@ def add_MCQ_options():
     
     return status 
 
-@app.route("/get_Quiz_Questions", methods=['GET'])
+@app.route("/get_Quiz_Questions_Options", methods=['GET'])
 def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
     da = SectionQuizController()
-    status = da.get_Quiz_Questions(quiz_id)
-    return status
+
+    allQuestions = json.loads(da.get_Quiz_Questions(quiz_id))
+
+    print("Questions: " + allQuestions, file=sys.stderr)
+    #Return list of questions, options, correct option
+    return allQuestions
 
 @app.route("/get_MCQ", methods=['GET'])
 def get_MCQ():
