@@ -1,4 +1,4 @@
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from  section_material_quiz_data_access import SectionMaterialQuizDataAccess
@@ -192,9 +192,10 @@ def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
     da = SectionQuizController()
 
-    allQuestions = json.loads(da.get_Quiz_Questions(quiz_id))
+    allQuestions = da.get_Quiz_Questions (quiz_id)
 
-    print("Questions: " + allQuestions, file=sys.stderr)
+
+    #print(dictz["code"], file=sys.stderr)
     #Return list of questions, options, correct option
     return allQuestions
 
