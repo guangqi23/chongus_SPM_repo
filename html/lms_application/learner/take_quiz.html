@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+        <title>Quiz</title>
+        <link rel="stylesheet" href="assets/css/quiz_style.css">
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    </head>
+    <body>
+        <!-- Start button -->
+        <div class="start_btn"><button>Start Quiz</button></div>
+        
+        <div class="info_box">
+            <div class="info_title">
+                <span>Some rules for this quiz</span>
+            </div>
+            <div class="info_list">
+                <div class="info">Information 1 <span>You only have 20 secs for each question</span></div>
+                <div class="info">Information 2</div>
+                <div class="info">Information 3</div>
+            </div>
+            <div class="buttons">
+                <button class="quit">Exit</button>
+                <button class="restart">Continue</button>
+            </div>
+        </div>
+
+        <!-- Quiz Box-->
+        <div class="quiz_box">
+            <header>
+                <div class="title">LMS quiz application</div>
+                <div class="timer">
+                    <div class="time_text">Time left</div>
+                    <div class="timer_sec"></div>
+                </div>
+                <div class="time_line"></div>
+            </header>
+            <section>
+                <div class="question_text">
+                    <span>What is time?</span>
+                </div>
+                <div class="option_list">
+                    <div class="option">
+                        <span>Idk</span>
+                        <div class="icon tick"><i class="fas fa-check"></i></div>
+                    </div>
+                    <div class="option">
+                        <span>Chemical</span>
+                        <div class="icon cross"><i class="fas fa-times"></i></div>
+                    </div>
+                    <div class="option">
+                        <span>Life</span>
+                        <div class="icon cross"><i class="fas fa-times"></i></div>
+                    </div>
+                    <div class="option">
+                        <span>A feels</span>
+                        <div class="icon cross"><i class="fas fa-times"></i></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Box Footer -->
+            <footer>
+                <div class="total_que">
+                    <!-- <span><p>2</p>of<p>5</p>Questions</span> -->
+                </div>
+                <button class="nxt_btn">Next Question</button>
+            </footer>
+        </div>
+
+        <!-- Result box-->
+        <div class="result_box">
+            <div class="icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="complete_text">Quiz completed!</div>
+            <div class="score_text">
+                <!-- <span>and sorry, you got only <p>2</p> out of <p>5</p></span> -->
+            </div>
+            <div class="buttons">
+                <button class="restart">Redo Quiz</button>
+                <button class="quit">Quit</button>
+            </div>
+        </div>
+
+
+
+        <script src="assets/js/quiz.js"></script>
+        <script src="assets/js/questions.js"></script>
+    </body>
+</html>
+</html>
