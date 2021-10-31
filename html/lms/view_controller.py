@@ -1,7 +1,10 @@
+from operator import ne
+from re import L
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy.sql.expression import false, true
 from flask_sqlalchemy import SQLAlchemy
+from learner_assignment import Learner_Assignment
 from trainer import Trainer
 from learner import Learner
 from trainer_assignment import Trainer_Assignment
@@ -45,7 +48,6 @@ class ViewController():
 
     def get_classes_of_a_course_without_trainer(course_id):
         trnr_as_class = Trainer_Assignment()
-        course_class = Course()
         classes_class = Classes()
 
         courses_with_trainers = [(course.course_id, course.class_id) for course in trnr_as_class.get_all_trainer_assignments()]
@@ -64,6 +66,13 @@ class ViewController():
         print(output)
 
         return output
+
+    def get_learner_assigned_classes(user_id):
+        lrnr_class = Learner_Assignment()
+        all_assigned_courses = lrnr_class.get_user_assigned_courses(user_id)
+
+        return all_assigned_courses
+
     
 
 
@@ -271,6 +280,45 @@ def get_all_trainers():
             }
         ), 404
 
+
+@app.route("/get_all_assigned_classes_of_user", methods = ['POST'])
+def get_all_assigned_classes_of_user():
+    application = request.get_json()
+    # print(application)
+    u_id = application['user_id']
+    
+    record = ViewController.get_learner_assigned_classes(u_id)
+    course_class = Course()
+    
+    new_record = []
+
+    for a_record in record:
+        print(a_record.get_course_id())
+        course_id, class_id = a_record.get_course_id()
+        course_rec = course_class.get_course_by_id(course_id)
+        course_name = course_rec.get_course_name()
+        a_record = {
+            "course_id" : course_id,
+            "class_id" : class_id,
+            "course_name" : course_name
+        }
+        new_record.append(a_record)
+
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record for a_record in new_record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no classes without a trainer"
+            }
+        ), 404
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)
