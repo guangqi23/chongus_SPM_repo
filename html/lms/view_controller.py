@@ -312,29 +312,6 @@ def get_all_trainers():
             }
         ), 404
 
-#to be removed later
-@app.route("/class_by_course", methods=['POST'])
-def get_classes_by_course():
-    application = request.get_json()
-    course_id = application['course_id']
-    classes = Classes()
-    record = classes.get_classes_by_course(course_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no classes."
-            }
-        ), 404
-
 @app.route("/get_all_assigned_classes_of_user", methods = ['POST'])
 def get_all_assigned_classes_of_user():
     application = request.get_json()
