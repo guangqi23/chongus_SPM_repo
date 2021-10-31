@@ -180,21 +180,12 @@ def get_assigned_courses():
             }
         ), 404
 
-<<<<<<< Updated upstream
 @app.route("/learnerbadges", methods=['POST'])
 def get_completed_courses():
     application = request.get_json()
     user_id = application['user_id']
     learner_badges = learnerbadges()
     record = learner_badges.get_completed_courses(user_id)
-=======
-@app.route("/completed_courses", methods=['POST'])
-def get_completed_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_completed_courses(user_id)
->>>>>>> Stashed changes
     if len(record):
             return jsonify(
                 {

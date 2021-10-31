@@ -10,13 +10,8 @@ db = SQLAlchemy(app)
 
 CORS(app) 
 
-<<<<<<< Updated upstream
 class learnerbadges(db.Model):
     __tablename__ = 'LEARNER_BADGES'
-=======
-class Learner_Badges(db.Model):
-    __tablename__ = 'learner_badges'
->>>>>>> Stashed changes
 
     userid = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, primary_key=True)
