@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy.sql.expression import false, true
+from classes import Classes
 from user import User
 from course import Course
 from course_enrollment import Course_Enrollment
@@ -51,29 +52,40 @@ class Learner(User):
 
         return output
 
+#get eligible classes for eligible courses
     def get_eligible_courses(self, userid):
         course_class = Course()
+        classes_class = Classes()
         course_pre_req = Course_Prerequisites()
         learner_badges = Learner_Badges()
-        completedcourses = learner_badges.get_learner_badges(userid)
+        completed_courses = learner_badges.get_learner_badges(userid)
 
         course_list = [course.course_id for course in self.get_remaining_courses(userid)]
         
-        output = []
+        # output = []
+        course_query_list = []
 
         for course_query in course_list: 
             prereqlist = course_pre_req.prereq_by_course(course_query)
             if len(prereqlist) == 0: 
-                courseinfo = course_class.get_course_by_id(course_query)
-                output.append(courseinfo)
+                course_query_list.append(course_query)
             else: 
                 for course in prereqlist: 
-                    if course.prereq_course_id in completedcourses:
-                        courseinfo = course_class.get_course_by_id(course_query)
-                        output.append(courseinfo)
+                    if course.prereq_course_id in completed_courses:
+                        course_query_list.append(course_query)
         
-        return output
+        courses = []
+        classes = []
+        for course in course_query_list:
+            course_classes = classes_class.get_classes_by_course(course)
+            for a_class in course_classes:
+                if a_class.slots > 0: 
+                    course_info = course_class.get_course_by_id(course)
+                    courses.append(course_info)
+                    classes.append(a_class)
 
+        return [courses, classes]
+    
     def get_uneligible_courses(self, userid):
         course_class = Course()
 

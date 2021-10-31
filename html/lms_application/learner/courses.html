@@ -134,7 +134,49 @@
               .catch(error => console.error(error.response.data));
           }
           viewAssignedCourses(4);
+      </script>
+      <div class="container" data-aos="fade-up">
+        <h1>View Classes Eligible for Enrollment</h1>
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="eligible_courses">
+          </div>
+        </div>
+          <script>
+            function viewEligibleCourses(userId) {
+              axios
+                .post('http://127.0.0.1:5002/eligible_courses', {user_id: userId
+                })
+                .then(res => 
+                  {
+                    records = res.data.data.record;
+                    let value = '';
+                    for(course of records) {
+                      let course_name = course.course_name
+                      let course_description = course.course_description
+                      let start_date = course.startdate
+                      let end_date = course.enddate
+                      let start_enrollment_date = course.startenrollmentdate
+                      let end_enrollment_date = course.endenrollmentdate
+                      value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                                <div class="course-item">
+                                <div class="course-content">
+                                <h3>${course_name}</h3>
+                                <p>${course_description}</p>
+                                <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
+                                <p><strong>Enrollment Period:</strong> ${start_enrollment_date}-${end_enrollment_date}</p>
+                                </div>
+                                </div>
+                                </div>`;
+                                    
+                      let body = document.getElementById('eligible_courses');
+                      body.innerHTML = value; 
+                    }
+                  }
+                )
+                .catch(error => console.error(error.response.data));
+            }
+            viewEligibleCourses(1);
         </script>
+      </script>
       <div class="container" data-aos="fade-up">
         <h1>View Completed Courses</h1>
         <div class="row" data-aos="zoom-in" data-aos-delay="100" id="completed_courses">

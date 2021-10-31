@@ -8,7 +8,6 @@ from learner_assignment import Learner_Assignment
 from trainer import Trainer
 from learner import Learner
 from trainer_assignment import Trainer_Assignment
-from learner_badges import learnerbadges
 from course import Course
 from classes import Classes
 from learner_badges import Learner_Badges
@@ -84,15 +83,24 @@ def get_eligible_courses():
     user_id = application['user_id']
     learner = Learner()
     record = learner.get_eligible_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
+    courses = record[0]
+    classes = record[1]
+    final_list = []
+    for i in range(len(courses)):
+        course_info = courses[i].json()
+        class_info = classes[i].json()
+        course_info.update(class_info)
+        final_list.append(course_info)
+
+    if len(final_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record for a_record in final_list]
                 }
-            )
+            }
+        )
     return jsonify(
         {
             "code": 404,
@@ -107,14 +115,14 @@ def get_uneligible_courses():
     learner = Learner()
     record = learner.get_uneligible_courses(user_id)
     if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record.json() for a_record in record]
                 }
-            )
+            }
+        )
     return jsonify(
         {
             "code": 404,
@@ -193,7 +201,7 @@ def get_assigned_courses():
 def get_completed_courses():
     application = request.get_json()
     user_id = application['user_id']
-    learner_badges = learnerbadges()
+    learner_badges = Learner_Badges()
     record = learner_badges.get_completed_courses(user_id)
     if len(record):
             return jsonify(
@@ -304,6 +312,28 @@ def get_all_trainers():
             }
         ), 404
 
+#to be removed later
+@app.route("/class_by_course", methods=['POST'])
+def get_classes_by_course():
+    application = request.get_json()
+    course_id = application['course_id']
+    classes = Classes()
+    record = classes.get_classes_by_course(course_id)
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record.json() for a_record in record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no classes."
+            }
+        ), 404
 
 @app.route("/get_all_assigned_classes_of_user", methods = ['POST'])
 def get_all_assigned_classes_of_user():

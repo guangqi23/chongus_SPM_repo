@@ -49,7 +49,7 @@ class Classes(db.Model):
         return str(class_A.startdate)
 
     def json(self):
-        return {"class_id":self.class_id,"course_id":self.course_id,"slots":self.slots}
+        return {"class_id":self.class_id,"course_id":self.course_id,"slots":self.slots,"startdate":self.startdate, "enddate":self.enddate, "trainer_name": self.trainer_name}
     
     
     
