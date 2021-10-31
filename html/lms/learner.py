@@ -23,19 +23,16 @@ class Learner(User):
     __mapper_args__ = {'polymorphic_identity': 'learner'}
 
     def get_all_learners(self):
-        lrnr = Learner()
-        return lrnr.query.filter_by(designation='Learner').all()
+        return Learner.query.filter_by(designation='Learner').all()
 
     def get_all_learners_id(self):
-        lrnr = Learner()
         records = Learner.query.with_entities(Learner.userid).all()
-        print(records)
         return records
 
     def get_remaining_courses(self, userid):
         learner_badges = learnerbadges()
         course_class = Course()
-
+        
         course_list = [course.course_id for course in course_class.get_all_courses()]
         completed_courses = [course.course_id for course in learner_badges.get_completed_courses(userid)]
         enrolled_courses = [course.course_id for course in self.get_enrolled_courses(userid)]
