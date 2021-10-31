@@ -10,7 +10,7 @@ db = SQLAlchemy(app)
 
 CORS(app) 
 
-class learnerbadges(db.Model):
+class Learner_Badges(db.Model):
     __tablename__ = 'LEARNER_BADGES'
 
     userid = db.Column(db.Integer, primary_key=True)
