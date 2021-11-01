@@ -156,20 +156,29 @@ def get_enrolled_courses():
         ), 404
 
 @app.route("/enrolled_classes", methods=["POST"])
-def get_enrolled_classes():
+def get_enrolled_course_class():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_enrolled_classes(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
+    record = learner.get_enrolled_course_class(user_id)
+    courses = record[0]
+    classes = record[1]
+    final_list = []
+    for i in range(len(courses)):
+        course_info = courses[i].json()
+        class_info = classes[i].json()
+        course_info.update(class_info)
+        final_list.append(course_info)
+
+    if len(final_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record for a_record in final_list]
                 }
-            )
+            }
+        )
     return jsonify(
         {
             "code": 404,
