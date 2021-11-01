@@ -11,7 +11,6 @@ from learner import Learner
 from trainer_assignment import Trainer_Assignment
 from course import Course
 from classes import Classes
-from learner_badges import Learner_Badges
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
@@ -132,28 +131,6 @@ def get_uneligible_courses():
             "message": "There are no uneligible courses."
             }
         ), 404
-    
-@app.route("/enrolled_courses", methods=['POST'])
-def get_enrolled_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_enrolled_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no enrolled courses."
-            }
-        ), 404
 
 @app.route("/enrolled_classes", methods=["POST"])
 def get_enrolled_course_class():
@@ -186,7 +163,6 @@ def get_enrolled_course_class():
             }
         ), 404
 
-
 @app.route("/assigned_courses", methods=['POST'])
 def get_assigned_course_class():
     application = request.get_json()
@@ -197,8 +173,6 @@ def get_assigned_course_class():
     classes = record[1]
     final_list = []
     for i in range(len(courses)):
-        print(courses[i])
-        print(classes[i])
         course_info = courses[i].json()
         class_info = classes[i].json()
         course_info.update(class_info)
@@ -264,7 +238,7 @@ def get_all_learner():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no assigned courses."
+            "message": "There are no learners."
             }
         ), 404
 
@@ -290,7 +264,6 @@ def get_courses_with_classes_without_trainer():
 @app.route("/get_classes_of_a_course_without_trainer",methods = ['POST'])
 def get_classes_of_a_course_without_trainer():
     application = request.get_json()
-    # print(application)
     c_id = application['course_id']
     
     record = ViewController.get_classes_of_a_course_without_trainer(c_id)
@@ -338,7 +311,6 @@ def get_all_trainers():
 @app.route("/get_all_assigned_classes_of_user", methods = ['POST'])
 def get_all_assigned_classes_of_user():
     application = request.get_json()
-    # print(application)
     u_id = application['user_id']
     
     record = ViewController.get_learner_assigned_classes(u_id)
