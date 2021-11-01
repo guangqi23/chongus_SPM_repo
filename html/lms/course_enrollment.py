@@ -108,3 +108,6 @@ class Course_Enrollment(db.Model):
         Course_Enrollment.query.filter_by(enrollment_id = rejectedEnrollId).delete()
         db.session.commit()
         return "200"
+
+    def get_course_and_class_id(self):
+        return self.course_id,self.class_id

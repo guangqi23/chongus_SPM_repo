@@ -25,7 +25,10 @@ class Learner(User):
     __mapper_args__ = {'polymorphic_identity': 'learner'}
 
     def get_all_learners(self):
-        return Learner.query.filter_by(designation='Learner').all()
+        records = Learner.query.filter_by(designation='Junior Engineer').all()
+        records2 = Learner.query.filter_by(designation='Junior Engineer').all()
+        records3 = records + records2
+        return records3
 
     def get_all_learners_id(self):
         records = Learner.query.with_entities(Learner.userid).all()

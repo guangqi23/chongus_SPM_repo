@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy.sql.expression import false, true
 from flask_sqlalchemy import SQLAlchemy
+from course_enrollment import Course_Enrollment
 from learner_assignment import Learner_Assignment
 from trainer import Trainer
 from learner import Learner
@@ -13,7 +14,7 @@ from classes import Classes
 from learner_badges import Learner_Badges
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -73,6 +74,12 @@ class ViewController():
         all_assigned_courses = lrnr_class.get_user_assigned_courses(user_id)
 
         return all_assigned_courses
+
+    def get_learner_enrolled_classes(user_id):
+        crse_enrol_class = Course_Enrollment()
+        
+        return crse_enrol_class.get_user_enrolled_courses(user_id)
+
 
     
 
@@ -347,7 +354,46 @@ def get_all_assigned_classes_of_user():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no classes without a trainer"
+            "message": "There are no assigned classes"
+            }
+        ), 404
+
+@app.route("/get_all_enrolled_classes_of_user", methods = ['POST'])
+def get_all_enrolled_classes_of_user():
+    application = request.get_json()
+    # print(application)
+    u_id = application['user_id']
+    
+    record = ViewController.get_learner_enrolled_classes(u_id)
+    course_class = Course()
+    
+    new_record = []
+
+    for a_record in record:
+        course_id,class_id = a_record.get_course_and_class_id()
+        course_rec = course_class.get_course_by_id(course_id)
+        course_name = course_rec.get_course_name()
+        a_record = {
+            "course_id" : course_id,
+            "class_id" : class_id,
+            "course_name" : course_name
+        }
+        new_record.append(a_record)
+        
+
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record for a_record in new_record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no enrolled classes"
             }
         ), 404
 
