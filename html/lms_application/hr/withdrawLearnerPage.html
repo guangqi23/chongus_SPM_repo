@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Courses - Mentor Bootstrap Template</title>
+  <title>Withdrawing Classes for Learners</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -79,8 +79,9 @@
 
     <!-- ======= Courses Section ======= -->
     <section id="courses" class="courses">
-      <div class="container" data-aos="fade-up">
 
+      <div class="container" data-aos="fade-up">
+        <div class = 'row' id ='showEnrolledCourses'></div>
         <div class="row" data-aos="zoom-in" data-aos-delay="100" id = 'showAssignedCourses'>
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
@@ -248,12 +249,71 @@
     
     function getEnrolledCourses(learner_id){
       axios
-      .post("http://127.0.0.1:5002/enrolled_classes",{user_id:learner_id})
+      .post("http://127.0.0.1:5002/get_all_enrolled_classes_of_user",{user_id:learner_id})
       .then(res => {
           records = res.data.data.record;
           console.log(records);
+          let cc_arr = []
+          let value = `<table class = 'table' id = 'myTable'>
+                            <thead class = 'thead-dark'>
+                            <tr>
+                                <th>Course ID</th>
+                                <th>Course Name</th>
+                                <th>Class ID</th>
+                                <th>Withdraw</th>
+                            </tr></thead><tbody>`;
+
+          for(eachEnrolledCourse of records){
+            let course_name = eachEnrolledCourse['course_name'];
+            let course_id = eachEnrolledCourse['course_id'];
+            let class_id = eachEnrolledCourse['class_id'];
+          
+            console.log("Course " + course_id);
+            console.log("Class " + class_id);
+
+            let needed_arr = [course_id,class_id];
+
+            cc_arr.push(needed_arr);
+
+            let buttonToAssign = "buttonToWithdrawFromEnrolledCourse" + course_id + "Class" + class_id
+            value += `<tr>
+                            <td>${course_id}</td>
+                            <td>${course_name}</td>
+                            <td>${class_id}</td>
+                            <td><button id = ${buttonToAssign}> Withdraw</button><td>
+                        </tr>`;
+
+          }      
+          value+= `</tbody></table>`;
+
+          let body = document.getElementById('showEnrolledCourses');
+          body.innerHTML = value; 
+
+          console.log(cc_arr);
+
+          for(let a_tup of cc_arr){
+            console.log(a_tup)
+            co_id = a_tup[0];
+            cl_id = a_tup[1];
+            // console.log('hi')
+            b_id = "buttonToWithdrawFromEnrolledCourse" + co_id + "Class" + cl_id;
+            console.log(b_id)
+            el = document.getElementById(b_id);
+                    el.addEventListener('click',function(event){
+                      send_application(co_id,cl_id,learner_id);
+                    })
+          }
+
       })
-      .catch(error => console.error(error.response.data))
+      .catch(error => {
+        if(error.response.data.code == 404){
+            let el = document.getElementById("showEnrolledCourses");
+            el.innerHTML =`<div class="alert alert-primary" role="alert">
+                            There are no enrolled courses for this learner.
+                          </div>`;
+            
+          }
+      })
     }
 
     function getAssignedCourses(learner_id){
@@ -316,8 +376,18 @@
 
 
       })
-      .catch(error => console.error(error.response.data))
+      .catch(error => {
+        if(error.response.data.code == 404){
+            let el = document.getElementById("showAssignedCourses");
+            el.innerHTML =`<div class="alert alert-primary" role="alert">
+                            There are no assigned courses for this learner.
+                          </div>`;
+            
+          }
+      })
     }
+
+
 
     function send_application(course_id,class_id,user_id){
       axios
