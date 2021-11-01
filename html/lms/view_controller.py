@@ -80,16 +80,12 @@ class ViewController():
         
         return crse_enrol_class.get_user_enrolled_courses(user_id)
 
-
-    
-
-
-@app.route("/eligible_courses", methods=['POST'])
-def get_eligible_courses():
+@app.route("/eligible_classes", methods=['POST'])
+def get_eligible_classes():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_eligible_courses(user_id)
+    record = learner.get_eligible_classes(user_id)
     courses = record[0]
     classes = record[1]
     final_list = []
@@ -111,7 +107,7 @@ def get_eligible_courses():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no eligible courses."
+            "message": "There are no eligible classes."
             }
         ), 404
 

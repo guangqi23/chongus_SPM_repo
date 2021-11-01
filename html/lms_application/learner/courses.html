@@ -138,13 +138,13 @@
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Classes Eligible for Enrollment</h1>
-        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="eligible_courses">
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="eligible_classes">
           </div>
         </div>
           <script>
             function viewEligibleCourses(userId) {
               axios
-                .post('http://127.0.0.1:5002/eligible_courses', {user_id: userId
+                .post('http://127.0.0.1:5002/eligible_classes', {user_id: userId
                 })
                 .then(res => 
                   {
@@ -168,7 +168,7 @@
                                 </div>
                                 </div>`;
                                     
-                      let body = document.getElementById('eligible_courses');
+                      let body = document.getElementById('eligible_classes');
                       body.innerHTML = value; 
                     }
                   }
@@ -211,6 +211,41 @@
                 .catch(error => console.error(error.response.data));
             }
             viewCompletedCourses(2);
+          </script>
+      <div class="container" data-aos="fade-up">
+        <h1>View Courses Ineligible for Enrollment</h1>
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="uneligible_courses">
+          </div>
+        </div>
+          <script>
+            function viewUneligibleCourses(userId) {
+              axios
+                .post('http://127.0.0.1:5002/uneligible_courses', {user_id: userId
+                })
+                .then(res => 
+                  {
+                    records = res.data.data.record;
+                    let value = '';
+                    for(course of records) {
+                      let coursename = course.course_name
+                      let coursedescription = course.course_description
+                      value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                                <div class="course-item">
+                                <div class="course-content">
+                                <h3>${coursename}</h3>
+                                <p>${coursedescription}</p>
+                                </div>
+                                </div>
+                                </div>`;
+                                    
+                      let body = document.getElementById('uneligible_courses');
+                      body.innerHTML = value; 
+                    }
+                  }
+                )
+                .catch(error => console.error(error.response.data));
+            }
+            viewUneligibleCourses(1);
       </script>
     </section><!-- End Courses Section -->
 

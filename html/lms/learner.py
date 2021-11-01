@@ -57,8 +57,6 @@ class Learner(User):
 
 #get eligible classes for eligible courses
     def get_eligible_courses(self, userid):
-        course_class = Course()
-        classes_class = Classes()
         course_pre_req = Course_Prerequisites()
         learner_badges = Learner_Badges()
         completed_courses = learner_badges.get_learner_badges(userid)
@@ -75,6 +73,13 @@ class Learner(User):
                     if course.prereq_course_id in completed_courses:
                         course_query_list.append(course_query)
         
+        return course_query_list
+
+    def get_eligible_classes(self, userid):
+        course_class = Course()
+        classes_class = Classes()
+        course_query_list = self.get_eligible_courses(userid)
+
         courses = []
         classes = []
         for course in course_query_list:
@@ -84,14 +89,14 @@ class Learner(User):
                     course_info = course_class.get_course_by_id(course)
                     courses.append(course_info)
                     classes.append(a_class)
-
+        
         return [courses, classes]
-    
+
     def get_uneligible_courses(self, userid):
         course_class = Course()
 
         course_list = [course.course_id for course in self.get_remaining_courses(userid)]
-        eligible_courses = [course.course_id for course in self.get_eligible_courses(userid)]
+        eligible_courses = [course for course in self.get_eligible_courses(userid)]
         other_courses = [course for course in course_list if course not in eligible_courses]
 
         output = []
