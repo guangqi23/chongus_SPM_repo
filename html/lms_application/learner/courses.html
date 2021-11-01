@@ -137,6 +137,46 @@
           viewAssignedCourses(4);
       </script>
       <div class="container" data-aos="fade-up">
+        <h1>View Enrolled Classes</h1>
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="enrolled_courses">
+        </div>
+      </div> <!-- End Course Item-->
+          <script>
+          function viewEnrolledCourses(userId) {
+            axios
+              .post('http://127.0.0.1:5002/enrolled_classes', {user_id: userId
+              })
+              .then(res => 
+                {
+                    records = res.data.data.record;
+                    let value = '';
+                        for(course of records) {
+                          console.log(course)
+                          let coursename = course.course_name
+                          let coursedescription = course.course_description
+                          let start_date = course.startdate
+                          let end_date = course.enddate
+                        
+                          value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                                    <div class="course-item">
+                                      <div class="course-content">
+                                        <h3>${coursename}</h3>
+                                        <p>${coursedescription}</p>
+                                        <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
+                                      </div>
+                                    </div>
+                                  </div>`;
+                                  
+                          let body = document.getElementById('enrolled_courses');
+                          body.innerHTML = value; 
+                        }
+                }
+              )
+              .catch(error => console.error(error.response.data));
+          }
+          viewEnrolledCourses(4);
+      </script>
+      <div class="container" data-aos="fade-up">
         <h1>View Classes Eligible for Enrollment</h1>
         <div class="row" data-aos="zoom-in" data-aos-delay="100" id="eligible_classes">
           </div>
