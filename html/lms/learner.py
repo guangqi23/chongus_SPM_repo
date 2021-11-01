@@ -26,7 +26,7 @@ class Learner(User):
 
     def get_all_learners(self):
         records = Learner.query.filter_by(designation='Junior Engineer').all()
-        records2 = Learner.query.filter_by(designation='Junior Engineer').all()
+        records2 = Learner.query.filter_by(designation='Senior Engineer').all()
         records3 = records + records2
         return records3
 
@@ -41,18 +41,10 @@ class Learner(User):
         course_list = [course.course_id for course in course_class.get_all_courses()]
         completed_courses = [course.course_id for course in learner_badges.get_learner_badges(userid)]
         enrolled_courses = [course for course in self.get_enrolled_courses(userid)]
-        assigned_courses = [course.course_id for course in self.get_assigned_courses(userid)]
+        assigned_courses = [course for course in self.get_assigned_courses(userid)]
         completed_enrolled_assigned_courses = completed_courses + enrolled_courses + assigned_courses
         remaining_course = [course for course in course_list if course not in completed_enrolled_assigned_courses]
-
-        output = []
-
-        for course_query in remaining_course: 
-            vacancies = course_class.get_vacancies_by_courses(course_query)
-            if vacancies > 0: 
-                    courseinfo = course_class.get_course_by_id(course_query)
-                    output.append(courseinfo)
-
+        output = [course_class.get_course_by_id(course_query) for course_query in remaining_course if course_class.get_vacancies_by_courses(course_query) > 0]
         return output
 
 #get eligible classes for eligible courses
@@ -79,7 +71,6 @@ class Learner(User):
         course_class = Course()
         classes_class = Classes()
         course_query_list = self.get_eligible_courses(userid)
-
         courses = []
         classes = []
         for course in course_query_list:
@@ -94,17 +85,10 @@ class Learner(User):
 
     def get_uneligible_courses(self, userid):
         course_class = Course()
-
         course_list = [course.course_id for course in self.get_remaining_courses(userid)]
         eligible_courses = [course for course in self.get_eligible_courses(userid)]
         other_courses = [course for course in course_list if course not in eligible_courses]
-
-        output = []
-      
-        for course_query in other_courses: 
-            courseinfo = course_class.get_course_by_id(course_query)
-            output.append(courseinfo)
-
+        output = [course_class.get_course_by_id(course_query) for course_query in other_courses]
         return output
     
     def is_learner(self, user_id):
@@ -114,63 +98,43 @@ class Learner(User):
     def get_enrolled_courses(self, user_id):
         enrolled_courses = Course_Enrollment()
         enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)        
-        output = []
-        for enrolled_course in enrolled_courses_list:
-            if enrolled_course.is_enrolled == 1:
-                output.append(enrolled_course)
-
+        output = [enrolled_course for enrolled_course in enrolled_courses_list if enrolled_course.is_enrolled == 1]
         return output
     
     def get_enrolled_course_class(self, user_id): 
         enrolled_courses_list = self.get_enrolled_courses(user_id)  
-        course_class = Course()
-        classes_class = Classes()      
-        courses = []
-        classes = []
-        for enrolled_course in enrolled_courses_list:
-            courseinfo = course_class.get_course_by_id(enrolled_course.course_id)
-            classinfo = classes_class.get_classes_by_class_id(enrolled_course.course_id, enrolled_course.class_id)
-            for a_class in classinfo:
-                classes.append(a_class)
-            courses.append(courseinfo)
-        
-        return [courses, classes]
+        output = [enrolled_course for enrolled_course in enrolled_courses_list]
+        return output
 
     def get_assigned_courses(self, user_id): 
         assigned_courses = Learner_Assignment()
-        course_class = Course()
-        output = []
         assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
-        for assigned_course in assigned_courses_list:
-            courseinfo = course_class.get_course_by_id(assigned_course.course_id)
-            output.append(courseinfo)
+        output = [assigned_course for assigned_course in assigned_courses_list]
         return output
     
     def get_assigned_course_class(self, user_id): 
         assigned_courses = Learner_Assignment()
-        course_class = Course()
-        classes_class = Classes()
-        courses = []
-        classes = []
         assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
-        for assigned_course in assigned_courses_list:
-            courseinfo = course_class.get_course_by_id(assigned_course.course_id)
-            classinfo = classes_class.get_classes_by_class_id(assigned_course.course_id, assigned_course.class_id)
-            for a_class in classinfo:
-                classes.append(a_class)
-            courses.append(courseinfo)
-        
-        return [courses, classes]
+        output = self.get_course_class(assigned_courses_list)
+        return output
 
     def get_completed_courses(self, user_id):
         completed_courses = Learner_Badges()
         course_class = Course()
-        output = []
         completed_courses_list = completed_courses.get_learner_badges(user_id)
-        for completed_course in completed_courses_list:
-            courseinfo = course_class.get_course_by_id(completed_course.course_id)
-            output.append(courseinfo)
+        output = [course_class.get_course_by_id(completed_course.course_id) for completed_course in completed_courses_list]
         return output
 
-
+    def get_course_class (self, course_list):
+        course_class = Course()
+        classes_class = Classes()
+        courses = []
+        classes = []
+        for a_course in course_list:
+            courseinfo = course_class.get_course_by_id(a_course.course_id)
+            classinfo = classes_class.get_classes_by_class_id(a_course.course_id, a_course.class_id)
+            for a_class in classinfo:
+                classes.append(a_class)
+            courses.append(courseinfo)
+        return [courses, classes]
 
