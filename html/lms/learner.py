@@ -61,8 +61,6 @@ class Learner(User):
         completed_courses = learner_badges.get_learner_badges(userid)
 
         course_list = [course.course_id for course in self.get_remaining_courses(userid)]
-        
-        # output = []
         course_query_list = []
 
         for course_query in course_list: 
