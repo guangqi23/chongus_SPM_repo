@@ -97,7 +97,7 @@
     <!-- ======= Courses Section ======= -->
     <section class="courses">
       <div class="container" data-aos="fade-up">
-        <h1>View Assigned Courses</h1>
+        <h1>View Assigned Classes</h1>
         <div class="row" data-aos="zoom-in" data-aos-delay="100" id="assigned_courses">
         </div>
       </div> <!-- End Course Item-->
@@ -114,14 +114,15 @@
                           console.log(course)
                           let coursename = course.course_name
                           let coursedescription = course.course_description
-                          let startdate = course.startdate
-                          let enddate = course.enddate
-                          
+                          let start_date = course.startdate
+                          let end_date = course.enddate
+                        
                           value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                     <div class="course-item">
                                       <div class="course-content">
                                         <h3>${coursename}</h3>
                                         <p>${coursedescription}</p>
+                                        <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
                                       </div>
                                     </div>
                                   </div>`;
@@ -175,7 +176,6 @@
                 .catch(error => console.error(error.response.data));
             }
             viewEligibleCourses(1);
-        </script>
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Completed Courses</h1>
@@ -211,7 +211,7 @@
                 .catch(error => console.error(error.response.data));
             }
             viewCompletedCourses(2);
-        </script>
+      </script>
     </section><!-- End Courses Section -->
 
   </main><!-- End #main -->

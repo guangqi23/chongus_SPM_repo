@@ -12,7 +12,7 @@ from learner_badges import Learner_Badges
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -139,6 +139,22 @@ class Learner(User):
             output.append(courseinfo)
         return output
     
+    def get_assigned_course_class(self, user_id): 
+        assigned_courses = Learner_Assignment()
+        course_class = Course()
+        classes_class = Classes()
+        courses = []
+        classes = []
+        assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
+        for assigned_course in assigned_courses_list:
+            courseinfo = course_class.get_course_by_id(assigned_course.course_id)
+            classinfo = classes_class.get_classes_by_class_id(assigned_course.course_id, assigned_course.class_id)
+            for a_class in classinfo:
+                classes.append(a_class)
+            courses.append(courseinfo)
+        
+        return [courses, classes]
+
     def get_completed_courses(self, user_id):
         completed_courses = Learner_Badges()
         course_class = Course()

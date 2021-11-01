@@ -183,17 +183,28 @@ def get_enrolled_classes():
 
 
 @app.route("/assigned_courses", methods=['POST'])
-def get_assigned_courses():
+def get_assigned_course_class():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_assigned_courses(user_id)
-    if len(record):
+    record = learner.get_assigned_course_class(user_id)
+    courses = record[0]
+    classes = record[1]
+    final_list = []
+    for i in range(len(courses)):
+        print(courses[i])
+        print(classes[i])
+        course_info = courses[i].json()
+        class_info = classes[i].json()
+        course_info.update(class_info)
+        final_list.append(course_info)
+        
+    if len(final_list):
             return jsonify(
                 {
                     "code": 200,
                     "data": {
-                        "record": [a_record.json() for a_record in record]
+                        "record": [a_record for a_record in final_list]
                     }
                 }
             )
@@ -204,12 +215,12 @@ def get_assigned_courses():
             }
         ), 404
 
-@app.route("/learnerbadges", methods=['POST'])
+@app.route("/completed_courses", methods=['POST'])
 def get_completed_courses():
     application = request.get_json()
     user_id = application['user_id']
-    learner_badges = Learner_Badges()
-    record = learner_badges.get_completed_courses(user_id)
+    learner = Learner()
+    record = learner.get_completed_courses(user_id)
     if len(record):
             return jsonify(
                 {
