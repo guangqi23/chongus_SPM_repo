@@ -368,7 +368,6 @@ def get_all_enrolled_classes_of_user():
         }
         new_record.append(a_record)
         
-
     if len(record):
             return jsonify(
                 {

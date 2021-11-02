@@ -10,7 +10,6 @@ from course_prerequisites import Course_Prerequisites
 from learner_assignment import Learner_Assignment
 from learner_badges import Learner_Badges
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -41,14 +40,12 @@ class Learner(User):
     def get_course_class (self, course_list):
         course_class = Course()
         classes_class = Classes()
-        courses = []
+        courses = [course_class.get_course_by_id(a_course.course_id) for a_course in course_list]
         classes = []
         for a_course in course_list:
-            courseinfo = course_class.get_course_by_id(a_course.course_id)
             classinfo = classes_class.get_classes_by_class_id(a_course.course_id, a_course.class_id)
             for a_class in classinfo:
                 classes.append(a_class)
-            courses.append(courseinfo)
         return [courses, classes]
     
     def get_enrolled_courses(self, user_id):
@@ -93,7 +90,6 @@ class Learner(User):
         output = [course_class.get_course_by_id(course_query) for course_query in remaining_course if course_class.get_vacancies_by_courses(course_query) > 0]
         return output
 
-#get eligible classes for eligible courses
     def get_eligible_courses(self, user_id):
         course_pre_req = Course_Prerequisites()
         learner_badges = Learner_Badges()
