@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Trainers - Mentor Bootstrap Template</title>
+  <title>LMS - HR</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
   
@@ -224,7 +224,7 @@
     console.log(class_id);
     function get_all_trainers(){
         axios
-        .get('http://127.0.0.1:5002/get_all_trainers',{})
+        .get('http://localhost:5000/get_all_trainers',{})
         .then(res =>{
             records = res.data.data.record;
                 console.log(records);
@@ -279,7 +279,7 @@
 
     function assignTrainer(course_id,class_id,trnr_id){
         axios
-        .post('http://localhost:5001/assign_course_trainer',
+        .post('http://localhost:5000/assign_course_trainer',
                 {
                   "hr_id" : "1",
                   "course_id" : course_id,

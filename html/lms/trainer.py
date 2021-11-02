@@ -7,8 +7,8 @@ from sqlalchemy import Column, Integer
 from trainer_assignment import Trainer_Assignment
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -29,7 +29,7 @@ class Trainer(User):
     
     def get_all_trainers(self):
         trnr = Trainer()
-        return trnr.query.filter_by(designation='Trainer').all()
+        return trnr.query.filter_by(designation='Senior Engineer').all()
 
     def get_assigned_classes(self,userid):
         
