@@ -300,7 +300,7 @@
             console.log(b_id)
             el = document.getElementById(b_id);
                     el.addEventListener('click',function(event){
-                      send_application(co_id,cl_id,learner_id);
+                      send_dropenrolled_application(co_id,cl_id,learner_id);
                     })
           }
 
@@ -396,6 +396,17 @@
             data = res.data;
             console.log(data);
             alert("This learner has successfully been withdrawned a class");
+            window.location = ('./withdrawLearner.html')
+      })
+    }
+
+    function send_dropenrolled_application(course_id,class_id,user_id){
+      axios
+      .post("http://127.0.0.1:5010/drop_class",{course_id:course_id,class_id:class_id,user_id:learner_id})
+      .then(res => {
+            data = res.data;
+            console.log(data);
+            alert("This learner has successfully been withdrawned a enrolled class");
             window.location = ('./withdrawLearner.html')
       })
     }
