@@ -29,6 +29,11 @@ class Section(db.Model):
     def get_section_title(self):
         return self.section_title
 
+    def get_section_title_with_id(self, sect_id):
+        section = Section.query.filter_by(section_id= sect_id).first()
+        section_title = section.section_title
+        return section_title
+
     def get_sections(self, section_id):
         section = Section.query.filter_by(section_id=section_id).first()
         return section

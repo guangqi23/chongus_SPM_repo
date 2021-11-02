@@ -29,8 +29,15 @@ class Quiz(db.Model):
     def get_section_id(self):
         return self.section_id
 
-    def get_time_limit(self):
-        return self.time_limit
+    def get_time_limit_with_id(self, quiz_id_input):
+        quizObj = Quiz.query.filter_by(quiz_id= quiz_id_input).first()
+        timer = quizObj.time_limit
+        return str(timer)
+
+    def get_section_id_with_quiz_id(self, quiz_id):
+        quizObj = Quiz.query.filter_by(quiz_id= quiz_id).first()
+        section_id = quizObj.section_id
+        return section_id
 
     def get_quiz(self,section_id):
         qid = self.quiz_id

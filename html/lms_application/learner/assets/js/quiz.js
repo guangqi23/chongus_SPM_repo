@@ -8,6 +8,26 @@ const quiz_box = document.querySelector(".quiz_box");
 const option_list = document.querySelector(".option_list");
 const timeCount = quiz_box.querySelector(".timer .timer_sec");
 const timeLine = quiz_box.querySelector("header .time_line");
+const quiz_title = document.getElementById('quiz_Title');
+
+let timeValue;
+
+timerURL = 'http://127.0.0.1:5002/get_Quiz_Timer?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
+axios.get(timerURL)
+    .then(response => {
+        console.log("Timer is:", response.data);
+        timeValue = parseInt(response.data);
+    });
+
+timerURL = 'http://127.0.0.1:5002/get_Section_Title?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
+axios.get(timerURL)
+    .then(response => {
+        console.log("Quiz title is: " , response.data);
+        quiz_title.innerHTML = ("Quiz: " + String(response.data));
+    });
+
+
+
 
 //If Start Quiz Button is clicked
 start_btn.onclick = ()=>{
@@ -27,14 +47,14 @@ continue_btn.onclick = ()=>{
     questionCounter(1);
     clearInterval(counter);
     startTimer(timeValue);
-    startTimerLine(counterLine);
+    //startTimerLine(counterLine); //Got bug
 }
 
 let question_count = 0;
 let question_num = 1;
 let counter;
 let counterLine;
-let timeValue = 15;
+
 let widthValue = 0;
 let userScore = 0;
 
@@ -75,7 +95,7 @@ nxt_btn.onclick = ()=>{
         question_num++;
         showQuestions(question_count);
         questionCounter(question_num);
-        startTimerLine(widthValue);
+        //startTimerLine(widthValue);
         nxt_btn.style.display = "none";
     }
     else
@@ -91,11 +111,22 @@ nxt_btn.onclick = ()=>{
 function showQuestions(index){
     const question_text = document.querySelector(".question_text");
     
-    let question_tag = '<span>'+ questions[index].number + '. ' +questions[index].question + '</span>';
-    let option_tag = '<div class="option">'+questions[index].options[0]+'<span></span></div>'
+    // let question_tag = '<span>'+ questions[index].number + '. ' +questions[index].question + '</span>';
+    let question_tag = '<span>'+ questions[index].question + '</span>';
+    let option_tag
+    if(String(questions[index].answer) == "true" || String(questions[index].answer) == "false")
+    {
+        option_tag = '<div class="option">'+questions[index].options[0]+'<span></span></div>'
+                       + '<div class="option">'+questions[index].options[1]+'<span></span></div>';
+    }
+    else
+    {
+        option_tag = '<div class="option">'+questions[index].options[0]+'<span></span></div>'
                     + '<div class="option">'+questions[index].options[1]+'<span></span></div>'
                     + '<div class="option">'+questions[index].options[2]+'<span></span></div>'
                     + '<div class="option">'+questions[index].options[3]+'<span></span></div>';
+    }
+    
     question_text.innerHTML = question_tag;
     option_list.innerHTML = option_tag;
     const option = option_list.querySelectorAll(".option");
@@ -110,9 +141,11 @@ let crossIcon = '<div class="icon cross"><i class="fas fa-times"></i></div>';
 
 function optionSelected(answer)
 {
-    let userAns = answer.textContent;
-    let correctAns = questions[question_count].answer;
+    let userAns = String(answer.textContent);
+    console.log("Selected option:" , userAns);
+    let correctAns = String(questions[question_count].answer);
     let allOptions = option_list.children.length; //Can reuse 
+    console.log("Comparing: " , userAns, " vs " , correctAns);
     if(userAns == correctAns)
     {
         userScore += 1;
@@ -152,21 +185,33 @@ function showResultBox()
     quiz_box.classList.remove("activeQuiz"); //Hide quiz
     result_box.classList.add("activeResult"); //Show result
     const scoreText = result_box.querySelector(".score_text");
-    if(userScore > 1)
+    let percentage = (userScore / questions.length) * 100;
+
+    //scoreObj = [sessionStorage["quiz_id"], sessionStorage["learner_id"] , percentage];
+    if(userScore == questions.length)
     {
-        let scoreTag = '<span>and Congratz, you got only <p>'+ userScore +'</p> out of <p>' +questions.length+ '</p></span>'
+        let scoreTag = '<span>Congratulations, you got <p>'+ userScore +'</p> out of <p>' +questions.length+ '</p></span>'
         scoreText.innerHTML = scoreTag;
     }
-    else if(userScore > 0)
+    else if(userScore >= (questions.length / 2))
     {
-        let scoreTag = '<span>and nice, you got only <p>'+ userScore +'</p> out of <p>' +questions.length+ '</p></span>'
+        let scoreTag = '<span>Nice, you got only <p>'+ userScore +'</p> out of <p>' +questions.length+ '</p></span>'
         scoreText.innerHTML = scoreTag;
     }
     else
     {
-        let scoreTag = '<span>and sorry, you got only <p>'+ userScore +'</p> out of <p>' +questions.length+ '</p></span>'
+        let scoreTag = '<span>Sorry, you got only <p>'+ userScore +'</p> out of <p>' +questions.length+ '</p></span>'
         scoreText.innerHTML = scoreTag;
     }
+    var ungradSubmitUrl = new URL('http://localhost:5002/submitScore');
+    ungradSubmitUrl.search = new URLSearchParams({quiz_id: sessionStorage["quiz_id"] , user_id : sessionStorage["learner_id"], score: percentage})
+    
+    axios.post(ungradSubmitUrl)
+                .then(response => {
+                    console.log()
+                });
+
+    
 }
 
 
