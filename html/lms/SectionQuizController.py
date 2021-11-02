@@ -271,7 +271,6 @@ def get_quiz_timer():
 def get_section_title():
     quiz_id = int(request.args.get('quiz_id', None))
     da = SectionQuizController()
-    print(quiz_id, file=sys.stderr)
     quiz_title = da.get_Quiz_Title(quiz_id)
     
     return quiz_title

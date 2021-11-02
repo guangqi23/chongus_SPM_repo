@@ -32,16 +32,19 @@ class Section(db.Model):
     def get_section_title_with_id(self, sect_id):
         section = Section.query.filter_by(section_id= sect_id).first()
         section_title = section.section_title
+        db.session.close()
         return section_title
 
     def get_sections(self, section_id):
         section = Section.query.filter_by(section_id=section_id).first()
+        db.session.close()
         return section
 
     def get_section_all(self,class_id):
         sections  = Section.query.filter_by(class_id=class_id)
         #check if empty
         count =0
+        db.session.close()
         for x in sections:
             count+=1
 
