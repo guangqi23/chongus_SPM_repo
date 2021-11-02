@@ -56,8 +56,9 @@ class Learner(User):
         return output
     
     def get_enrolled_course_class(self, user_id): 
-        enrolled_courses_list = self.get_enrolled_courses(user_id)  
-        output = [enrolled_course for enrolled_course in enrolled_courses_list]
+        enrolled_courses = self.get_enrolled_courses(user_id)  
+        enrolled_courses_list = [enrolled_course for enrolled_course in enrolled_courses]
+        output = self.get_course_class(enrolled_courses_list)
         return output
 
     def get_assigned_courses(self, user_id): 
