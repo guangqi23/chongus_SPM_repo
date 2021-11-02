@@ -428,7 +428,7 @@
             card_type = 'MCQ';
             //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
             //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
-            card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="mcq_answer" target = ${answer}>${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><label style = 'display:inline'>A) </label><div  style = 'display:inline' class ="mcqoption1" target =  ${opt_text1}>${opt_text1}</div><p></p><label  style = 'display:inline' >B) </label><div   style = 'display:inline' class ="mcqoption2"target =  ${opt_text2}>${opt_text2}</div><p></p><label  style = 'display:inline'>C) </label><div  style = 'display:inline' class ="mcqoption3"target =  ${opt_text3}>${opt_text3}</div><p></p><label style = 'display:inline' >D) </label><div  style = 'display:inline' class ="mcqoption4" target =  ${opt_text4}>${opt_text4}</div></div></div>`
+            card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer" target = ${answer}>${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><label>A) </label><div class ="mcqoption1" target =  ${opt_text1}>${opt_text1}</div><label>B) </label><div class ="mcqoption2"target =  ${opt_text2}>${opt_text2}</div><label>C) </label><div class ="mcqoption3"target =  ${opt_text3}>${opt_text3}</div><label>D) </label><div class ="mcqoption4" target =  ${opt_text4}>${opt_text4}</div></div></div>`
             $("#quiz_card").append(card);
             console.log('appended');
 
@@ -442,7 +442,6 @@
             var qn_type = document.getElementsByClassName('question_type');
             let len = qn_type.length;
             is_mcq_counter =0;
-            is_tf_counter=0
             for (var x = 0; x < len; x++) 
                 {
                 order = x+1;
@@ -451,28 +450,67 @@
                 if(qqn_type =='TF'){
                     var answer = document.getElementsByClassName('answer');
                     var question = document.getElementsByClassName('question');
-                    qanswer = answer[is_tf_counter].getAttribute('target');
-                    is_tf_counter +=1;
+                    qanswer = answer[x].getAttribute('target');
                     final_answer = 1;
                     qquestion = question[x].textContent;
                     tf_order = order;
                     if (qanswer == false){
                        final_answer = 0;
                     }
+                    $(async() => {          
+                    // Change serviceURL to your own
                     var serviceURL="http://localhost:5002/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
-                    var theRequest = $.ajax({
-                        url: serviceURL,
-                        method: 'GET',
-                    }).done(function(data){
-                            console.log(data);
-                            console.log(theRequest.responseText);
+                    try {
+                        const response =
+                        await fetch(
+                        serviceURL, { method: 'GET' }
+                        );
+                        const result = await response.json();
+                        // Data is present,see it on console
+                        // console.log(result);
+                    
+                    if (response.status === 200) {
+                        console.log("quiz module created");
+                     } else if (response.status == 404) {
+                    // No reservation
+                    showError(result.message);
+                    } else {
+                            // unexpected outcome, throw the error
+                            throw response.status;
+                        };
+                        
+                    } catch (error) {
+                        // Errors when calling the service; such as network error, 
+                        // service offline, etc
+                        showError
+                        ('There is an error creating the quiz, please try again later.<br />' + error);
+                            } // error
                     });
+
+                    
+
                 }
                 else
                 {
-                    
+                    var answer = document.getElementsByClassName('answer');
                     var question = document.getElementsByClassName('question');
-                    qqn = 'MCQ';
+                    var opt1 = document.getElementsByClassName('mcqoption1');
+                    var opt2 = document.getElementsByClassName('mcqoption2');
+                    var opt3 = document.getElementsByClassName('mcqoption3');
+                    var opt4 = document.getElementsByClassName('mcqoption4');
+                    console.log('opt1',opt1[0]);
+                    qanswer = answer[x].textContent;
+                    mcq_qquestion = question[x].textContent;
+                    qqn = 'MCQ'
+                    if(qanswer == 'False')
+                    {
+                        final_answer =0;
+                    }
+                    qopt1= opt1[is_mcq_counter].textContent;
+                    qopt2= opt2[is_mcq_counter].textContent;
+                    qopt3= opt3[is_mcq_counter].textContent;
+                    qopt4= opt4[is_mcq_counter].textContent;
+                    mcq_order =order;
                     /*var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
                     var theRequest = $.ajax({
                         url: serviceURL,
@@ -484,32 +522,14 @@
                             console.log(theRequest.responseText);
                     });*/
                     qn_id =0;
-                    mcq_qquestion = question[x].textContent;
-                    var question = document.getElementsByClassName('question');
-                    mcq_order =order;
-                    
+                    var answer = document.getElementsByClassName('answer');
+                    var actual_ans = answer[0].innerHTML;
+                    console.log('ANSWER',actual_ans);
                     var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
                     }).done(function(data){
-                                
-                                var opt1 = document.getElementsByClassName('mcqoption1');
-                                var opt2 = document.getElementsByClassName('mcqoption2');
-                                var opt3 = document.getElementsByClassName('mcqoption3');
-                                var opt4 = document.getElementsByClassName('mcqoption4');
-                                console.log('mcq_iter_counter',is_mcq_counter);
-                                qopt1= opt1[is_mcq_counter].innerHTML;
-                                qopt2= opt2[is_mcq_counter].innerHTML;
-                                qopt3= opt3[is_mcq_counter].innerHTML;
-                                qopt4= opt4[is_mcq_counter].innerHTML;
-                                
-                                var answer = document.getElementsByClassName('mcq_answer');
-                                
-                                var actual_ans = answer[is_mcq_counter].innerHTML;
-                                
-                                console.log(actual_ans);
-                                console.log(opt3);
                                 console.log(data);
                                 qn_id = data.id;
                                 console.log(qn_id);
@@ -519,12 +539,12 @@
                                 
                                 if (actual_ans == qopt1)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -537,12 +557,12 @@
                             });
                                 if (actual_ans == qopt2)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -555,12 +575,12 @@
                             });
                                 if (actual_ans == qopt3)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -573,12 +593,12 @@
                             });
                                 if (actual_ans == qopt4)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                     serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
+                                    serviceURL =  serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -588,10 +608,9 @@
                                         console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
-                            }); 
-                            is_mcq_counter+=1;                       
+                            });                        
                         });                    
-                    
+                    is_mcq_counter+=1;
                 }
 
                 }

@@ -33,14 +33,12 @@ class multiplechoiceoptions(db.Model):
         
     def get_options_by_question_id(self,question_id):
         option= multiplechoiceoptions.query.filter_by(question_id = question_id)
-       
         count =0
         for x in option:
             count+=1
         if count!=0:
             return jsonify(
                 {
-                    
                     "data": [question.json() for question in option]
                 })
         return jsonify(
