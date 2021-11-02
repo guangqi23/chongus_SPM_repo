@@ -2,12 +2,13 @@ from flask import Flask, json, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from course_enrollment import Course_Enrollment
-from learner_badges import learnerbadges
+from learner_badges import Learner_Badges
 from course_prerequisites import Course_Prerequisites
 from classes import Classes
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -22,9 +23,9 @@ class EnrollmentController():
         is_enrolled = 0
 
         # check if fulfilled prerequisites
-        completed_courses = learnerbadges()
+        completed_courses = Learner_Badges()
         course_prereq = Course_Prerequisites()
-        fulfilled_prereq = completed_courses.get_completed_courses(userid)
+        fulfilled_prereq = completed_courses.get_learner_badges(userid)
         prerequisites = course_prereq.prereq_by_course(course_id)
         completed = [course.course_id for course in fulfilled_prereq]
         prereq = [course.prereq_course_id for course in prerequisites]

@@ -168,10 +168,11 @@ def prereq_by_course():
         ), 404
 
 
-@app.route("/changeEnrollmentStatus/input")
+@app.route("/changeEnrollmentStatus", methods=["POST"])
 def changeEnrollStatus():
+    application = request.get_json()
     da = CourseController()
-    enrollId = int(request.args.get('enrol_id', None))
+    enrollId = application['enrollment_id']
     output = da.changeEnrollmentStatus(enrollId)
     return jsonify(
         {
@@ -229,12 +230,26 @@ def getAllPendingEnrollment():
     
 
 
-@app.route("/rejectEnrollment/input", methods=['GET'])
+@app.route("/rejectEnrollment", methods=['POST'])
 def rejectEnrollment():
+    application = request.get_json()
     da = Course_Enrollment()
-    enrollId = int(request.args.get('enrol_id', None))
+    enrollId = application['enrollment_id']
     result = da.rejectEnrollment(enrollId)
-    return result
+    if result == 200:
+        return jsonify(
+            {
+                'code': 200,
+                'message': "Enrollment status of this learner has been rejected"
+            }
+        )
+    
+    return jsonify(
+        {
+            'code': 500,
+            'message': "There was an error when rejecting enrollment record"
+        }
+    )
 
 @app.route("/change_course_start_end_date", methods=['POST'])
 def change_course_start_end_date():

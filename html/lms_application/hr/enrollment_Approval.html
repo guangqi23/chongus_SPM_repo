@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Contact - Mentor Bootstrap Template</title>
+  <title>LMS - HR</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -43,7 +43,7 @@
   ======================================================== -->
 </head>
 
-<body>
+<body onload="retrieve_all_enrollment_record()">
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -193,70 +193,73 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script>
-
-
-    $(async() => {
-                microServiceURL = "http://127.0.0.1:5000/allEnrollmentsPending";
-                try{
-                    const response = 
-                    await fetch(
-                        microServiceURL, {method: 'GET'}
-                    );
-                    const result = await response.json();
-                    if (response.status === 200)
-                    {
-                        console.log(result)
-                        var enrollmentRecords = result;
-                        var rows = "";
-                        for (const record of enrollmentRecords)
-                        {
-                            console.log("Adding to table")
-                            eachRow = "<td class='enrol_id text-center'>" + record.enrollment_id + "</td>" +
-                                      "<td class='text-center'>" + record.course_id + "</td>" + 
-                                      "<td class='text-center'>" + record.userid + "</td>" +
-                                      "<td class='text-center'>" + record.class_id + "</td>" + 
-                                      "<td class='text-center'>" + record.is_enrolled + "</td>" +
-                                      "<td class='text-center'>" + "<button type='button' class='btn btn-secondary' style='margin-right: 5px; ' onclick='statusChange(this)'>Accept</button>" +
-                                        "<button type='button' class='btn btn-secondary' onclick='rejectEnrollment(this)'>Reject</button>" + "</td>"
-                            rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
-                        }
-                        $('#enrollmentTable').append(rows);
-                    }
-                } catch (error)
-                {
-                    showError(error)
-                }
-    });
+    function retrieve_all_enrollment_record(){
+      axios
+        .get('http://localhost:5000/allEnrollmentsPending')
+        .then(
+          res => {
+            records = res.data
+            console.log(records)
+            rows = ""
+            for (record of records){
+                console.log(record)
+                console.log("Adding to table")
+                eachRow = "<td class='enrol_id text-center'>" + record.enrollment_id + "</td>" +
+                          "<td class='text-center'>" + record.course_id + "</td>" + 
+                          "<td class='text-center'>" + record.userid + "</td>" +
+                          "<td class='text-center'>" + record.class_id + "</td>" + 
+                          "<td class='text-center'>" + record.is_enrolled + "</td>" +
+                          "<td class='text-center'>" + "<button type='button' class='btn btn-secondary' style='margin-right: 5px; ' onclick='statusChange(this)'>Accept</button>" +
+                            "<button type='button' class='btn btn-secondary' onclick='rejectEnrollment(this)'>Reject</button>" + "</td>"
+                rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
+                
+            }
+            $('#enrollmentTable').append(rows);
+        })
+        .catch(error => console.error(error.response));
+    }
 
     function statusChange(row_id)
     {
         var row = $(row_id).closest("tr");
         enrollment_id = row[0].childNodes[0].childNodes[0].data
         //console.log("Enrollment ID: " + enrollment_id)
-
-        const Http = new XMLHttpRequest();
-        const url = 'http://localhost:5000/changeEnrollmentStatus/input?enrol_id=' + enrollment_id;
-        $(async() => {
-            fetch(url)
-            .then(data=>{return data.Json()})
-            .catch(error=>console.log(error))
-        });
+        
+        axios
+        .post('http://localhost:5000/changeEnrollmentStatus', {
+          'enrollment_id': enrollment_id
+        })
+        .then(
+          res => {
+            result = res.data
+            if(result.status == 200){
+              console.log("It was successful and I will replace this with an alert next time")
+            }
+          }
+        )
+        .catch(error => console.error(error.response));
     }
 
     function rejectEnrollment(row_id)
     {
         var row = $(row_id).closest("tr");
         enrollment_id = row[0].childNodes[0].childNodes[0].data
-        console.log("Enrollment ID: " + enrollment_id)
+        
+        axios
+        .post('http://localhost:5000/rejectEnrollment', {
+          'enrollment_id': enrollment_id
+        })
+        .then(
+          res => {
+            result = res.data
+            if(result.status == 200){
+              console.log("It was successful and I will replace this with an alert next time")
+            }
+          }
+        )
+        .catch(error => console.error(error.response));
 
-        const Http = new XMLHttpRequest();
-        const url = 'http://localhost:5000/rejectEnrollment/input?enrol_id=' + enrollment_id;
-        $(async() => {
-            fetch(url)
-            .then(data=>{return data})
-            .catch(error=>console.log(error))
-        });
-        setTimeout(location.reload.bind(location), 2000);
+        // setTimeout(location.reload.bind(location), 2000);
     }
 
 

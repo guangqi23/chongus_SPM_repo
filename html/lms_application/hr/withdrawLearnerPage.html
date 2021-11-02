@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Withdrawing Classes for Learners</title>
+  <title>LMS - HR</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -318,7 +318,7 @@
 
     function getAssignedCourses(learner_id){
       axios
-      .post("http://127.0.0.1:5002/get_all_assigned_classes_of_user",{user_id : learner_id})
+      .post("http://localhost:5000/get_all_assigned_classes_of_user",{user_id : learner_id})
       .then(res => {
           records = res.data.data.record;
           console.log(records);
@@ -391,7 +391,7 @@
 
     function send_application(course_id,class_id,user_id){
       axios
-      .post("http://127.0.0.1:5001/delete_assigned_classes",{course_id:course_id,class_id:class_id,user_id:learner_id})
+      .post("http://localhost:5000/delete_assigned_classes",{course_id:course_id,class_id:class_id,user_id:learner_id})
       .then(res => {
             data = res.data;
             console.log(data);
