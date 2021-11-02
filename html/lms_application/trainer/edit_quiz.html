@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Edit Quiz</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" 
+        crossorigin="anonymous">
+     
+        <!-- Latest compiled and minified JavaScript -->
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+        
+        <script 
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Mentor - v4.6.0
+  * Template URL: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+    <!--div class="modal fade" id="CreateQuiz" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                    <div class="form-group">
+                        <label for="time_limit" class="col-form-label">Time Limit (Seconds):</label>
+                        <input type="number" class="form-control" id="time_limit">
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  
+                    <button type="button" class="get-started-btn" style = 'border: none;' id = 'create_quiz' onclick = 'create_quiz()'>Create quiz</button>
+                </div>
+                </div>
+            </div>
+    </div-->
+
+    
+    <div class="modal fade" id="TrueFalse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id ='tf_form'>
+                <div class="form-group" >
+                    
+                    <label for="tf_question1" class="col-form-label">Question:</label>
+                    <textarea class="form-control" id="tf_question1" ></textarea>
+                    <label class="radio-inline" for='tf_options1'>
+                    <br>Select answer: True / False</br>
+                    <input type="radio" name="inlineRadioOptions" id="tf_options1" value="True"> True
+                    </label>
+                    <label class="radio-inline" for='tf_options2'>
+                    <input type="radio" name="inlineRadioOptions" id="tf_options2" value="False"> False
+                    </label>
+                    <br>                    
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="get-started-btn" style = 'border: none;' id ='tf_button' onclick="create_truefalse()"  data-dismiss="modal">Create True False Question</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="MCQ" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id ='tf_form'>
+                <div class="form-group" >
+                    
+                    <label for="mcq_question1" class="col-form-label">Question:</label>
+                    <textarea class="form-control" id="mcq_question1" ></textarea>
+                    <br>Check right answer:</br>
+                    <label class="radio-inline" for='mcq_options1'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options1" value="mcq_options1"> Option A</label>
+                    <input type = 'text' class="form-control"  id = "mcq_text1" placeholder = 'Enter Answer'>
+                    
+                    <br>
+                    <label class="radio-inline" for='mcq_options2'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options2" value="mcq_options2"> Option B</label>
+                    <input type = 'text'class="form-control" id = "mcq_text2" placeholder = 'Enter Answer'>
+                   
+                    <br> 
+                    <label class="radio-inline" for='mcq_options3'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options3" value="mcq_options3"> Option C</label>
+                    <input type = 'text' class="form-control"  id = "mcq_text3" placeholder = 'Enter Answer'>
+                  
+                    <br>    
+                    <label class="radio-inline" for='mcq_options4'>
+                    <input type="radio" name="inlineRadioOptions" id="mcq_options4" value="mcq_options4"> Option D</label>
+                    <input type = 'text' class="form-control"  id = "mcq_text4" placeholder = 'Enter Answer'>
+               
+                                        
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="get-started-btn" style = 'border: none;' onclick="create_mcq()"  data-dismiss="modal">Create True False Question</button>
+                
+            </div>
+            </div>
+        </div>
+        </div>
+
+
+        <div class="modal fade" id="edit_TrueFalse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id ='tf_form'>
+                <div class="form-group" >
+                    
+                    <label for="tf_question1" class="col-form-label">Question:</label>
+                    <textarea class="form-control" id="tf_question_update" ></textarea>
+                    <label class="radio-inline" for ='tf_options_edit_1'>
+                    <br>Select answer: True / False</br>
+                    <input type="radio" name="inlineRadioOptions" id="tf_options_e1" value="True"> True
+                    </label>
+                    <label class="radio-inline" for='tf_options_edit_2'>
+                    <input type="radio" name="inlineRadioOptions" id="tf_options_e2" value="False"> False
+                    </label>
+                    <br>                    
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="get-started-btn" style = 'border: none;' id ='tf_button' onclick="update_TrueFalse()"  data-dismiss="modal">Create True False Question</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+ <div class="modal fade" id="edit_MCQ" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit MCQ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id ='edit_mcq_form'>
+                <div class="form-group" >
+                    
+                    <label for="edit_mcq_question1" class="col-form-label">Question:</label>
+                    <textarea class="form-control" id="edit_mcq_question1" ></textarea>
+                    <br>Check right answer:</br>
+                    <label class="radio-inline" for='edit_mcq_options1'>
+                    <input type="radio" name="inlineRadioOptions" id="edit_mcq_options1" value="edit_mcq_options1"> Option A</label>
+                    <input type = 'text' class="form-control"  id = "edit_mcq_text1" placeholder = 'Enter Answer'>
+                    
+                    <br>
+                    <label class="radio-inline" for='edit_mcq_options2'>
+                    <input type="radio" name="inlineRadioOptions" id="edit_mcq_options2" value="edit_mcq_options2"> Option B</label>
+                    <input type = 'text' class="form-control" id = "edit_mcq_text2" placeholder = 'Enter Answer'>
+                   
+                    <br> 
+                    <label class="radio-inline" for='edit_mcq_options3'>
+                    <input type="radio" name="inlineRadioOptions" id="edit_mcq_options3" value="edit_mcq_options3"> Option C</label>
+                    <input type = 'text' class="form-control"  id = "edit_mcq_text3" placeholder = 'Enter Answer'>
+                  
+                    <br>    
+                    <label class="radio-inline" for='edit_mcq_options4'>
+                    <input type="radio" name="inlineRadioOptions" id="edit_mcq_options4" value="edit_mcq_options4"> Option D</label>
+                    <input type = 'text' class="form-control"  id = "edit_mcq_text4" placeholder = 'Enter Answer'>
+               
+                                        
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="get-started-btn" style = 'border: none;' onclick="update_MCQ()"  data-dismiss="modal">Create True False Question</button>
+                
+            </div>
+            </div>
+        </div>
+        </div>
+
+
+
+
+
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo me-auto"><a href="index.html">Mentor</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="courses.html">Courses</a></li>
+          <li><a href="trainers.html">Trainers</a></li>
+          <li><a href="events.html">Events</a></li>
+
+          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="#">Deep Drop Down 1</a></li>
+                  <li><a href="#">Deep Drop Down 2</a></li>
+                  <li><a href="#">Deep Drop Down 3</a></li>
+                  <li><a href="#">Deep Drop Down 4</a></li>
+                  <li><a href="#">Deep Drop Down 5</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Drop Down 2</a></li>
+              <li><a href="#">Drop Down 3</a></li>
+              <li><a href="#">Drop Down 4</a></li>
+            </ul>
+          </li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <a href="courses.html" class="get-started-btn">Get Started</a>
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main" data-aos="fade-in">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs">
+      <div class="container">
+        <h2>Edit quiz</h2>
+        <p></p>
+      </div>
+    </div><!-- End Breadcrumbs -->
+
+    <!-- ======= Courses Section ======= -->
+    <section id="courses" class="courses">
+      <div class="container" data-aos="fade-up">
+      <div class="form-group">
+                        <label for="time_limit" class="col-form-label">Time Limit (Seconds):</label>
+                        <input type="number" class="form-control" id="time_limit">
+                </div>
+      <div class="d-flex justify-content-center"style = "margin-bottom:50px">
+            <button type="button" class="get-started-btn"data-toggle="modal" data-target="#MCQ" style = 'border:none'>Add Multiple Choice Question</button>
+            <div style = 'margin:20px;'> </div>
+            <button type="button" class="get-started-btn" onclick = ''id = 'create_TrueFalse'data-toggle="modal" data-target="#TrueFalse" style = 'border:none'>Add True False Question</button>
+        </div>
+        
+
+        <div id = 'quiz_card'> <!-- End Course Item-->
+        </div>
+      <div style = "width: 100%;display: inline;overflow: auto;white-space: nowrap; -right: 50px;">
+                <div style = "float:right">
+                    <button type="button" class="get-started-btn" style = 'border: none;background-color:red' onclick="create_qns()"  data-dismiss="modal">Update Quiz</button>
+                </div>
+            </div>
+    =
+    </section><!-- End Courses Section -->
+    
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+    
+
+    <div class="container d-md-flex py-4">
+
+      <div class="me-md-auto text-center text-md-start">
+        <div class="copyright">
+          &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
+        </div>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
+          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
+      </div>
+      <div class="social-links text-center text-md-right pt-3 pt-md-0">
+        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+  <script>
+        let params = new URLSearchParams(location.search);
+        console.log('getting section_id...');
+        section_id = params.get('section_id');
+        class_id = params.get('class_id');
+        quiz_id = params.get('quiz_id');
+        console.log(quiz_id);
+        var counter = 0;
+        var indexer = 0;
+        var update_id ='';
+        //reset everytime user try to create
+        $('#TrueFalse').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
+
+        $('#MCQ').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
+
+            $(async() => {              
+            // Change serviceURL to your own
+            var serviceURL = "http://127.0.0.1:5001/view_section_quiz?section_id="+section_id;
+            console.log('getting time...');
+            try {
+                console.log('trying');
+                const response = await fetch(
+                serviceURL, { method: 'GET' }
+                );
+                const result = await response.json();
+                // Data is present,see it on console
+                console.log(result);
+                console.log(response.status);
+                if (response.status === 200) {
+                    //display time
+                    console.log('getting time...2');
+                    
+                    time = result.data.time_limit;
+                    console.log(time);
+                    document.getElementById("time_limit").value=time.toString();
+                        throw response.status;
+                    } else if (response.status == 404) {
+                        // No reservation
+                    
+                    } else {
+                        // unexpected outcome, throw the error
+                        throw response.status;
+                    };
+                
+            } catch (error) {
+                // Errors when calling the service; such as network error, 
+                // service offline, etc
+                showError
+                ('There is an error creating the quiz, please try again later.<br />' + error);
+                    } // error
+            });
+        
+
+    
+        $(async() => {              
+            // Change serviceURL to your own
+            var serviceURL2 = "http://127.0.0.1:5002/get_Quiz_Questions?quiz_id="+quiz_id;
+            console.log('svcurl',quiz_id)
+            try {
+                const response =
+                await fetch(
+                serviceURL2, { method: 'GET' }
+                );
+                const result1 = await response.json();
+                // Data is present,see it on console
+                // console.log(result);
+                if (response.status === 200) {
+                //display time
+                    questions = result1.data;
+                    arr_length = questions.length;
+                    console.log('ready...');
+                    var row_id ="row";
+                    
+                    for (i=0;i<arr_length;i++){
+                        
+                        console.log('printing questions');
+                        
+                        if (questions[i].question_type == 'TF')
+                        {       
+                                console.log('entered loop');
+                                q_id_tf = questions[i].question_id;
+                                $(async() => {              
+                                // Change serviceURL to your own
+                                var serviceURL3 = "http://127.0.0.1:5002/get_TrueFalse?question_id="+q_id_tf;
+
+                                console.log(serviceURL3)
+                                try {
+                                    const response =
+                                    await fetch(
+                                    serviceURL3, { method: 'GET' }
+                                    );
+                                    const result3 = await response.json();
+                                    // Data is present,see it on console
+                                    // console.log(result);
+                                    
+                                    if (response.status === 200) {
+                                    //display time
+                                        
+                                    
+                                        tfquestion = result3.data;
+                                        question = tfquestion[0].question;
+                                        card_type = 'TF';
+                                        
+                                        var answer ='';
+                                        if (tfquestion[0].answer){
+                                            answer = 'True';
+                                            
+                                        }
+                                        else
+                                        {
+                                            answer = 'False';
+                                        }
+                                        console.log('appending...')
+                                        indexer +=1;
+                                        row_id = "row"+ indexer;
+                                        button_html = `<button type="button" class="get-started-btn" onclick=edit_TrueFalse(${indexer}) id="edit_TrueFalse" data-toggle="modal" data-target="#edit_TrueFalse" style="border:none;margin-bottom:20px" >Edit</button>`
+                                        
+                                        answer_id = "answer_"+row_id;
+                                        question_id = "question_"+row_id
+                                        
+                                        card = `<div class="row" id = "${row_id}" target = "${row_id}" data-aos="zoom-in" data-aos-delay="100" style = "width:100%!;margin-top;margin-left:30px;margin-right:30px" ><div class = ' p-2' style = 'max-width:100%'><div class="course-item" id =#><div class="course-content" style = 'width:100%'><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer" id = ${answer_id} target = ${answer}>Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' id = ${question_id} target = ${question}>${question}</p></div>${button_html}</div></div>`;
+                                        $("#quiz_card").append(card);
+                                        console.log('appended');
+                                        throw response.status;
+                                    } 
+                                    else if (response.status == 404) {
+                                        // No reservation
+                                    
+                                    } else {
+                                        // unexpected outcome, throw the error
+                                        throw response.status;
+                                    };
+                                    
+                                } catch (error) {
+                                    // Errors when calling the service; such as network error, 
+                                    // service offline, etc
+                                    showError
+                                    ('There is an error creating the quiz, please try again later.<br />' + error);
+                                        } // error
+                                });
+
+                        }
+                        else
+                        {
+                            //Insert MCQ
+                            var question ='';
+                            console.log('passhere');
+                            console.log('getting mcq',questions[i]);
+                            q_id_mcq = questions[i].question_id;
+                            mcq_question =  questions[i].question;
+                            row_id = "row"+i;
+                            $(async() => {              
+                                // Change serviceURL to your own
+                                
+                                var serviceURL3 = "http://127.0.0.1:5002/get_MCQ?question_id="+q_id_mcq;
+                                try {
+                                    const response =
+                                    await fetch(
+                                    serviceURL3, { method: 'GET' }
+                                    );
+                                    const result3 = await response.json();
+                                    // Data is present,see it on console
+                                    // console.log(result);
+                                    if (response.status === 200) {
+                                    //display time
+                                        row_id = "row"+i;
+                                        console.log('result3',result3)
+                                        mcqquestion = result3.data;
+                                        answer =0;
+                                        console.log("successful mcq response ",mcqquestion[0].correct_option);
+                                        for (j=0;j<4;j++){
+                                            if(mcqquestion[j].correct_option == true){
+                                            answer = j
+                                            }
+                                        }
+                                        console.log("successful mcq response2");
+                                        answer_arr = ['A','B','C','D'];
+                                     
+                                        console.log('option contents:');
+                                        console.log(mcqquestion[0].option_content);
+                                        console.log('option contents end');
+                                        console.log('printing mcq');
+                                        card_type = 'MCQ';
+                                        indexer +=1;
+                                        row_id ="row"+indexer;
+                                        button_html_mcq = `<button type="button" class="get-started-btn" onclick=edit_MCQ(${indexer}) id="edit_MCQ" data-toggle="modal" data-target="#edit_MCQ" style="border:none;margin-bottom:20px;margin-top:20px" >Edit</button>`
+                                        mcq_answer_id = "answer_"+row_id;
+                                        mcq_question_id = "question_"+row_id;
+                                        mcq_options1_id = "mcq_options1_"+row_id;
+                                        mcq_options2_id = "mcq_options2_"+row_id;
+                                        mcq_options3_id = "mcq_options3_"+row_id;
+                                        mcq_options4_id = "mcq_options4_"+row_id;
+                                        mcq_question_id = 'question_'+row_id;
+                                        //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
+                                        //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
+                                        card = `<div class="row" id = "${row_id}" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer"target = ${answer_arr[answer]} id = ${mcq_answer_id}> Answer: ${answer_arr[answer]}</p></div><h3>Question</h3><p class = 'question' target = ${mcq_question} id = ${mcq_question_id}>${mcq_question}</p></div><div class ="mcqoption1" target =  ${mcqquestion[0].option_content} id = ${mcq_options1_id}> A) ${mcqquestion[0].option_content}</div><div class ="mcqoption2" id = ${mcq_options2_id} target =  ${mcqquestion[1].option_content}> B) ${mcqquestion[1].option_content}</div><div id = ${mcq_options3_id} class ="mcqoption3"target =  ${mcqquestion[2].option_content}> C) ${mcqquestion[2].option_content}</div><div class ="mcqoption4"id = ${mcq_options4_id} target =  ${mcqquestion[3].option_content}> D)${mcqquestion[3].option_content}</div>${button_html_mcq}</div></div>`;
+                                        $("#quiz_card").append(card);
+                                                                    
+                                        throw response.status;
+                                    } 
+                                    else if (response.status == 404) {
+                                        // No reservation
+                                    
+                                    } else {
+                                        // unexpected outcome, throw the error
+                                        throw response.status;
+                                    };
+                                    
+                                } catch (error) {
+                                    // Errors when calling the service; such as network error, 
+                                    // service offline, etc
+                                    showError
+                                    ('There is an error creating the quiz, please try again later.<br />' + error);
+                                        } // error
+                                });
+                        }
+
+                    }
+                    throw response.status;
+                } 
+                else if (response.status == 404) {
+                    // No reservation
+                   
+                } else {
+                    // unexpected outcome, throw the error
+                    throw response.status;
+                };
+                
+            } catch (error) {
+                // Errors when calling the service; such as network error, 
+                // service offline, etc
+                showError
+                ('There is an error creating the quiz, please try again later.<br />' + error);
+                    } // error
+            });
+
+    
+    function get_truefalse(quiz)
+        {
+            arr_size = quiz.data.size;
+            console.log(quiz)
+            console.log('size = ',arr_size)
+
+        }
+
+
+
+
+
+
+        function create_truefalse()
+        {
+            counter +=1;
+            
+            var question =$('#tf_question1').val();
+            console.log(question);
+            //alert($('input[name=tf-options]:checked').val());
+            //var selected =document.querySelector('input[name="tf-options"]:checked').value
+            //console.log(selected);
+            var answer ;
+            var choice;
+            var  selected = $("#tf_options1");
+
+            if (selected[0].checked == 0){
+                console.log('answer is: False')
+                choice = 0;
+                answer = 'False'
+            }
+            else
+            {
+                console.log('answer is: True')
+                choice = 1;
+                answer = 'True'
+            }
+            card_type = 'TF';
+            indexer +=1;
+            row_id = "row"+ indexer;
+            button_html = `<button type="button" class="get-started-btn" onclick=edit_TrueFalse(${indexer}) id="edit_TrueFalse" data-toggle="modal" data-target="#edit_TrueFalse" style="border:none;margin-bottom:20px" >Edit</button>`
+            answer_id = "answer_"+row_id;
+            question_id = "question_"+row_id;                       
+            card = `<div class="row" id = "${row_id}" target = "${row_id}" data-aos="zoom-in" data-aos-delay="100" style = "width:100%!;margin-top;margin-left:30px;margin-right:30px" ><div class = ' p-2' style = 'max-width:100%'><div class="course-item" id =#><div class="course-content" style = 'width:100%'><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer" id = ${answer_id} target = ${answer}>Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' id = ${question_id} target = ${question}>${question}</p></div>${button_html}</div></div>`;
+            $("#quiz_card").append(card);
+            console.log('appended x1');
+        }
+
+
+        function create_mcq(){
+            counter +=1;
+            var question =$('#mcq_question1').val();
+            console.log(question);
+            //alert($('input[name=tf-options]:checked').val());
+            //var selected =document.querySelector('input[name="tf-options"]:checked').value
+            //console.log(selected);
+            var opt_text1 =$('#mcq_text1').val();
+            var opt_text2 =$('#mcq_text2').val();
+            var opt_text3 =$('#mcq_text3').val();
+            var opt_text4 =$('#mcq_text4').val();
+            console.log(opt_text4);
+            var answer ;
+            var choice;
+            var  opt1 = $("#mcq_options1");
+            var  opt2 = $("#mcq_options2");
+            var  opt3 = $("#mcq_options3");
+            var  opt4 = $("#mcq_options4");
+            var ans_val =0
+            if (opt1[0].checked == 1){
+                
+                choice = 0;
+                ans_val=0
+                answer = opt_text1;
+            }
+            else if (opt2[0].checked == 1)
+            {
+                
+                choice = 1;
+                ans_val=1
+                answer = opt_text2;
+            }
+            else if (opt3[0].checked == 1)
+            {
+                choice = 1;
+                ans_val=2
+                answer = opt_text3;
+            }
+            else if (opt4[0].checked == 1){
+                ans_val=3;
+                answer = opt_text4;
+            }
+            card_type = 'MCQ';
+            indexer +=1;
+            row_id ="row"+indexer;
+            answer_arr = ['A','B','C','D'];
+            button_html_mcq = `<button type="button" class="get-started-btn" onclick=edit_MCQ(${indexer}) id="edit_MCQ" data-toggle="modal" data-target="#edit_MCQ" style="border:none;margin-bottom:20px;margin-top:20px" >Edit</button>`
+            mcq_answer_id = "answer_"+row_id;
+            mcq_question_id = "question_"+row_id;
+            mcq_options1_id = "mcq_options1_"+row_id;
+            mcq_options2_id = "mcq_options2_"+row_id;
+            mcq_options3_id = "mcq_options3_"+row_id;
+            mcq_options4_id = "mcq_options4_"+row_id;
+            mcq_question_id = 'question_'+row_id;
+            //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`;
+            //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
+            card = `<div class="row" id = "${row_id}" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer"target  =${answer_arr[ans_val]} id = ${mcq_answer_id}> Answer: ${answer_arr[ans_val]}</p></div><h3>Question</h3><p class = 'question' target = ${question} id = ${mcq_question_id}>${question}</p></div><div class ="mcqoption1" target =  ${opt_text1} id = ${mcq_options1_id}> A) ${opt_text1}</div><div class ="mcqoption2" id = ${mcq_options2_id} target =  ${opt_text2}> B)${opt_text2}</div><div id = ${mcq_options3_id} class ="mcqoption3"target =  ${opt_text3}> C)${opt_text3}</div><div class ="mcqoption4"id = ${mcq_options4_id} target =  ${opt_text4}> D)${opt_text4}</div>${button_html_mcq}</div></div>`;
+            //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
+            //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
+            //card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer"target = ${answer}> Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><div class ="mcqoption1" target =  ${opt_text1}> A) ${opt_text1}</div><div class ="mcqoption2"target =  ${opt_text2}> B) ${opt_text2}</div><div class ="mcqoption3"target =  ${opt_text3}> C) ${opt_text3}</div><div class ="mcqoption4" target =  ${opt_text4}> D)${opt_text4}</div></div></div>`
+            $("#quiz_card").append(card);
+            console.log('appended');
+
+        }
+
+
+
+        function create_qns(){
+            //get first table (only)
+            var qn_id;
+            var qn_type = document.getElementsByClassName('question_type');
+            let len = qn_type.length;
+            is_mcq_counter =0;
+            for (var x = 0; x < len; x++) 
+                {
+                order = x+1;
+                qqn_type = qn_type[x].getAttribute('target');
+                
+                if(qqn_type =='TF'){
+                    var answer = document.getElementsByClassName('answer');
+                    var question = document.getElementsByClassName('question');
+                    qanswer = answer[x].getAttribute('target');
+                    qquestion = question[x].getAttribute('target');
+                   
+                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+qanswer+"&quiz_id="+quiz_id+"&question="+qqn_type+"&question_type="+qqn_type+"&qorder="+order;
+                    var theRequest = $.ajax({
+                        url: serviceURL,
+                        method: 'GET',
+                    }).done(function(data){
+                            console.log(data);
+                            console.log(theRequest.responseText);
+                    });
+                }
+                else
+                {
+                    
+                    var answer = document.getElementsByClassName('answer');
+                    var question = document.getElementsByClassName('question');
+                    var opt1 = document.getElementsByClassName('mcqoption1');
+                    var opt2 = document.getElementsByClassName('mcqoption2');
+                    var opt3 = document.getElementsByClassName('mcqoption3');
+                    var opt4 = document.getElementsByClassName('mcqoption4');
+                    console.log('opt1',opt1[0]);
+                    qanswer = answer[x].getAttribute('target');
+                    qquestion = question[x].getAttribute('target');
+                    qopt1= opt1[is_mcq_counter].getAttribute('target');
+                    qopt2= opt2[is_mcq_counter].getAttribute('target');
+                    qopt3= opt3[is_mcq_counter].getAttribute('target');
+                    qopt4= opt4[is_mcq_counter].getAttribute('target');
+                    /*var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
+                    var theRequest = $.ajax({
+                        url: serviceURL,
+                        method: 'GET',
+                    }).done(function(data){
+                            console.log(data);
+                            qn_id = data.mcq_id;
+                            console.log(qn_id);
+                            console.log(theRequest.responseText);
+                    });*/
+                    $(async() => {           
+                    var serviceURL ="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
+                    console.log('hehe');
+                    try {
+                        const response =
+                        await fetch(
+                        serviceURL, { method: 'GET' }
+                        );
+                        const result = await response.json();
+
+                        if (response.status === 200) {
+                            console.log('successfully added into db');
+                            qn_id = result.id;
+                            option_list =[]
+                            option_list.push(qopt1);
+                            option_list.push(qopt2);
+                            option_list.push(qopt3);
+                            option_list.push(qopt4);
+                            actual_ans =0;
+                            if (qanswer== qopt1)
+                            {
+                                actual_ans =0
+                            }
+                            else if (qanswer==qopt2 )
+                            {
+                                actual_ans =1
+                            }
+                            else if (qanswer== qopt3)
+                            {
+                                actual_ans =2
+                            }
+                            else
+                            {
+                                actual_ans =3
+                            }
+                        
+
+                            for (var y = 0; y < 4; y++) 
+                            {
+                                console.log(actual_ans);
+                                var correct_option=0;
+                                if (y== actual_ans){
+                                    correct_option=1;
+                                    console.log('option',qanswer)
+                                    console.log('values',qopt3)
+                                }
+                                
+                                opt_order = y+1;
+                                console.log('co',correct_option);
+                                var serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
+                                console.log(serviceURL);
+                                var theRequest = $.ajax({
+                                    url: serviceURL,
+                                    method: 'GET',
+                                }).done(function(data){
+                                        console.log(data);
+                                        console.log(theRequest.responseText);
+                            });
+                            }
+                        }
+                    }
+                     catch (error) {
+                        // Errors when calling the service; such as network error, 
+                        // service offline, etc
+                        showError('There is a problem retrieving menu data, please try again later.<br />' + error);
+                        } // error
+                    })
+                    
+                    
+                    is_mcq_counter+=1;
+                }
+
+                }
+
+            //window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+            }
+
+
+
+        function create_qns(){
+            //get first table (only)
+            var qn_id;
+            var qn_type = document.getElementsByClassName('question_type');
+            let len = qn_type.length;
+            is_mcq_counter =0;
+            for (var x = 0; x < len; x++) 
+                {
+                order = x+1;
+                qqn_type = qn_type[x].getAttribute('target');
+                
+                if(qqn_type =='TF'){
+                    var answer = document.getElementsByClassName('answer');
+                    var question = document.getElementsByClassName('question');
+                    qanswer = answer[x].getAttribute('target');
+                    qquestion = question[x].getAttribute('target');
+                   
+                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+qanswer+"&quiz_id="+quiz_id+"&question="+qqn_type+"&question_type="+qqn_type+"&qorder="+order;
+                    var theRequest = $.ajax({
+                        url: serviceURL,
+                        method: 'GET',
+                    }).done(function(data){
+                            console.log(data);
+                            console.log(theRequest.responseText);
+                    });
+                }
+                else
+                {
+                    
+                    var answer = document.getElementsByClassName('answer');
+                    var question = document.getElementsByClassName('question');
+                    var opt1 = document.getElementsByClassName('mcqoption1');
+                    var opt2 = document.getElementsByClassName('mcqoption2');
+                    var opt3 = document.getElementsByClassName('mcqoption3');
+                    var opt4 = document.getElementsByClassName('mcqoption4');
+                    console.log('opt1',opt1[0]);
+                    qanswer = answer[x].getAttribute('target');
+                    qquestion = question[x].getAttribute('target');
+                    qopt1= opt1[is_mcq_counter].getAttribute('target');
+                    qopt2= opt2[is_mcq_counter].getAttribute('target');
+                    qopt3= opt3[is_mcq_counter].getAttribute('target');
+                    qopt4= opt4[is_mcq_counter].getAttribute('target');
+                    /*var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
+                    var theRequest = $.ajax({
+                        url: serviceURL,
+                        method: 'GET',
+                    }).done(function(data){
+                            console.log(data);
+                            qn_id = data.mcq_id;
+                            console.log(qn_id);
+                            console.log(theRequest.responseText);
+                    });*/
+                    $(async() => {           
+                    var serviceURL ="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
+                    console.log('hehe');
+                    try {
+                        const response =
+                        await fetch(
+                        serviceURL, { method: 'GET' }
+                        );
+                        const result = await response.json();
+
+                        if (response.status === 200) {
+                            console.log('successfully added into db');
+                            qn_id = result.id;
+                            option_list =[]
+                            option_list.push(qopt1);
+                            option_list.push(qopt2);
+                            option_list.push(qopt3);
+                            option_list.push(qopt4);
+                            actual_ans =0;
+                            if (qanswer== qopt1)
+                            {
+                                actual_ans =0
+                            }
+                            else if (qanswer==qopt2 )
+                            {
+                                actual_ans =1
+                            }
+                            else if (qanswer== qopt3)
+                            {
+                                actual_ans =2
+                            }
+                            else
+                            {
+                                actual_ans =3
+                            }
+                        
+
+                            for (var y = 0; y < 4; y++) 
+                            {
+                                console.log(actual_ans);
+                                var correct_option=0;
+                                if (y== actual_ans){
+                                    correct_option=1;
+                                    console.log('option',qanswer)
+                                    console.log('values',qopt3)
+                                }
+                                
+                                opt_order = y+1;
+                                console.log('co',correct_option);
+                                var serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
+                                console.log(serviceURL);
+                                var theRequest = $.ajax({
+                                    url: serviceURL,
+                                    method: 'GET',
+                                }).done(function(data){
+                                        console.log(data);
+                                        console.log(theRequest.responseText);
+                            });
+                            }
+                        }
+                    }
+                     catch (error) {
+                        // Errors when calling the service; such as network error, 
+                        // service offline, etc
+                        showError('There is a problem retrieving menu data, please try again later.<br />' + error);
+                        } // error
+                    })
+                    
+                    
+                    is_mcq_counter+=1;
+                }
+
+                }
+
+            //window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+            }
+
+
+            
+
+
+        function edit_TrueFalse(id)
+        {
+            console.log("method called");
+            console.log('truefalse edit success',id);
+            //1. get that row values using the id
+            ans = "answer_"+"row"+id
+            console.log(document.getElementById(ans))
+            answer =document.getElementById(ans).getAttribute('target');
+            console.log(answer)
+            qn= "question_"+"row"+id
+            question=document.getElementById(qn).getAttribute('target');
+            console.log(question);
+            update_id = "row"+id;
+            console.log('update id ',update_id);
+            document.getElementById('tf_question_update').textContent = question;
+            if(answer == "True"){
+                document.getElementById("tf_options_e1").checked = true;
+            }
+            else
+            {
+                document.getElementById("tf_options_e2").checked = true;
+            }
+            
+        }
+
+        function edit_MCQ(id)
+        {
+
+            row_id = "row"+id;
+            ans = 'answer_'+row_id;
+            answer =document.getElementById(ans).getAttribute('target');
+            console.log(answer)
+            qn= "question_"+row_id
+            update_id = "row"+id;
+            question=document.getElementById(qn).getAttribute('target');
+            console.log(question)
+            document.getElementById('edit_mcq_question1').textContent = question;
+            console.log(answer)
+            mcq_options1_id = "mcq_options1_"+row_id;
+            mcq_options2_id = "mcq_options2_"+row_id;
+            mcq_options3_id = "mcq_options3_"+row_id;
+            mcq_options4_id = "mcq_options4_"+row_id;
+            opt1 = document.getElementById( mcq_options1_id).getAttribute('target');
+            opt2 = document.getElementById( mcq_options2_id).getAttribute('target');
+            opt3 = document.getElementById( mcq_options3_id).getAttribute('target');
+            opt4 = document.getElementById( mcq_options4_id).getAttribute('target');
+            console.log('opt2',opt2);
+            document.getElementById('edit_mcq_text1').value = opt1;
+            document.getElementById('edit_mcq_text2').value = opt2;
+            document.getElementById('edit_mcq_text3').value = opt3;
+            document.getElementById('edit_mcq_text4').value = opt4;
+            answer_arr = ['A','B','C','D'];
+            ans_index = answer_arr.indexOf(answer) +1;
+            console.log(ans_index);
+            document.getElementById('edit_mcq_options'+ans_index).checked= true;
+
+        }
+
+    function update_TrueFalse()
+    {
+        var question = document.getElementById('tf_question_update').value;
+        console.log('new text',question);
+        var answer_str = 'False';
+        answer =true;
+        if (document.getElementById('tf_options_e1').checked == true)
+        {
+            answer=true;
+            answer_str = 'True';
+        }
+        else{
+            answer = false;
+        }
+        console.log('question',question);
+        console.log(answer);
+        console.log('question_'+update_id)
+        var qn = document.getElementById('question_'+update_id);
+        console.log(qn);
+        var ans = document.getElementById('answer_'+update_id);
+        
+        qn.innerHTML = question;
+        qn.setAttribute('target',question);
+        ans.innerHTML = "Answer: "+ answer_str;
+        ans.setAttribute('target',answer);
+
+    }
+
+    function update_MCQ()
+    {
+        var question = document.getElementById('edit_mcq_question1').value;
+        console.log(question);
+        console.log(update_id);
+        var choice1  = document.getElementById('edit_mcq_text1').value;
+        var choice2  = document.getElementById('edit_mcq_text2').value;
+        var choice3  = document.getElementById('edit_mcq_text3').value;
+        var choice4  = document.getElementById('edit_mcq_text4').value;
+        var qn = document.getElementById('question_'+update_id);
+        console.log(qn);
+        qn.innerHTML = question;
+        qn.setAttribute('target',question);
+        mcq_opt1 = document.getElementById('mcq_options1_'+row_id);
+        mcq_opt2 = document.getElementById('mcq_options2_'+row_id);
+        mcq_opt3 = document.getElementById('mcq_options3_'+row_id);
+        mcq_opt4 = document.getElementById('mcq_options4_'+row_id);
+        mcq_opt1.innerHTML = "A) "+ choice1;
+        mcq_opt2.innerHTML = "B) "+choice2;
+        mcq_opt3.innerHTML = "C) "+choice3;
+        mcq_opt4.innerHTML = "D) "+choice4;
+        mcq_opt1.setAttribute('target',choice1);
+        mcq_opt2.setAttribute('target',choice2);
+        mcq_opt3.setAttribute('target',choice3);
+        mcq_opt4.setAttribute('target',choice4);
+        //update the answer
+        answer='';
+        if (document.getElementById('edit_mcq_options1').checked == true)
+        {
+            answer = 'A';
+        }
+        else if (document.getElementById('edit_mcq_options2').checked == true)
+        {
+            answer = 'B';
+        }
+        else if (document.getElementById('edit_mcq_options3').checked == true)
+        {
+            answer = 'C';
+        }
+        else
+        {
+            answer = 'D';
+        }
+        var ans = document.getElementById('answer_'+update_id);
+        ans.innerHTML = "Answer: "+ answer;
+        ans.setAttribute('target',answer);
+    }
+
+    </script>
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/purecounter/purecounter.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
