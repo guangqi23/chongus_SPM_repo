@@ -16,8 +16,8 @@ timerURL = 'http://127.0.0.1:5002/get_Quiz_Timer?quiz_id=' + String(sessionStora
 axios.get(timerURL)
     .then(response => {
         console.log("Timer is:", response.data);
-        //timeValue = parseInt(response.data);
-        timeValue = 15;
+        timeValue = parseInt(response.data);
+        //timeValue = 15; Use if want to test timeout function
     });
 
 timerURL = 'http://127.0.0.1:5002/get_Section_Title?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
