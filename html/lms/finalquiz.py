@@ -32,6 +32,8 @@ class FinalQuiz(db.Model):
         exists = db.session.query(FinalQuiz.quiz_id).filter_by(quiz_id= quiz_id).first() is not None 
         if exists:
             pass_score = db.session.query(FinalQuiz.passing_score).filter_by(quiz_id= quiz_id).first()
+            db.session.close()
             return pass_score
         else:
+            db.session.close()
             return exists

@@ -33,4 +33,5 @@ class Graded_quiz_score(db.Model):
         scoreRecord = Graded_quiz_score(userid = scoreObj['user_id'], quiz_id = scoreObj['quiz_id'], quiz_score = scoreObj['quiz_score'], result = scoreObj['result'], time_inserted = datetime.now())
         db.session.add(scoreRecord)
         db.session.commit()
+        db.session.close()
         return "Success"

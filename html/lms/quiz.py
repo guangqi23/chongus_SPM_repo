@@ -32,17 +32,20 @@ class Quiz(db.Model):
     def get_time_limit_with_id(self, quiz_id_input):
         quizObj = Quiz.query.filter_by(quiz_id= quiz_id_input).first()
         timer = quizObj.time_limit
+        db.session.close()
         return str(timer)
 
     def get_section_id_with_quiz_id(self, quiz_id):
         quizObj = Quiz.query.filter_by(quiz_id= quiz_id).first()
         section_id = quizObj.section_id
+        db.session.close()
         return section_id
 
     def get_quiz(self,section_id):
         qid = self.quiz_id
         quizzes = Quiz.query.filter_by(section_id=section_id)
         #get last value
+        db.session.close()
         last_id = quizzes[-1]
         return jsonify(
             {
