@@ -28,3 +28,12 @@ class FinalQuiz(db.Model):
         section = FinalQuiz.query.filter_by(quiz_id = quiz_id).first()
         return section
 
+    def is_graded(self, quiz_id): #Check if quiz_id is in table (If so then quiz is graded)
+        exists = db.session.query(FinalQuiz.quiz_id).filter_by(quiz_id= quiz_id).first() is not None 
+        if exists:
+            pass_score = db.session.query(FinalQuiz.passing_score).filter_by(quiz_id= quiz_id).first()
+            db.session.close()
+            return pass_score
+        else:
+            db.session.close()
+            return exists

@@ -78,6 +78,7 @@ class TrueFalse(QuizQuestions):
 
     def get_true_false_options(self,question_id):
         tf = TrueFalse.query.filter_by(question_id=question_id).first()
+        db.session.close()
         return tf
 
     def get_quiz_questions(self,question_id):
@@ -85,6 +86,7 @@ class TrueFalse(QuizQuestions):
         #check if empty
         y = self.get_qorder()
         count =0
+        db.session.close()
         for x in questions:
             count+=1
 

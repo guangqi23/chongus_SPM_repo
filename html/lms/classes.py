@@ -46,6 +46,7 @@ class Classes(db.Model):
     #By Xing Jie 
     def get_class_startdate(self, class_id):
         class_A = Classes.query.filter_by(class_id = class_id).first()
+        
         return str(class_A.startdate)
 
     def json(self):

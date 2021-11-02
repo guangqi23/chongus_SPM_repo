@@ -48,6 +48,8 @@ class SectionMaterialQuizDataAccess():
         questions = da.get_quiz_questions(quiz_id)
         return questions
 
+    
+
     def create_section(self,class_id,section_title):
         
         section_entry = Section(class_id = class_id,section_title=section_title)
@@ -176,5 +178,14 @@ class SectionMaterialQuizDataAccess():
             }
         ), 200
 
+    def get_TrueFalse(self,question_id):
+        da = TrueFalse()
+        questions = da.get_quiz_questions(question_id)
+        return questions
+    
+    def get_MCQ(self,question_id):
+        da = multiplechoiceoptions()
+        questions = da.get_options_by_question_id(question_id)
+        return questions
 
     
