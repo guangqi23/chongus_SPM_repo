@@ -428,7 +428,7 @@
             card_type = 'MCQ';
             //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
             //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
-            card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer"target = ${answer}> Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><div class ="mcqoption1" target =  ${opt_text1}> A) ${opt_text1}</div><div class ="mcqoption2"target =  ${opt_text2}> B) ${opt_text2}</div><div class ="mcqoption3"target =  ${opt_text3}> C) ${opt_text3}</div><div class ="mcqoption4" target =  ${opt_text4}> D)${opt_text4}</div></div></div>`
+            card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="mcq_answer" target = ${answer}>${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><label style = 'display:inline'>A) </label><div  style = 'display:inline' class ="mcqoption1" target =  ${opt_text1}>${opt_text1}</div><p></p><label  style = 'display:inline' >B) </label><div   style = 'display:inline' class ="mcqoption2"target =  ${opt_text2}>${opt_text2}</div><p></p><label  style = 'display:inline'>C) </label><div  style = 'display:inline' class ="mcqoption3"target =  ${opt_text3}>${opt_text3}</div><p></p><label style = 'display:inline' >D) </label><div  style = 'display:inline' class ="mcqoption4" target =  ${opt_text4}>${opt_text4}</div></div></div>`
             $("#quiz_card").append(card);
             console.log('appended');
 
@@ -442,6 +442,7 @@
             var qn_type = document.getElementsByClassName('question_type');
             let len = qn_type.length;
             is_mcq_counter =0;
+            is_tf_counter=0
             for (var x = 0; x < len; x++) 
                 {
                 order = x+1;
@@ -450,10 +451,15 @@
                 if(qqn_type =='TF'){
                     var answer = document.getElementsByClassName('answer');
                     var question = document.getElementsByClassName('question');
-                    qanswer = answer[x].getAttribute('target');
-                    qquestion = question[x].getAttribute('target');
-                   
-                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+qanswer+"&quiz_id="+quiz_id+"&question="+qqn_type+"&question_type="+qqn_type+"&qorder="+order;
+                    qanswer = answer[is_tf_counter].getAttribute('target');
+                    is_tf_counter +=1;
+                    final_answer = 1;
+                    qquestion = question[x].textContent;
+                    tf_order = order;
+                    if (qanswer == false){
+                       final_answer = 0;
+                    }
+                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -465,19 +471,8 @@
                 else
                 {
                     
-                    var answer = document.getElementsByClassName('answer');
                     var question = document.getElementsByClassName('question');
-                    var opt1 = document.getElementsByClassName('mcqoption1');
-                    var opt2 = document.getElementsByClassName('mcqoption2');
-                    var opt3 = document.getElementsByClassName('mcqoption3');
-                    var opt4 = document.getElementsByClassName('mcqoption4');
-                    console.log('opt1',opt1[0]);
-                    qanswer = answer[x].getAttribute('target');
-                    qquestion = question[x].getAttribute('target');
-                    qopt1= opt1[is_mcq_counter].getAttribute('target');
-                    qopt2= opt2[is_mcq_counter].getAttribute('target');
-                    qopt3= opt3[is_mcq_counter].getAttribute('target');
-                    qopt4= opt4[is_mcq_counter].getAttribute('target');
+                    qqn = 'MCQ';
                     /*var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
                     var theRequest = $.ajax({
                         url: serviceURL,
@@ -488,76 +483,115 @@
                             console.log(qn_id);
                             console.log(theRequest.responseText);
                     });*/
-                    $(async() => {           
-                    var serviceURL ="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
-                    console.log('hehe');
-                    try {
-                        const response =
-                        await fetch(
-                        serviceURL, { method: 'GET' }
-                        );
-                        const result = await response.json();
-
-                        if (response.status === 200) {
-                            console.log('successfully added into db');
-                            qn_id = result.id;
-                            option_list =[]
-                            option_list.push(qopt1);
-                            option_list.push(qopt2);
-                            option_list.push(qopt3);
-                            option_list.push(qopt4);
-                            actual_ans =0;
-                            if (qanswer== qopt1)
-                            {
-                                actual_ans =0
-                            }
-                            else if (qanswer==qopt2 )
-                            {
-                                actual_ans =1
-                            }
-                            else if (qanswer== qopt3)
-                            {
-                                actual_ans =2
-                            }
-                            else
-                            {
-                                actual_ans =3
-                            }
-                        
-
-                            for (var y = 0; y < 4; y++) 
-                            {
-                                console.log(actual_ans);
-                                var correct_option=0;
-                                if (y== actual_ans){
-                                    correct_option=1;
-                                    console.log('option',qanswer)
-                                    console.log('values',qopt3)
-                                }
+                    qn_id =0;
+                    mcq_qquestion = question[x].textContent;
+                    var question = document.getElementsByClassName('question');
+                    mcq_order =order;
+                    
+                    var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
+                    var theRequest = $.ajax({
+                        url: serviceURL,
+                        method: 'GET',
+                    }).done(function(data){
                                 
-                                opt_order = y+1;
-                                console.log('co',correct_option);
-                                var serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
+                                var opt1 = document.getElementsByClassName('mcqoption1');
+                                var opt2 = document.getElementsByClassName('mcqoption2');
+                                var opt3 = document.getElementsByClassName('mcqoption3');
+                                var opt4 = document.getElementsByClassName('mcqoption4');
+                                console.log('mcq_iter_counter',is_mcq_counter);
+                                qopt1= opt1[is_mcq_counter].innerHTML;
+                                qopt2= opt2[is_mcq_counter].innerHTML;
+                                qopt3= opt3[is_mcq_counter].innerHTML;
+                                qopt4= opt4[is_mcq_counter].innerHTML;
+                                
+                                var answer = document.getElementsByClassName('mcq_answer');
+                                
+                                var actual_ans = answer[is_mcq_counter].innerHTML;
+                                
+                                console.log(actual_ans);
+                                console.log(opt3);
+                                console.log(data);
+                                qn_id = data.id;
+                                console.log(qn_id);
+                                /*var answer = document.getElementsByClassName('answer');
+                                actual_ans =  answer[x].text;
+                                console.log('ANSWER',actual_ans);*/
+                                
+                                if (actual_ans == qopt1)
+                                {
+                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
+
+                                }
+                                else
+                                {
+                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
+                                }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
+                                        console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
                             });
-                            }
-                        }
-                    }
-                     catch (error) {
-                        // Errors when calling the service; such as network error, 
-                        // service offline, etc
-                        showError('There is a problem retrieving menu data, please try again later.<br />' + error);
-                        } // error
-                    })
+                                if (actual_ans == qopt2)
+                                {
+                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
+
+                                }
+                                else
+                                {
+                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
+                                }
+                                console.log(serviceURL);
+                                var theRequest = $.ajax({
+                                    url: serviceURL,
+                                    method: 'GET',
+                                }).done(function(data){
+                                        console.log('added MCQ');
+                                        console.log(data);
+                                    
+                            });
+                                if (actual_ans == qopt3)
+                                {
+                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
+
+                                }
+                                else
+                                {
+                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
+                                }
+                                console.log(serviceURL);
+                                var theRequest = $.ajax({
+                                    url: serviceURL,
+                                    method: 'GET',
+                                }).done(function(data){
+                                        console.log('added MCQ');
+                                        console.log(data);
+                                        console.log(theRequest.responseText);
+                            });
+                                if (actual_ans == qopt4)
+                                {
+                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
+
+                                }
+                                else
+                                {
+                                     serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
+                                }
+                                console.log(serviceURL);
+                                var theRequest = $.ajax({
+                                    url: serviceURL,
+                                    method: 'GET',
+                                }).done(function(data){
+                                        console.log('added MCQ');
+                                        console.log(data);
+                                        console.log(theRequest.responseText);
+                            }); 
+                            is_mcq_counter+=1;                       
+                        });                    
                     
-                    
-                    is_mcq_counter+=1;
                 }
 
                 }

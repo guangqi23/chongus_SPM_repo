@@ -188,4 +188,31 @@ class SectionMaterialQuizDataAccess():
         questions = da.get_options_by_question_id(question_id)
         return questions
 
+    def delete_Quiz(self,quiz_id):
+        '''delete_quiz =QuizQuestions.query.filter_by(quiz_id = quiz_id).delete()
+        delete_tf = TrueFalse.query.filter_by(quiz_id = quiz_id).delete()'''
+        record_obj = db.session.query(TrueFalse).filter(TrueFalse.quiz_id== quiz_id)
+        db.session.delete(record_obj)
+        db.session.commit()
+        '''
+        try: 
+            db.session.delete(delete_tf)
+            db.session.delete(delete_quiz)
+            db.session.commit()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while deleting the quiz. " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The questions has been successfully quiz",
+                
+            }
+        ), 200'''
+        
     

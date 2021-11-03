@@ -40,7 +40,6 @@ class multiplechoiceoptions(db.Model):
         if count!=0:
             return jsonify(
                 {
-                    
                     "data": [question.json() for question in option]
                 })
         return jsonify(

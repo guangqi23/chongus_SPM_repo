@@ -90,6 +90,12 @@ class SectionQuizController():
         da = SectionMaterialQuizDataAccess()
         status = da.get_MCQ(question_id)
         return status
+
+    def delete_Quiz(self,quiz_id):
+        da = SectionMaterialQuizDataAccess()
+        status = da.delete_Quiz(quiz_id)
+        return status
+            
     
     def get_Quiz_Timer(self, quiz_id):
         da = Quiz()
@@ -231,6 +237,12 @@ def get_TrueFalse():
     status = da.get_TrueFalse(question_id)
     return status
 
+@app.route("/delete_quiz", methods=['GET'])
+def delete_Questions():
+    quiz_id = int(request.args.get('quiz_id', None))
+    da = SectionQuizController()
+    status = da.delete_Quiz(quiz_id)
+    return status
 @app.route("/submitScore", methods=['POST'])
 def submitScore():
     quiz_id = int(request.args.get('quiz_id', None))
