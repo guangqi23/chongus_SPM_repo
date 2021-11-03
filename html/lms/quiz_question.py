@@ -58,6 +58,9 @@ class QuizQuestions(db.Model):
             }
         )
 
+    
+
+
         
 class TrueFalse(QuizQuestions):
     __tablename__ = 'TRUEFALSEQ'

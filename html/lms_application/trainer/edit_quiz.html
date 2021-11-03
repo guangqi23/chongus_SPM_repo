@@ -390,11 +390,11 @@
             $(this).find('form').trigger('reset');
         })
 
-            $(async() => {              
+        $(async() => {              
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_section_quiz?section_id="+section_id;
+            var serviceURL = "http://127.0.0.1:5001/view_section_quiz_by_qid?quiz_id="+quiz_id;
             try {
-               
+                console.log('fetching');
                 const response = await fetch(
                 serviceURL, { method: 'GET' }
                 );
@@ -430,8 +430,7 @@
     
         $(async() => {              
             // Change serviceURL to your own
-            var serviceURL2 = "http://127.0.0.1:5002/get_Quiz_Questions?quiz_id="+quiz_id;
-            
+            var serviceURL2 = "http://127.0.0.1:5002/get_quiz_questions?quiz_id="+quiz_id;
             try {
                 const response =
                 await fetch(
@@ -444,13 +443,14 @@
                 //display time
                     questions = result1.data;
                     arr_length = questions.length;
+                    console.log(serviceURL2);
+                    console.log('fetching quiz_id..',result1.data);
                     
                     var row_id ="row";
                     for (i=0;i<arr_length;i++){
                         console.log(questions[i].question_type ,i);
                         if (questions[i].question_type =='TF'){
-                            
-                            q_id_tf = questions[i].question_id;
+                                        q_id_tf = questions[i].question_id;
                                         var serviceURL3 = "http://127.0.0.1:5002/get_TrueFalse?question_id="+q_id_tf;
                                         var theRequest = $.ajax({
                                         url: serviceURL3,
