@@ -473,12 +473,23 @@
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                  
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
+<<<<<<< Updated upstream
                 rows +='<a href=# class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">attempt</p></a>'
                   
                 
                 //Set counter back to 0 
                 // add all the rows to the table
                 $('#quiz-list').append(rows);
+=======
+                //rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
+                rows_quiz = '<p>ffok yo moma!</p>';
+                console.log('printing quiz row');
+                
+                //Set counter back to 0 
+                // add all the rows to the table
+                $('#quiz-list').append(rows_quiz);
+                console.log('after');
+>>>>>>> Stashed changes
 
                 } else if (response.status == 404) {
                     // No reservation
