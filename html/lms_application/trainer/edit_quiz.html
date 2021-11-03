@@ -382,6 +382,13 @@
         $('#MCQ').on('hidden.bs.modal', function () {
             $(this).find('form').trigger('reset');
         })
+        $('#edit_TrueFalse').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
+
+        $('#edit_MCQ').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        })
 
             $(async() => {              
             // Change serviceURL to your own
@@ -794,15 +801,15 @@
             //1. get that row values using the id
             ans = "answer_"+"row"+id
             console.log(document.getElementById(ans))
-            answer =document.getElementById(ans).innerHTML;
-            console.log(answer)
+            answer =document.getElementById(ans).getAttribute('target');
+            console.log('answer this',answer)
             qn= "question_"+"row"+id
             question=document.getElementById(qn).innerHTML;
             console.log(question);
             update_id = "row"+id;
             console.log('update id ',update_id);
             document.getElementById('tf_question_update').textContent = question;
-            if(answer == "True"){
+            if(answer == 'True'){
                 document.getElementById("tf_options_e1").checked = true;
             }
             else
