@@ -6,8 +6,8 @@ import json
 
 app = Flask(__name__)
 #app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/users'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -36,7 +36,7 @@ class Classes(db.Model):
         return str(slots.slots)
 
     def get_classes_by_class_id(self,course_id,class_id):
-        record = Classes.query.filter_by(class_id=class_id,course_id=course_id).first()
+        record = Classes.query.filter_by(course_id=course_id,class_id=class_id).all()
         return record
     
     def get_classes_by_course(self, course_id):
@@ -50,7 +50,7 @@ class Classes(db.Model):
         return str(class_A.startdate)
 
     def json(self):
-        return {"class_id":self.class_id,"course_id":self.course_id,"slots":self.slots}
+        return {"class_id":self.class_id,"course_id":self.course_id,"slots":self.slots,"startdate":self.startdate, "enddate":self.enddate, "trainer_name": self.trainer_name}
     
     
     

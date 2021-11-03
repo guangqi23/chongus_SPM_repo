@@ -4,7 +4,8 @@ from flask_cors import CORS
 from sqlalchemy.sql.expression import false, true
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -21,6 +22,9 @@ class Learner_Assignment(db.Model):
     def get_user_assigned_courses(self, userid): 
         record = Learner_Assignment.query.filter_by(userid=userid).all()
         return record
+
+    def get_course_id(self):
+        return self.course_id,self.class_id
     
     def json(self):
         return {"course_id":self.course_id,"class_id":self.class_id, "userid":self.userid}
@@ -42,5 +46,25 @@ class Learner_Assignment(db.Model):
             {
                 "code": 200,
                 "message": "The class has been successfully assigned to the Learner"
+            }
+        ), 200
+
+    def delete_learner_assignment(self,course_id,class_id,user_id):
+        lrnr_as_record = self.query.filter_by(course_id = course_id, class_id=class_id,userid = user_id).first()
+        try:
+            db.session.delete(lrnr_as_record)
+            db.session.commit()
+        except Exception as error:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": "An error occured while deleting the learner assignment record. " + str(error)
+                }
+            )
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The learner assignment record has been successfully deleted"
             }
         ), 200

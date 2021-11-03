@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Assigning Classes to Learners</title>
+  <title>LMS - HR</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -195,7 +195,7 @@
     function getAllLearners() {
         axios
 
-          .get('http://127.0.0.1:5002/get_all_learners',{}
+          .get('http://localhost:5000/get_all_learners',{}
           )
           .then(res  => 
             {
@@ -257,7 +257,7 @@
         document.getElementById("displayEligibleCourses").innerHTML = '';
         console.log(userid);
         axios
-        .post('http://127.0.0.1:5002/eligible_courses',{user_id:userid})
+        .post('http://localhost:5000/eligible_courses',{user_id:userid})
         .then(res =>{
         
                   records = res.data.data.record;
@@ -322,7 +322,7 @@
 
       function getClassesForEligibleCourses(courseid,user_id){
         axios
-        .post("http://127.0.0.1:5011/get_classes/" + courseid)
+        .post("http://localhost:5000/get_classes/" + courseid)
         .then(res=>{
                   records = res.data.data.record;
                   console.log(records);
@@ -402,7 +402,7 @@
             // add additional test cases later to check for missing values (or just do it in python)
             console.log(course_id, class_id, lrnr_id);
             axios
-            .post('http://localhost:5001/assign_course_learner',
+            .post('http://localhost:5000/assign_course_learner',
                 {
                   "hr_id" : "1",
                   "course_id" : course_id,

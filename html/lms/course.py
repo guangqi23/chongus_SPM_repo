@@ -4,7 +4,7 @@ from flask_cors import CORS
 from classes import Classes
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -19,8 +19,6 @@ class Course(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100), nullable=False)
     course_description = db.Column(db.String(300), nullable=False)
-    startdate = db.Column(db.DateTime, nullable=False)
-    enddate = db.Column(db.DateTime, nullable=False)
     startenrollmentdate = db.Column(db.DateTime, nullable=False)
     endenrollmentdate = db.Column(db.DateTime, nullable=False)
 
@@ -30,8 +28,6 @@ class Course(db.Model):
     def get_course_by_id(self, course_id):
         record = Course.query.filter_by(course_id=course_id).first()
         return record
-
-
 
     def add_course(self):
         # this should check if there is already an existing course in the database. To be added later
@@ -53,6 +49,9 @@ class Course(db.Model):
                 "message": "The course has been successfully created"
             }
         ), 200
+    
+    def get_course_name(self):
+        return self.course_name
 
     def del_course(self, course_id):
         course = self.query.filter_by(course_id=course_id).first()
@@ -83,6 +82,28 @@ class Course(db.Model):
             course_vacancies += a_class.slots
         
         return course_vacancies
+
+    def change_start_end_date(self, course_id, start_date, end_date):
+        record = Course.query.filter_by(course_id = course_id)
+        record.startenrollmentdate = start_date
+        record.endenrollmentdate = end_date
+        try:
+            db.session.commit()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "A database error occured while changing the start and end date of the course " + str(error)
+                }
+            ), 500
+
+        return jsonify (
+                {
+                    "code": 200,
+                    "message": "The start and end date of the course has been successfully changed"
+                }
+            ), 200
+        
    
     def json(self):
         return {"course_id": self.course_id, "course_name": self.course_name, "course_description": self.course_description, "startenrollmentdate": self.startenrollmentdate, "endenrollmentdate": self.endenrollmentdate}   

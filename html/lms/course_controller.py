@@ -50,32 +50,32 @@ class CourseController():
         course_entry = Course()
         return course_entry.del_course(course_id)
 
-    def create_prerequisites(self, user_id, course_id, application):
-        employee_da = EmployeeDataAccess()
-        course = Course()
-        print("Request to create a course received")
+    # def create_prerequisites(self, user_id, course_id, application):
+    #     employee_da = EmployeeDataAccess()
+    #     course = Course()
+    #     print("Request to create a course received")
 
-        # call validate_hr in employee data access class
-        valid_hr = employee_da.validate_hr(user_id)
-        # check if the course exists on the database
-        valid_course = course.get_course_by_id(course_id)
+    #     # call validate_hr in employee data access class
+    #     valid_hr = employee_da.validate_hr(user_id)
+    #     # check if the course exists on the database
+    #     valid_course = course.get_course_by_id(course_id)
 
-        if valid_hr and valid_course: # boolean return
-            print("HR is requesting to add prerequisites to a course")
-            prerequisites = application["prerequisites"]
-            for prerequisite in prerequisites:
-                # need to check if the prerequisite course exists in the database
-                prereq = Course_Prerequisites(course_id=course_id, prereq_course_id=prerequisite)
-                status = prereq.add_prerequisites()
-                print(status)
-                if status == 500:
-                    return status
+    #     if valid_hr and valid_course: # boolean return
+    #         print("HR is requesting to add prerequisites to a course")
+    #         prerequisites = application["prerequisites"]
+    #         for prerequisite in prerequisites:
+    #             # need to check if the prerequisite course exists in the database
+    #             prereq = Course_Prerequisites(course_id=course_id, prereq_course_id=prerequisite)
+    #             status = prereq.add_prerequisites()
+    #             print(status)
+    #             if status == 500:
+    #                 return status
         
-                # perform a check if prerequisites already existed and store them in an array
-                # if the prerequisite is not a duplicate, store it in a separate array
+    #             # perform a check if prerequisites already existed and store them in an array
+    #             # if the prerequisite is not a duplicate, store it in a separate array
 
-            # later on this will return which prerequisites were duplicates and which were added as new prerequisites
-            return status
+    #         # later on this will return which prerequisites were duplicates and which were added as new prerequisites
+    #         return status
 
     #Xing Jie parts
     # def retrieveAllEnrollment(self):
@@ -168,12 +168,18 @@ def prereq_by_course():
         ), 404
 
 
-@app.route("/changeEnrollmentStatus/input")
+@app.route("/changeEnrollmentStatus", methods=["POST"])
 def changeEnrollStatus():
+    application = request.get_json()
     da = CourseController()
-    enrollId = int(request.args.get('enrol_id', None))
+    enrollId = application['enrollment_id']
     output = da.changeEnrollmentStatus(enrollId)
-    return output
+    return jsonify(
+        {
+            'code': 200,
+            'message': output
+        }
+    )
 
 @app.route("/allEnrollmentsPending", methods=['GET'])
 def getAllPendingEnrollment():
@@ -224,12 +230,36 @@ def getAllPendingEnrollment():
     
 
 
-@app.route("/rejectEnrollment/input", methods=['GET'])
+@app.route("/rejectEnrollment", methods=['POST'])
 def rejectEnrollment():
+    application = request.get_json()
     da = Course_Enrollment()
-    enrollId = int(request.args.get('enrol_id', None))
+    enrollId = application['enrollment_id']
     result = da.rejectEnrollment(enrollId)
-    return result
+    if result == 200:
+        return jsonify(
+            {
+                'code': 200,
+                'message': "Enrollment status of this learner has been rejected"
+            }
+        )
+    
+    return jsonify(
+        {
+            'code': 500,
+            'message': "There was an error when rejecting enrollment record"
+        }
+    )
+
+@app.route("/change_course_start_end_date", methods=['POST'])
+def change_course_start_end_date():
+    application = request.get_json()
+    course_ctrl = Course()
+    course_id = application['course_id']
+    start_date = application['start_date']
+    end_date = application['end_date']
+    status = course_ctrl.change_start_end_date(course_id, start_date, end_date)
+    return status
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

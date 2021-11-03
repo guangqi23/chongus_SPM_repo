@@ -475,13 +475,16 @@
                 console.log('printing quiz row');
                 redirectURL = "./edit_quiz2.html?section_id="+index+"&quiz_id="+section.quiz_id;
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
-                rows_quiz += '<a href="'+redi+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
+                rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
                 
                 console.log('printing quiz row');
                 
                 //Set counter back to 0 
                 // add all the rows to the table
                 $('#quiz-list').append(rows_quiz);
+                //rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
+            
+                console.log('after');
 
                 } else if (response.status == 404) {
                     // No reservation

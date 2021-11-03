@@ -9,6 +9,9 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
+  <!-- Axios Functionalities -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
+
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
@@ -27,7 +30,6 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
 
   <!-- =======================================================
   * Template Name: Mentor - v4.6.0
@@ -37,7 +39,7 @@
   ======================================================== -->
 </head>
 
-<body onload="retrieve_all_courses()">
+<body>
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -54,6 +56,10 @@
           <li><a href="create_course.html">Create Course</a></li>
           <li><a href="assignLearners.html">Assign Learners</a></li>
           <li><a href="assignTrainer.html">Assign Trainers</a></li>
+
+         
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
       <a href="courses.html" class="get-started-btn">Get Started</a>
@@ -66,42 +72,27 @@
     <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs">
       <div class="container">
-        <h2>Courses</h2>
+        <h2>Withdrawing Learner from Course</h2>
         <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
       </div>
     </div><!-- End Breadcrumbs -->
 
     <!-- ======= Courses Section ======= -->
     <section id="courses" class="courses">
+
       <div class="container" data-aos="fade-up">
+        <div class = 'row' id ='showEnrolledCourses'></div>
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id = 'showAssignedCourses'>
 
-        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="all_courses">
-
-          <!-- <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
             <div class="course-item">
-              <img src="assets/img/course-1.jpg" class="img-fluid" alt="...">
               <div class="course-content">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h4>Web Development</h4>
-                  <p class="price">$169</p>
-                </div>
-
+                
                 <h3><a href="course-details.html">Website Design</a></h3>
                 <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-                <div class="trainer d-flex justify-content-between align-items-center">
-                  <div class="trainer-profile d-flex align-items-center">
-                    <img src="assets/img/trainers/trainer-1.jpg" class="img-fluid" alt="">
-                    <span>Antonio</span>
-                  </div>
-                  <div class="trainer-rank d-flex align-items-center">
-                    <i class="bx bx-user"></i>&nbsp;50
-                    &nbsp;&nbsp;
-                    <i class="bx bx-heart"></i>&nbsp;65
-                  </div>
-                </div>
               </div>
             </div>
-          </div> 
+          </div> <!-- End Course Item-->
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
             <div class="course-item">
@@ -127,7 +118,7 @@
                 </div>
               </div>
             </div>
-          </div> 
+          </div> <!-- End Course Item-->
 
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
             <div class="course-item">
@@ -153,14 +144,13 @@
                 </div>
               </div>
             </div>
-          </div>  -->
+          </div> <!-- End Course Item-->
 
         </div>
-        <div class="my-3" id="status_output"></div>
+
       </div>
-      
     </section><!-- End Courses Section -->
-    
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -251,78 +241,178 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Main Functionalities -->
   <script>
-    function retrieve_all_courses(){
-        axios
-        .get("http://localhost:5000/courses")
-        .then(res =>
-            {
-                records = res.data.data.record
-                console.log(records)
-                course_output = ""
-                for(record of records){
-                  course_output += `
-                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch" id="card_${record.course_id}">
-                      <div class="course-item">
-                        <img src="assets/img/course-1.jpg" class="img-fluid" alt="...">
-                        <div class="course-content">
-                          <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 id="${record.course_id}">Delete Course</h4>
-                          </div>
-
-                          <h3><a href="course-details.html">${record.course_name}</a></h3>
-                          <p>${record.course_description}</p>
-                        </div>
-                      </div>
-                    </div>
-                    `                   
-                }
-
-                document.getElementById("all_courses").innerHTML = course_output
-                
-                for(record of records){
-                  let course_id = record.course_id
-                  document.getElementById(course_id).addEventListener('click', function(){
-                    delete_selected_course(course_id)
-                  })
-                }
-            }
-        )
-    }
+    const learner_id = new URLSearchParams(window.location.search).get('learner_id');
+    console.log(learner_id);
     
-    function delete_selected_course(course_id){
-        console.log(course_id)
-        axios
-        .post("http://localhost:5000/delete_course",
-            {
-                "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
-                "course_id": course_id // have to be careful of which course to delete. You cannot delete a course that has been assigned as a prerequisite. Remove it as a prerequisite first before the course can be deleted
-            }
-        )
-        .then(res =>
-            {
-              data = res.data;
-              console.log(data)
-              if(data["code"] == 200){
-                output = `<div class="alert alert-success" role="alert">
-                  ${data["message"]}
-                </div>`
-              }
-              else{
-                output = `<div class="alert alert-danger" role="alert">
-                  ${data["message"]}
-                </div>`
-                console.log(data['message'])
-              }
-              
-              document.getElementById("status_output").innerHTML = output
-              document.getElementById("card_"+course_id).outerHTML = ""
-            }
-        )
-        .catch(error => console.error(error.response.data));
+    function getEnrolledCourses(learner_id){
+      axios
+      .post("http://127.0.0.1:5002/get_all_enrolled_classes_of_user",{user_id:learner_id})
+      .then(res => {
+          records = res.data.data.record;
+          console.log(records);
+          let cc_arr = []
+          let value = `<table class = 'table' id = 'myTable'>
+                            <thead class = 'thead-dark'>
+                            <tr>
+                                <th>Course ID</th>
+                                <th>Course Name</th>
+                                <th>Class ID</th>
+                                <th>Withdraw</th>
+                            </tr></thead><tbody>`;
+
+          for(eachEnrolledCourse of records){
+            let course_name = eachEnrolledCourse['course_name'];
+            let course_id = eachEnrolledCourse['course_id'];
+            let class_id = eachEnrolledCourse['class_id'];
+          
+            console.log("Course " + course_id);
+            console.log("Class " + class_id);
+
+            let needed_arr = [course_id,class_id];
+
+            cc_arr.push(needed_arr);
+
+            let buttonToAssign = "buttonToWithdrawFromEnrolledCourse" + course_id + "Class" + class_id
+            value += `<tr>
+                            <td>${course_id}</td>
+                            <td>${course_name}</td>
+                            <td>${class_id}</td>
+                            <td><button id = ${buttonToAssign}> Withdraw</button><td>
+                        </tr>`;
+
+          }      
+          value+= `</tbody></table>`;
+
+          let body = document.getElementById('showEnrolledCourses');
+          body.innerHTML = value; 
+
+          console.log(cc_arr);
+
+          for(let a_tup of cc_arr){
+            console.log(a_tup)
+            co_id = a_tup[0];
+            cl_id = a_tup[1];
+            // console.log('hi')
+            b_id = "buttonToWithdrawFromEnrolledCourse" + co_id + "Class" + cl_id;
+            console.log(b_id)
+            el = document.getElementById(b_id);
+                    el.addEventListener('click',function(event){
+                      send_dropenrolled_application(co_id,cl_id,learner_id);
+                    })
+          }
+
+      })
+      .catch(error => {
+        if(error.response.data.code == 404){
+            let el = document.getElementById("showEnrolledCourses");
+            el.innerHTML =`<div class="alert alert-primary" role="alert">
+                            There are no enrolled courses for this learner.
+                          </div>`;
+            
+          }
+      })
     }
 
-    
+    function getAssignedCourses(learner_id){
+      axios
+      .post("http://localhost:5000/get_all_assigned_classes_of_user",{user_id : learner_id})
+      .then(res => {
+          records = res.data.data.record;
+          console.log(records);
+          console.log("hello");
+          let cc_arr = []
+          let value = `<table class = 'table' id = 'myTable'>
+                            <thead class = 'thead-dark'>
+                            <tr>
+                                <th>Course ID</th>
+                                <th>Course Name</th>
+                                <th>Class ID</th>
+                                <th>Withdraw</th>
+                            </tr></thead><tbody>`;
+
+          for(eachAssignedClass of records){
+            let course_name = eachAssignedClass['course_name'];
+            let course_id = eachAssignedClass['course_id'];
+            let class_id = eachAssignedClass['class_id'];
+          
+            console.log("Course " + course_id);
+            console.log("Class " + class_id);
+
+            let needed_arr = [course_id,class_id];
+
+            cc_arr.push(needed_arr);
+
+            let buttonToAssign = "buttonToWithdrawFromCourse" + course_id + "Class" + class_id
+            value += `<tr>
+                            <td>${course_id}</td>
+                            <td>${course_name}</td>
+                            <td>${class_id}</td>
+                            <td><button id = ${buttonToAssign}> Withdraw</button><td>
+                        </tr>`;
+
+          }      
+          value+= `</tbody></table>`;
+
+          let body = document.getElementById('showAssignedCourses');
+          body.innerHTML = value; 
+
+          console.log(cc_arr);
+
+          for(let a_tup of cc_arr){
+            console.log(a_tup)
+            co_id = a_tup[0];
+            cl_id = a_tup[1];
+            // console.log('hi')
+            b_id = "buttonToWithdrawFromCourse" + co_id + "Class" + cl_id;
+            console.log(b_id)
+            el = document.getElementById(b_id);
+                    el.addEventListener('click',function(event){
+                      send_application(co_id,cl_id,learner_id);
+                    })
+          }
+
+
+      })
+      .catch(error => {
+        if(error.response.data.code == 404){
+            let el = document.getElementById("showAssignedCourses");
+            el.innerHTML =`<div class="alert alert-primary" role="alert">
+                            There are no assigned courses for this learner.
+                          </div>`;
+            
+          }
+      })
+    }
+
+
+
+    function send_application(course_id,class_id,user_id){
+      axios
+      .post("http://localhost:5000/delete_assigned_classes",{course_id:course_id,class_id:class_id,user_id:learner_id})
+      .then(res => {
+            data = res.data;
+            console.log(data);
+            alert("This learner has successfully been withdrawned a class");
+            window.location = ('./withdrawLearner.html')
+      })
+    }
+
+    function send_dropenrolled_application(course_id,class_id,user_id){
+      axios
+      .post("http://127.0.0.1:5010/drop_class",{course_id:course_id,class_id:class_id,user_id:learner_id})
+      .then(res => {
+            data = res.data;
+            console.log(data);
+            alert("This learner has successfully been withdrawned a enrolled class");
+            window.location = ('./withdrawLearner.html')
+      })
+    }
+
+    getEnrolledCourses(learner_id);
+    getAssignedCourses(learner_id);
   </script>
 
 </body>

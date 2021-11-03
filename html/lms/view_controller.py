@@ -1,7 +1,11 @@
+from operator import ne
+from re import L
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy.sql.expression import false, true
 from flask_sqlalchemy import SQLAlchemy
+from course_enrollment import Course_Enrollment
+from learner_assignment import Learner_Assignment
 from trainer import Trainer
 from learner import Learner
 from trainer_assignment import Trainer_Assignment
@@ -9,7 +13,8 @@ from course import Course
 from classes import Classes
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -45,7 +50,6 @@ class ViewController():
 
     def get_classes_of_a_course_without_trainer(course_id):
         trnr_as_class = Trainer_Assignment()
-        course_class = Course()
         classes_class = Classes()
 
         courses_with_trainers = [(course.course_id, course.class_id) for course in trnr_as_class.get_all_trainer_assignments()]
@@ -64,28 +68,46 @@ class ViewController():
         print(output)
 
         return output
-    
 
+    def get_learner_assigned_classes(user_id):
+        lrnr_class = Learner_Assignment()
+        all_assigned_courses = lrnr_class.get_user_assigned_courses(user_id)
 
-@app.route("/eligible_courses", methods=['POST'])
-def get_eligible_courses():
+        return all_assigned_courses
+
+    def get_learner_enrolled_classes(user_id):
+        crse_enrol_class = Course_Enrollment()
+        
+        return crse_enrol_class.get_user_enrolled_courses(user_id)
+
+@app.route("/eligible_classes", methods=['POST'])
+def get_eligible_classes():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_eligible_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
+    record = learner.get_eligible_classes(user_id)
+    courses = record[0]
+    classes = record[1]
+    final_list = []
+    for i in range(len(courses)):
+        course_info = courses[i].json()
+        class_info = classes[i].json()
+        course_info.update(class_info)
+        final_list.append(course_info)
+
+    if len(final_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record for a_record in final_list]
                 }
-            )
+            }
+        )
     return jsonify(
         {
             "code": 404,
-            "message": "There are no eligible courses."
+            "message": "There are no eligible classes."
             }
         ), 404
 
@@ -96,58 +118,45 @@ def get_uneligible_courses():
     learner = Learner()
     record = learner.get_uneligible_courses(user_id)
     if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record.json() for a_record in record]
                 }
-            )
+            }
+        )
     return jsonify(
         {
             "code": 404,
             "message": "There are no uneligible courses."
             }
         ), 404
-    
-@app.route("/enrolled_courses", methods=['POST'])
-def get_enrolled_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_enrolled_courses(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
-                }
-            )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no enrolled courses."
-            }
-        ), 404
 
 @app.route("/enrolled_classes", methods=["POST"])
-def get_enrolled_classes():
+def get_enrolled_course_class():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_enrolled_classes(user_id)
-    if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record.json() for a_record in record]
-                    }
+    record = learner.get_enrolled_course_class(user_id)
+    courses = record[0]
+    classes = record[1]
+    final_list = []
+    for i in range(len(courses)):
+        course_info = courses[i].json()
+        class_info = classes[i].json()
+        course_info.update(class_info)
+        final_list.append(course_info)
+
+    if len(final_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record for a_record in final_list]
                 }
-            )
+            }
+        )
     return jsonify(
         {
             "code": 404,
@@ -155,13 +164,43 @@ def get_enrolled_classes():
             }
         ), 404
 
-
 @app.route("/assigned_courses", methods=['POST'])
-def get_assigned_courses():
+def get_assigned_course_class():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_assigned_courses(user_id)
+    record = learner.get_assigned_course_class(user_id)
+    courses = record[0]
+    classes = record[1]
+    final_list = []
+    for i in range(len(courses)):
+        course_info = courses[i].json()
+        class_info = classes[i].json()
+        course_info.update(class_info)
+        final_list.append(course_info)
+        
+    if len(final_list):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record for a_record in final_list]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no assigned courses."
+            }
+        ), 404
+
+@app.route("/completed_courses", methods=['POST'])
+def get_completed_courses():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner = Learner()
+    record = learner.get_completed_courses(user_id)
     if len(record):
             return jsonify(
                 {
@@ -174,7 +213,7 @@ def get_assigned_courses():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no assigned courses."
+            "message": "There are no completed courses."
             }
         ), 404
 
@@ -200,7 +239,7 @@ def get_all_learner():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no assigned courses."
+            "message": "There are no learners."
             }
         ), 404
 
@@ -226,7 +265,6 @@ def get_courses_with_classes_without_trainer():
 @app.route("/get_classes_of_a_course_without_trainer",methods = ['POST'])
 def get_classes_of_a_course_without_trainer():
     application = request.get_json()
-    # print(application)
     c_id = application['course_id']
     
     record = ViewController.get_classes_of_a_course_without_trainer(c_id)
@@ -271,6 +309,81 @@ def get_all_trainers():
             }
         ), 404
 
+@app.route("/get_all_assigned_classes_of_user", methods = ['POST'])
+def get_all_assigned_classes_of_user():
+    application = request.get_json()
+    u_id = application['user_id']
+    
+    record = ViewController.get_learner_assigned_classes(u_id)
+    course_class = Course()
+    
+    new_record = []
+
+    for a_record in record:
+        print(a_record.get_course_id())
+        course_id, class_id = a_record.get_course_id()
+        course_rec = course_class.get_course_by_id(course_id)
+        course_name = course_rec.get_course_name()
+        a_record = {
+            "course_id" : course_id,
+            "class_id" : class_id,
+            "course_name" : course_name
+        }
+        new_record.append(a_record)
+
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record for a_record in new_record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no assigned classes"
+            }
+        ), 404
+
+@app.route("/get_all_enrolled_classes_of_user", methods = ['POST'])
+def get_all_enrolled_classes_of_user():
+    application = request.get_json()
+    # print(application)
+    u_id = application['user_id']
+    
+    record = ViewController.get_learner_enrolled_classes(u_id)
+    course_class = Course()
+    
+    new_record = []
+
+    for a_record in record:
+        course_id,class_id = a_record.get_course_and_class_id()
+        course_rec = course_class.get_course_by_id(course_id)
+        course_name = course_rec.get_course_name()
+        a_record = {
+            "course_id" : course_id,
+            "class_id" : class_id,
+            "course_name" : course_name
+        }
+        new_record.append(a_record)
+        
+    if len(record):
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "record": [a_record for a_record in new_record]
+                    }
+                }
+            )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no enrolled classes"
+            }
+        ), 404
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)

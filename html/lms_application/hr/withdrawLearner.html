@@ -9,6 +9,9 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
+  <!-- Axios Functionalities -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
@@ -27,7 +30,6 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
 
   <!-- =======================================================
   * Template Name: Mentor - v4.6.0
@@ -37,7 +39,7 @@
   ======================================================== -->
 </head>
 
-<body onload="retrieve_all_courses()">
+<body>
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -54,6 +56,10 @@
           <li><a href="create_course.html">Create Course</a></li>
           <li><a href="assignLearners.html">Assign Learners</a></li>
           <li><a href="assignTrainer.html">Assign Trainers</a></li>
+
+         
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
       <a href="courses.html" class="get-started-btn">Get Started</a>
@@ -66,101 +72,33 @@
     <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs">
       <div class="container">
-        <h2>Courses</h2>
+        <h2>Withdrawing Classes for Learners</h2>
         <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
       </div>
     </div><!-- End Breadcrumbs -->
 
-    <!-- ======= Courses Section ======= -->
-    <section id="courses" class="courses">
-      <div class="container" data-aos="fade-up">
-
-        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="all_courses">
-
-          <!-- <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-            <div class="course-item">
-              <img src="assets/img/course-1.jpg" class="img-fluid" alt="...">
-              <div class="course-content">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h4>Web Development</h4>
-                  <p class="price">$169</p>
-                </div>
-
-                <h3><a href="course-details.html">Website Design</a></h3>
-                <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-                <div class="trainer d-flex justify-content-between align-items-center">
-                  <div class="trainer-profile d-flex align-items-center">
-                    <img src="assets/img/trainers/trainer-1.jpg" class="img-fluid" alt="">
-                    <span>Antonio</span>
-                  </div>
-                  <div class="trainer-rank d-flex align-items-center">
-                    <i class="bx bx-user"></i>&nbsp;50
-                    &nbsp;&nbsp;
-                    <i class="bx bx-heart"></i>&nbsp;65
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> 
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-            <div class="course-item">
-              <img src="assets/img/course-2.jpg" class="img-fluid" alt="...">
-              <div class="course-content">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h4>Marketing</h4>
-                  <p class="price">$250</p>
-                </div>
-
-                <h3><a href="course-details.html">Search Engine Optimization</a></h3>
-                <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-                <div class="trainer d-flex justify-content-between align-items-center">
-                  <div class="trainer-profile d-flex align-items-center">
-                    <img src="assets/img/trainers/trainer-2.jpg" class="img-fluid" alt="">
-                    <span>Lana</span>
-                  </div>
-                  <div class="trainer-rank d-flex align-items-center">
-                    <i class="bx bx-user"></i>&nbsp;35
-                    &nbsp;&nbsp;
-                    <i class="bx bx-heart"></i>&nbsp;42
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> 
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-            <div class="course-item">
-              <img src="assets/img/course-3.jpg" class="img-fluid" alt="...">
-              <div class="course-content">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h4>Content</h4>
-                  <p class="price">$180</p>
-                </div>
-
-                <h3><a href="course-details.html">Copywriting</a></h3>
-                <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-                <div class="trainer d-flex justify-content-between align-items-center">
-                  <div class="trainer-profile d-flex align-items-center">
-                    <img src="assets/img/trainers/trainer-3.jpg" class="img-fluid" alt="">
-                    <span>Brandon</span>
-                  </div>
-                  <div class="trainer-rank d-flex align-items-center">
-                    <i class="bx bx-user"></i>&nbsp;20
-                    &nbsp;&nbsp;
-                    <i class="bx bx-heart"></i>&nbsp;85
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>  -->
-
-        </div>
-        <div class="my-3" id="status_output"></div>
+    <!-- ======= Trainers Section ======= -->
+    <section id="trainers" class="trainers">
+      <div class="container" data-aos="fade-up" > 
+        <input  type="text" 
+        id="myInput" 
+        onkeyup="toFilter()" 
+        placeholder="Search Learner.." 
+        title="Type in a name of a learner">
       </div>
       
-    </section><!-- End Courses Section -->
-    
+
+      <div class="container" data-aos="fade-up" id = 'all_learners'>
+
+      </div>
+      <div class="container" data-aos="fade-up"  id = 'displayEligibleCourses'>
+
+      </div>
+      <div class="container" data-aos="fade-up"  id = 'displayClassOfEligibleCourses'>
+
+      </div>
+    </section><!-- End Trainers Section -->
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -251,78 +189,103 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Main Functionalities -->
   <script>
-    function retrieve_all_courses(){
+    function getAllLearners() {
         axios
-        .get("http://localhost:5000/courses")
-        .then(res =>
+
+          .get('http://localhost:5000/get_all_learners',{}
+          )
+          .then(res  => 
             {
-                records = res.data.data.record
-                console.log(records)
-                course_output = ""
-                for(record of records){
-                  course_output += `
-                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch" id="card_${record.course_id}">
-                      <div class="course-item">
-                        <img src="assets/img/course-1.jpg" class="img-fluid" alt="...">
-                        <div class="course-content">
-                          <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 id="${record.course_id}">Delete Course</h4>
-                          </div>
-
-                          <h3><a href="course-details.html">${record.course_name}</a></h3>
-                          <p>${record.course_description}</p>
-                        </div>
-                      </div>
-                    </div>
-                    `                   
-                }
-
-                document.getElementById("all_courses").innerHTML = course_output
+                records = res.data.data.record;
+                console.log(records);
+                lrnr_id_arr = [];
+                let value = `<table class = 'table' id = 'myTable'>
+                            <thead class = 'thead-dark'>
+                            <tr>
+                                <th>Department</th>
+                                <th>designation</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>User ID</th>
+                            </tr></thead><tbody>`;
                 
-                for(record of records){
-                  let course_id = record.course_id
-                  document.getElementById(course_id).addEventListener('click', function(){
-                    delete_selected_course(course_id)
-                  })
-                }
-            }
-        )
-    }
-    
-    function delete_selected_course(course_id){
-        console.log(course_id)
-        axios
-        .post("http://localhost:5000/delete_course",
-            {
-                "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
-                "course_id": course_id // have to be careful of which course to delete. You cannot delete a course that has been assigned as a prerequisite. Remove it as a prerequisite first before the course can be deleted
-            }
-        )
-        .then(res =>
-            {
-              data = res.data;
-              console.log(data)
-              if(data["code"] == 200){
-                output = `<div class="alert alert-success" role="alert">
-                  ${data["message"]}
-                </div>`
-              }
-              else{
-                output = `<div class="alert alert-danger" role="alert">
-                  ${data["message"]}
-                </div>`
-                console.log(data['message'])
-              }
-              
-              document.getElementById("status_output").innerHTML = output
-              document.getElementById("card_"+course_id).outerHTML = ""
-            }
-        )
-        .catch(error => console.error(error.response.data));
-    }
+                for(learner of records){
+                    let department = learner.department;
+                    let designation = learner.designation;
+                    let email = learner.email;
+                    let name = learner.name;
+                    let user_id = learner.user_id;  
+                    lrnr_id_arr.push(user_id);
 
-    
+                    let buttonToAssign = 'buttonToAssignUser_' + user_id;
+
+                    value += `<tr>
+                            <td>${department}</td>
+                            <td>${designation}</td>
+                            <td>${email}</td>
+                            <td>${name}</td>
+                            <td>${user_id}</td>
+                            <td><button value = ${user_id} id = ${buttonToAssign}> Withdraw</button><td>
+                            </tr>`;
+
+                }
+
+                value+= `</tbody></table>`;
+                let body = document.getElementById('all_learners');
+                body.innerHTML = value; 
+                // console.log(lrnr_id_arr);
+                for(let lrnr_id of lrnr_id_arr){
+                  console.log(lrnr_id);
+                  buttonToAssign = 'buttonToAssignUser_' + lrnr_id;
+                  el = document.getElementById(buttonToAssign);
+                  // console.log(el)
+                  el.addEventListener('click',function(event){
+                    redirectToAssignedAndEnrolled(lrnr_id);
+                  }) 
+                  
+                }
+
+            }
+          )
+          .catch(error => console.error(error.response.data));
+      }
+
+      function redirectToAssignedAndEnrolled(learner_id){
+        window.location = ('./withdrawLearnerPage.html?learner_id=' + learner_id );
+      }
+
+
+      function toFilter(){  
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            // Hide the row initially.
+            tr[i].style.display = "none";
+
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+              cell = tr[i].getElementsByTagName("td")[j] ;
+              if (cell) {
+                if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+                  break;
+                } 
+              }
+            }
+        }
+        
+      }
+      
+
+      
+
+      getAllLearners();
   </script>
 
 </body>

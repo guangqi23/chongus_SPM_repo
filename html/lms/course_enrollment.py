@@ -1,10 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from sqlalchemy.sql.sqltypes import Boolean
-from user import User
-# from sqlalchemy.ext.declarative.api import declared_attr
-from sqlalchemy import Column, Integer
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
@@ -108,3 +103,6 @@ class Course_Enrollment(db.Model):
         Course_Enrollment.query.filter_by(enrollment_id = rejectedEnrollId).delete()
         db.session.commit()
         return "200"
+
+    def get_course_and_class_id(self):
+        return self.course_id,self.class_id
