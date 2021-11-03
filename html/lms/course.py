@@ -38,6 +38,7 @@ class Course(db.Model):
         try: 
             db.session.add(self)
             db.session.commit()
+            
         except Exception as error:
             return jsonify (
                 {

@@ -48,6 +48,8 @@ class SectionMaterialQuizDataAccess():
         questions = da.get_quiz_questions(quiz_id)
         return questions
 
+    
+
     def create_section(self,class_id,section_title):
         
         section_entry = Section(class_id = class_id,section_title=section_title)

@@ -1,8 +1,15 @@
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from  section_material_quiz_data_access import SectionMaterialQuizDataAccess
+from section_material_quiz_data_access import SectionMaterialQuizDataAccess
+from ungraded_quiz_score import Ungraded_quiz_score
+from graded_quiz_score import Graded_quiz_score
+from finalquiz import FinalQuiz
+from quiz import Quiz
+from section import Section
 
+
+import sys
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
@@ -89,6 +96,18 @@ class SectionQuizController():
         status = da.delete_Quiz(quiz_id)
         return status
             
+    
+    def get_Quiz_Timer(self, quiz_id):
+        da = Quiz()
+        timer = da.get_time_limit_with_id(quiz_id)
+        return timer
+    
+    def get_Quiz_Title(self, quiz_id):
+        qa = Quiz()
+        section_id = qa.get_section_id_with_quiz_id(quiz_id)
+        da = Section()
+        quiz_title = da.get_section_title_with_id(section_id)
+        return quiz_title
 
 
 ############## View Functions ###############################
@@ -192,12 +211,17 @@ def add_MCQ_options():
     
     return status 
 
-@app.route("/get_Quiz_Questions", methods=['GET'])
+@app.route("/get_Quiz_Questions_Options", methods=['GET'])
 def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
     da = SectionQuizController()
-    status = da.get_Quiz_Questions(quiz_id)
-    return status
+
+    allQuestions = da.get_Quiz_Questions(quiz_id)
+
+
+    #print(dictz["code"], file=sys.stderr)
+    #Return list of questions, options, correct option
+    return allQuestions
 
 @app.route("/get_MCQ", methods=['GET'])
 def get_MCQ():
@@ -219,6 +243,49 @@ def delete_Questions():
     da = SectionQuizController()
     status = da.delete_Quiz(quiz_id)
     return status
+@app.route("/submitScore", methods=['POST'])
+def submitScore():
+    quiz_id = int(request.args.get('quiz_id', None))
+    user_id = int(request.args.get('user_id', None))
+    quiz_score = float(request.args.get('score', None))
+    print(quiz_id, file=sys.stderr)
+    print(user_id, file=sys.stderr)
+    print(quiz_score, file=sys.stderr)
+    scoreObj = {"quiz_id" : quiz_id, "user_id" : user_id, "quiz_score" : quiz_score}
+    
+
+    #Check if quiz is graded or not
+    finalDA = FinalQuiz()
+    gradedOrNot = finalDA.is_graded(quiz_id)
+
+    if(gradedOrNot == False):
+        ungradedDa = Ungraded_quiz_score()
+        message = ungradedDa.insert_score(scoreObj)
+        return message
+    else:
+        gradedDa = Graded_quiz_score()
+        if float(quiz_score) >= float(gradedOrNot[0]):
+            scoreObj["result"] = True
+        else:
+            scoreObj["result"] = False
+        
+        message = gradedDa.insert_score(scoreObj)
+        return message
+
+@app.route("/get_Quiz_Timer", methods=['GET'])
+def get_quiz_timer():
+    da = SectionQuizController()
+    quiz_id = int(request.args.get('quiz_id', None))
+    timer = da.get_Quiz_Timer(quiz_id)
+    return timer
+
+@app.route("/get_Section_Title", methods=['GET'])
+def get_section_title():
+    quiz_id = int(request.args.get('quiz_id', None))
+    da = SectionQuizController()
+    quiz_title = da.get_Quiz_Title(quiz_id)
+    
+    return quiz_title
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)
