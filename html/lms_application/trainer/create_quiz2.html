@@ -272,7 +272,7 @@
         <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
         <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
       </div>
-    </div>
+    </div>i
   </footer><!-- End Footer -->
   <script>
         let params = new URLSearchParams(location.search);
@@ -316,7 +316,7 @@
             ///create_quiz 
             $(async() => {          
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/create_quiz?section_id="+section_id+"&time_limit="+time_limit;
+            var serviceURL = "http://localhost:5000/create_quiz?section_id="+section_id+"&time_limit="+time_limit;
             try {
                 const response =
                 await fetch(
@@ -459,7 +459,7 @@
                     if (qanswer == false){
                        final_answer = 0;
                     }
-                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
+                    var serviceURL="http://localhost:5000/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -488,7 +488,7 @@
                     var question = document.getElementsByClassName('question');
                     mcq_order =order;
                     
-                    var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
+                    var serviceURL="http://localhost:5000/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -519,12 +519,12 @@
                                 
                                 if (actual_ans == qopt1)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -537,12 +537,12 @@
                             });
                                 if (actual_ans == qopt2)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -555,12 +555,12 @@
                             });
                                 if (actual_ans == qopt3)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -573,12 +573,12 @@
                             });
                                 if (actual_ans == qopt4)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                     serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
+                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({

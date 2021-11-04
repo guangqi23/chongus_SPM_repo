@@ -52,12 +52,7 @@ class Quiz(db.Model):
                 "code": 200,
                 "data": last_id.json()
             })
-        return jsonify(
-            {
-                "code": 404,
-                "message": "There are no quiz."
-            }
-        )
+        
     def add_questions(self,questions):
         self.question.append(questions)
 

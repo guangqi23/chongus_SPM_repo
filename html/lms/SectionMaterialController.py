@@ -82,23 +82,23 @@ def create_Materials(self):
 @app.route("/view_section_materials", methods=['GET'])
 def view_Materials():
     section_id = int(request.args.get('section_id', None))
-    da = SectionMaterialController()
-    materials = da.view_all_materials(section_id)
+    da = SectionMaterialQuizController()
+    materials = da.get_material_record_by_section(section_id)
     return materials
 
     
 @app.route("/view_class_sections", methods=['GET'])
 def view_Sections():
     class_id = int(request.args.get('class_id', None))
-    da = SectionMaterialController()
-    sections = da.view_all_sections(class_id)
+    da = SectionMaterialQuizController()
+    sections = da.get_sections_by_class(class_id)
     return sections
 
 @app.route("/view_section_quiz", methods=['GET'])
 def view_Quiz():
     section_id = int(request.args.get('section_id', None))
-    da = SectionMaterialController()
-    quiz = da.view_section_quiz(section_id)
+    da = SectionMaterialQuizController()
+    quiz = da.get_section_quiz(section_id)
     return quiz
 
 
@@ -106,7 +106,7 @@ def view_Quiz():
 def create_section():
     class_id = int(request.args.get('class_id', None))
     section_title = str(request.args.get('section_title', None))
-    da = SectionMaterialController()
+    da = SectionMaterialQuizController()
     status = da.create_section(class_id,section_title)
     return status
 
@@ -114,14 +114,14 @@ def create_section():
 def create_quiz():
     section_id = int(request.args.get('section_id', None))
     time_limit = int(request.args.get('time_limit', None))
-    da =SectionMaterialController()
+    da = SectionMaterialQuizController()
     status = da.create_quiz(section_id,time_limit)
     return status
     
 @app.route("/get_quiz_questions", methods=['GET'])
 def get_quiz_questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = SectionMaterialController()
+    da = SectionMaterialQuizController()
     status = da.get_quiz_questions(quiz_id)
     return status
 
@@ -131,17 +131,16 @@ def create_quiz_questions():
     question_type = str(request.args.get('quiz_id', None))
     qorder = str(request.args.get('qorder', None))
     question =str(request.args.get('question', None))
-    da = SectionMaterialController()
-    status = da.create_quiz_questions(quiz_id,question_type,qorder,question)
+    da = SectionMaterialQuizController()
+    status = da.create_quiz(quiz_id,question_type,qorder,question)
     return status
 
-
-@app.route("/view_quiz_questions", methods=['GET'])
-def get_qn():
-    qn_id = int(request.args.get('qn_id', None))
-    da =  SectionMaterialController()
-    quiz = da.view_qn(qn_id)
-    return quiz
+# @app.route("/view_quiz_questions", methods=['GET'])
+# def get_qn():
+#     qn_id = int(request.args.get('qn_id', None))
+#     da =  SectionMaterialController()
+#     quiz = da.view_qn(qn_id)
+#     return quiz
 
 @app.route("/create_section_materials", methods=['GET'])
 def create_section_materials():
@@ -149,8 +148,8 @@ def create_section_materials():
     material_title = str(request.args.get('material_title', None))
     material_content = str(request.args.get('material_content', None))
     material_type = str(request.args.get('material_type', None))
-    da = SectionMaterialController()
-    status = da.create_section_materials(section_id,material_title,material_content,material_type)
+    da = SectionMaterialQuizController()
+    status = da.create_material(section_id,material_title,material_content,material_type)
     return status
 
 

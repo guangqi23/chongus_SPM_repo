@@ -104,7 +104,7 @@
           <script>
           function viewAssignedCourses(userId) {
             axios
-              .post('http://127.0.0.1:5002/assigned_courses', {user_id: userId
+              .post('http://localhost:5000/assigned_courses', {user_id: userId
               })
               .then(res => 
                 {
@@ -144,7 +144,7 @@
           <script>
           function viewEnrolledCourses(userId) {
             axios
-              .post('http://127.0.0.1:5002/enrolled_classes', {user_id: userId
+              .post('http://localhost:5000/enrolled_classes', {user_id: userId
               })
               .then(res => 
                 {
@@ -184,7 +184,7 @@
           <script>
             function viewEligibleCourses(userId) {
               axios
-                .post('http://127.0.0.1:5002/eligible_classes', {user_id: userId
+                .post('http://localhost:5000/eligible_classes', {user_id: userId
                 })
                 .then(res => 
                   {
@@ -225,7 +225,7 @@
           <script>
             function viewCompletedCourses(userId) {
               axios
-                .post('http://127.0.0.1:5002/completed_courses', {user_id: userId
+                .post('http://localhost:5000/completed_courses', {user_id: userId
                 })
                 .then(res => 
                   {
@@ -260,7 +260,7 @@
           <script>
             function viewUneligibleCourses(userId) {
               axios
-                .post('http://127.0.0.1:5002/uneligible_courses', {user_id: userId
+                .post('http://localhost:5000/uneligible_courses', {user_id: userId
                 })
                 .then(res => 
                   {

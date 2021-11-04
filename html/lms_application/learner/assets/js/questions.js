@@ -1,7 +1,7 @@
 //Create an array and passing the number, questions, options and answers
 //Retrieve info from db
 
-microServiceURL = "http://localhost:5002/get_Quiz_Questions_Options?quiz_id=" + String(sessionStorage.getItem("quiz_id"));
+microServiceURL = "http://localhost:5000/get_Quiz_Questions_Options?quiz_id=" + String(sessionStorage.getItem("quiz_id"));
 let request = new XMLHttpRequest();
 request.open('GET',microServiceURL);
 request.responseText = 'text';
@@ -31,7 +31,7 @@ request.onload = function()
         if(questionType == "MCQ")
         {
             console.log("MCQ found!");
-            mcqURL = "http://127.0.0.1:5002/get_MCQ?question_id=" + questionId;
+            mcqURL = "http://localhost:5000/get_MCQ?question_id=" + questionId;
 
 
 
@@ -83,7 +83,7 @@ request.onload = function()
         }
         else if (questionType == "TF")
         {
-            tfURL = 'http://127.0.0.1:5002/get_TrueFalse?question_id=' + questionId;
+            tfURL = 'http://localhost:5000/get_TrueFalse?question_id=' + questionId;
             axios.get(tfURL)
                 .then(response => {
                     dataArr = response.data["data"][0];

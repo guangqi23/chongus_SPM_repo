@@ -40,6 +40,6 @@ class User(db.Model):
     def get_user_id(self):
         return self.userid
 
-    def is_hr(self, userid):
-        user = User.query.filter_by(userid=userid).first()
-        return user
+    # def is_hr(self, userid):
+    #     user = User.query.filter_by(userid=userid).first()
+    #     return user

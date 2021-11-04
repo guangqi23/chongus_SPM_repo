@@ -392,7 +392,7 @@
 
             $(async() => {              
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_section_quiz?section_id="+section_id;
+            var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
             try {
                
                 const response = await fetch(
@@ -430,7 +430,7 @@
     
         $(async() => {              
             // Change serviceURL to your own
-            var serviceURL2 = "http://127.0.0.1:5002/get_Quiz_Questions?quiz_id="+quiz_id;
+            var serviceURL2 = "http://localhost:5000/get_Quiz_Questions?quiz_id="+quiz_id;
             
             try {
                 const response =
@@ -451,7 +451,7 @@
                         if (questions[i].question_type =='TF'){
                             
                             q_id_tf = questions[i].question_id;
-                                        var serviceURL3 = "http://127.0.0.1:5002/get_TrueFalse?question_id="+q_id_tf;
+                                        var serviceURL3 = "http://localhost:5000/get_TrueFalse?question_id="+q_id_tf;
                                         var theRequest = $.ajax({
                                         url: serviceURL3,
                                         method: 'GET',
@@ -488,7 +488,7 @@
                         else if (questions[i].question_type =='MCQ'){
                             q_id_mcq = questions[i].question_id;
                             temp = i;
-                            var serviceURL3 = "http://127.0.0.1:5002/get_MCQ?question_id="+q_id_mcq;
+                            var serviceURL3 = "http://localhost:5000/get_MCQ?question_id="+q_id_mcq;
                             var theRequest = $.ajax({
                                 url: serviceURL3,
                                 method: 'GET',
@@ -655,7 +655,7 @@
                     qanswer = answer[x].getAttribute('target');
                     qquestion = question[x].getAttribute('target');
                    
-                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+qanswer+"&quiz_id="+quiz_id+"&question="+qqn_type+"&question_type="+qqn_type+"&qorder="+order;
+                    var serviceURL="http://localhost:5000/create_TrueFalse?answer="+qanswer+"&quiz_id="+quiz_id+"&question="+qqn_type+"&question_type="+qqn_type+"&qorder="+order;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -680,7 +680,7 @@
                     qopt3= opt3[is_mcq_counter].getAttribute('target');
                     qopt4= opt4[is_mcq_counter].getAttribute('target');
                     $(async() => {           
-                    var serviceURL ="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
+                    var serviceURL ="http://localhost:5000/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
                     
                     try {
                         const response =
@@ -726,7 +726,7 @@
                                 }
                                 
                                 opt_order = y+1;
-                                var serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
+                                var serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
@@ -900,7 +900,7 @@
     {       
             var new_quiz_id =0
             var time_limit = document.getElementById("time_limit").value;
-            var serviceURL = "http://127.0.0.1:5001/create_quiz?section_id="+section_id+"&time_limit="+time_limit;
+            var serviceURL = "http://localhost:5000/create_quiz?section_id="+section_id+"&time_limit="+time_limit;
              var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -927,7 +927,7 @@
                     if (qanswer == false){
                        final_answer = 0;
                     }
-                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
+                    var serviceURL="http://localhost:5000/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -945,7 +945,7 @@
                     mcq_qquestion = question[x].textContent;
                     var question = document.getElementsByClassName('question');
                     mcq_order =order;
-                    var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
+                    var serviceURL="http://localhost:5000/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -968,12 +968,12 @@
                                 
                                 if (actual_ans == qopt1)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
                                 }
                                 
                                 var theRequest = $.ajax({
@@ -986,12 +986,12 @@
                             });
                                 if (actual_ans == qopt2)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -1004,12 +1004,12 @@
                             });
                                 if (actual_ans == qopt3)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({
@@ -1022,12 +1022,12 @@
                             });
                                 if (actual_ans == qopt4)
                                 {
-                                    serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
+                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
 
                                 }
                                 else
                                 {
-                                     serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
+                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
                                 }
                                 console.log(serviceURL);
                                 var theRequest = $.ajax({

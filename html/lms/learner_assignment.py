@@ -19,8 +19,8 @@ class Learner_Assignment(db.Model):
     class_id = db.Column(db.Integer, primary_key=True, index=True)
     userid = db.Column(db.Integer, primary_key=True, index=True)
 
-    def get_user_assigned_courses(self, userid): 
-        record = Learner_Assignment.query.filter_by(userid=userid).all()
+    def get_user_assigned_courses(self, user_id): 
+        record = Learner_Assignment.query.filter_by(userid=user_id).all()
         return record
 
     def get_course_id(self):

@@ -223,7 +223,7 @@
     {
         var row = $(row_id).closest("tr");
         enrollment_id = row[0].childNodes[0].childNodes[0].data
-        //console.log("Enrollment ID: " + enrollment_id)
+        //console.log("Enrollment ID: " + enrollment_id)c
         
         axios
         .post('http://localhost:5000/changeEnrollmentStatus', {

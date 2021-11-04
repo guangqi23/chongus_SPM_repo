@@ -22,9 +22,9 @@ class Trainer(User):
     __mapper_args__ = {'polymorphic_identity': 'trainer'}
     userid = db.Column(db.Integer, db.ForeignKey('users.userid'), primary_key=True)
     
-    def is_trainer(self, userid):
-        trnr = Trainer.query.filter_by(userid=userid).first()
-        return trnr
+    # def is_trainer(self, userid):
+    #     trnr = Trainer.query.filter_by(userid=userid).first()
+    #     return trnr
 
     def get_user_id(self):
         return self.userid
@@ -33,9 +33,9 @@ class Trainer(User):
         trnr = Trainer()
         return trnr.query.filter_by(designation='Senior Engineer').all()
 
-    def get_assigned_classes(self,userid):
+    def get_assigned_classes(self,user_id):
         
-        classes = Trainer_Assignment.query.filter_by(userid=userid)
+        classes = Trainer_Assignment.query.filter_by(userid=user_id)
 
         results_dict = {}
         count = 1   
