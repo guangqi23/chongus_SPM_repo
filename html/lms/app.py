@@ -739,6 +739,26 @@ class Quiz(db.Model):
     def add_questions(self,questions):
         self.question.append(questions)
 
+    def get_quiz_by_id(self,quiz_id):
+        try:
+            quizzes = Quiz.query.filter_by(quiz_id=quiz_id).first()
+            db.session.close()
+        except Exception as error:
+            return jsonify(
+                {
+                    "code": 404,
+                    "message": "There are no quiz."
+                }
+            )
+        
+      
+        return jsonify(
+            {
+                "code": 200,
+                "data": quizzes.json()
+            })
+        
+
 class Section(db.Model):
     __tablename__ = 'SECTIONS'
     section_id = db.Column(db.Integer, primary_key=True)
@@ -1242,7 +1262,7 @@ class SectionMaterialQuizController():
         try: 
             db.session.add(quiz_entry)
             db.session.commit()
-            db.session.close()
+            # db.session.close()
         except Exception as error:
             return jsonify (
                 {
@@ -1250,6 +1270,8 @@ class SectionMaterialQuizController():
                     "message": "An error occured while creating the section. " + str(error)
                 }
             ), 500
+
+        print("quiz_entry.get_quiz_id(): " + str(quiz_entry.get_quiz_id()))
 
         return jsonify(
             {
@@ -1308,7 +1330,7 @@ class SectionMaterialQuizController():
         try: 
             db.session.add(question_entry)
             db.session.commit()
-            db.session.close()
+            # db.session.close()
         except Exception as error:
             return jsonify (
                 {
@@ -1332,7 +1354,7 @@ class SectionMaterialQuizController():
         try: 
             db.session.add(option_entry)
             db.session.commit()
-            db.session.close()
+            # db.session.close()
         except Exception as error:
             return jsonify (
                 {
@@ -1769,15 +1791,15 @@ def get_quiz_questions():
     questions = da.get_quiz_questions(quiz_id)
     return questions
 
-@app.route("/create_quiz_questions", methods=['GET'])
-def create_quiz_questions():
-    quiz_id = int(request.args.get('quiz_id', None))
-    question_type = str(request.args.get('quiz_id', None))
-    qorder = str(request.args.get('qorder', None))
-    question =str(request.args.get('question', None))
-    da = SectionMaterialQuizController()
-    status = da.create_quiz(quiz_id,question_type,qorder,question)
-    return status
+# @app.route("/create_quiz_questions", methods=['GET'])
+# def create_quiz_questions():
+#     quiz_id = int(request.args.get('quiz_id', None))
+#     question_type = str(request.args.get('quiz_id', None))
+#     qorder = str(request.args.get('qorder', None))
+#     question =str(request.args.get('question', None))
+#     da = SectionMaterialQuizController()
+#     status = da.create_quiz_questions(quiz_id,question_type,qorder,question)
+#     return status
 
 # @app.route("/view_quiz_questions", methods=['GET'])
 # def get_qn():
@@ -1850,12 +1872,9 @@ def add_MCQ_options():
 @app.route("/get_Quiz_Questions_Options", methods=['GET'])
 def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = QuizQuestions()
-    questions = da.get_quiz_questions(quiz_id)
-
-    #print(dictz["code"], file=sys.stderr)
-    #Return list of questions, options, correct option
-    return questions
+    da = Quiz()
+    data = da.get_quiz_by_id(quiz_id)
+    return data
 
 @app.route("/get_MCQ", methods=['GET'])
 def get_MCQ():

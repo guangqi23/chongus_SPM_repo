@@ -419,59 +419,59 @@
             }
             //===========================Check if Doc======================================================================================
             else if  (ft.toString() == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'|| ft.includes(checkIfDoc.toString())){
-                const API_ENDPOINT = 'https://t7eyjq82mh.execute-api.us-east-1.amazonaws.com/default/happybucket7-worddoc'
-                const response = await axios({
-                  method: 'GET',
-                  url: API_ENDPOINT
-                })
-                finaltype = 'application/word'
-                console.log('Response: ', response)
-            console.log('Uploading: ', this.image)
-            let binary = atob(this.image.split(',')[1])
-            let array = []
-            for (var i = 0; i < binary.length; i++) {
-              array.push(binary.charCodeAt(i))
-            }
-
-            filetype = ft.toString()
-            console.log('file type below!')
-            console.log(filetype)
-
-            let blobData = new Blob([new Uint8Array(array)], {type: 'application/word'})
-            console.log('Uploading to: ', response.uploadURL)
-            const result = await fetch(response.uploadURL, {
-              method: 'PUT',
-              body: blobData
-            })
-            console.log('Result: ', result)
-            if (result.status == 200){
-              material_content = result.url
-              material_title =  document. getElementById("material_title").value;
-              material_type = 'doc'
-               $(async() => {           
-              var serviceURL = "http://localhost:5000/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
-              console.log('hehe');
-              try {
-                  const response =
-                  await fetch(
-                  serviceURL, { method: 'GET' }
-                  );
-                  const result = await response.json();
-
-                if (response.status === 200) {
-                    console.log('successfully added into db')
-                  }
-                } 
-                
-                catch (error) {
-                // Errors when calling the service; such as network error, 
-                // service offline, etc
-                showError('There is a problem retrieving menu data, please try again later.<br />' + error);
-                } // error
+              const API_ENDPOINT = 'https://t7eyjq82mh.execute-api.us-east-1.amazonaws.com/default/happybucket7-worddoc'
+              const response = await axios({
+                method: 'GET',
+                url: API_ENDPOINT
               })
-            }
-            // Final URL for the user doesn't need the query string params
-            this.uploadURL = response.uploadURL.split('?')[0]
+              finaltype = 'application/word'
+              console.log('Response: ', response)
+              console.log('Uploading: ', this.image)
+              let binary = atob(this.image.split(',')[1])
+              let array = []
+              for (var i = 0; i < binary.length; i++) {
+                array.push(binary.charCodeAt(i))
+              }
+
+              filetype = ft.toString()
+              console.log('file type below!')
+              console.log(filetype)
+
+              let blobData = new Blob([new Uint8Array(array)], {type: 'application/word'})
+              console.log('Uploading to: ', response.uploadURL)
+              const result = await fetch(response.uploadURL, {
+                method: 'PUT',
+                body: blobData
+              })
+              console.log('Result: ', result)
+              if (result.status == 200){
+                material_content = result.url
+                material_title =  document. getElementById("material_title").value;
+                material_type = 'doc'
+                $(async() => {           
+                var serviceURL = "http://localhost:5000/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
+                console.log('hehe');
+                try {
+                    const response =
+                    await fetch(
+                    serviceURL, { method: 'GET' }
+                    );
+                    const result = await response.json();
+
+                  if (response.status === 200) {
+                      console.log('successfully added into db')
+                    }
+                  } 
+                  
+                  catch (error) {
+                  // Errors when calling the service; such as network error, 
+                  // service offline, etc
+                  showError('There is a problem retrieving menu data, please try again later.<br />' + error);
+                  } // error
+                })
+              }
+              // Final URL for the user doesn't need the query string params
+              this.uploadURL = response.uploadURL.split('?')[0]
             }
 
             //=========================Check if PPT======================================================================================
