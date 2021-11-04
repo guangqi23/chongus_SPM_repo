@@ -4,6 +4,7 @@ from flask_cors import CORS
 from finalquiz import FinalQuiz
 from quiz_question import QuizQuestions
 from sqlalchemy import desc
+import sys
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
@@ -17,7 +18,6 @@ class Quiz(db.Model):
     quiz_id = db.Column(db.Integer, primary_key=True)
     section_id = db.Column(db.Integer)
     time_limit = db.Column(db.Integer)
-    question = []
     
 
     def json(self):
@@ -55,6 +55,24 @@ class Quiz(db.Model):
         
     def add_questions(self,questions):
         self.question.append(questions)
+
+    def get_quiz_by_id(self,quiz_id):
+        quizzes = Quiz.query.filter_by(quiz_id=quiz_id).first()
+       
+        db.session.close()
+      
+        return jsonify(
+            {
+                "code": 200,
+                "data": quizzes.json()
+            })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no quiz."
+            }
+        )
+   
 
 
         

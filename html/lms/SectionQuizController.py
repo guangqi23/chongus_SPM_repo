@@ -142,12 +142,13 @@ def create_quiz():
     status = da.create_quiz(section_id,time_limit)
     return status
     
-# @app.route("/get_quiz_questions", methods=['GET'])
-# def get_quiz_questions():
-#     quiz_id = int(request.args.get('quiz_id', None))
-#     da = SectionQuizController()
-#     status = da.get_quiz_questions(quiz_id)
-#     return status
+@app.route("/get_quiz_questions", methods=['GET'])
+def get_quiz_questions():
+    quiz_id = int(request.args.get('quiz_id', None))
+    da = SectionQuizController()
+    status = da.get_Quiz_Questions(quiz_id)
+    return status
+
 
 @app.route("/create_quiz_questions", methods=['GET'])
 def create_quiz_questions():
@@ -241,6 +242,7 @@ def delete_Questions():
     da = SectionMaterialQuizController()
     status = da.delete_Quiz(quiz_id)
     return status
+
 @app.route("/submitScore", methods=['POST'])
 def submitScore():
     quiz_id = int(request.args.get('quiz_id', None))

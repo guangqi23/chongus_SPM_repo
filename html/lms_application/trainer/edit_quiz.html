@@ -390,11 +390,11 @@
             $(this).find('form').trigger('reset');
         })
 
-            $(async() => {              
+        $(async() => {              
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
             try {
-               
+                console.log('fetching');
                 const response = await fetch(
                 serviceURL, { method: 'GET' }
                 );
@@ -444,6 +444,8 @@
                 //display time
                     questions = result1.data;
                     arr_length = questions.length;
+                    console.log(serviceURL2);
+                    console.log('fetching quiz_id..',result1.data);
                     
                     var row_id ="row";
                     for (i=0;i<arr_length;i++){

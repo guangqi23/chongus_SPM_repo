@@ -30,9 +30,9 @@ class SectionMaterialController():
         return sections
     
 #   Get quiz id of that section
-    def view_section_quiz(self,section_id):
+    def view_section_quiz_by_qid(self,section_id):
         da = SectionMaterialQuizDataAccess()
-        sections = da.get_section_quiz(section_id)
+        sections = da.get_section_quiz_by_qid(section_id)
         return sections
 
 #   Create section
@@ -99,6 +99,13 @@ def view_Quiz():
     section_id = int(request.args.get('section_id', None))
     da = SectionMaterialQuizController()
     quiz = da.get_section_quiz(section_id)
+    return quiz
+
+@app.route("/view_section_quiz_by_qid", methods=['GET'])
+def view_section_quiz_by_qid():
+    quiz_id = int(request.args.get('quiz_id', None))
+    da = SectionMaterialController()
+    quiz = da.view_section_quiz_by_qid(quiz_id)
     return quiz
 
 
