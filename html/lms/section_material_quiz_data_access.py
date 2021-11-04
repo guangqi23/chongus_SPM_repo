@@ -214,5 +214,8 @@ class SectionMaterialQuizDataAccess():
                 
             }
         ), 200'''
-        
+    def get_section_quiz_by_qid(self,quiz_id):
+        da = Quiz()
+        data = da.get_quiz_by_id(quiz_id)
+        return data
     
