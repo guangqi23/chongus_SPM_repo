@@ -33,7 +33,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingji
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, session_options={
+    'expire_on_commit': False
+})
 
 CORS(app)
 
@@ -758,7 +760,6 @@ class Quiz(db.Model):
                 "data": quizzes.json()
             })
         
-
 class Section(db.Model):
     __tablename__ = 'SECTIONS'
     section_id = db.Column(db.Integer, primary_key=True)
@@ -1000,6 +1001,45 @@ class multiplechoice(QuizQuestions):
     def json(self):
         return {"question_id": self.question_id,"quiz_id": self.quiz_id, "qorder": self.qorder,"question_type": self.question_type,"question": self.question }
 
+class Ungraded_quiz_score(db.Model):
+    __tablename__ = 'UNGRADED_QUIZ_SCORE'
+
+    userid = db.Column(db.Integer, primary_key=True)
+    quiz_id = db.Column(db.Integer, primary_key=True)
+    quiz_score = db.Column(db.Float, nullable=True)
+    time_inserted = db.Column(db.DateTime, primary_key=True)
+
+    def json(self):
+        return {"user_id": self.userid, "quiz_id": self.quiz_id, "quiz_score": self.quiz_score, "time_inserted" : datetime.now()}
+
+    def insert_score(self, scoreObj): 
+        
+        scoreRecord = Ungraded_quiz_score(userid = scoreObj['user_id'], quiz_id = scoreObj['quiz_id'], quiz_score = scoreObj['quiz_score'], time_inserted = datetime.now())
+        db.session.add(scoreRecord)
+        db.session.commit()
+        db.session.close()
+        return "Success"
+
+class Graded_quiz_score(db.Model):
+    __tablename__ = 'GRADED_QUIZ_SCORE'
+
+    userid = db.Column(db.Integer, primary_key=True)
+    quiz_id = db.Column(db.Integer, primary_key=True)
+    quiz_score = db.Column(db.Float, nullable=True)
+    result = db.Column(db.Boolean, nullable = True)
+    time_inserted = db.Column(db.DateTime, primary_key = True)
+
+
+    def json(self):
+        return {"user_id": self.userid, "quiz_id": self.quiz_id, "quiz_score": self.quiz_score, "result": self.result, "time_inserted" : datetime.now()}
+
+    def insert_score(self, scoreObj): 
+        
+        scoreRecord = Graded_quiz_score(userid = scoreObj['user_id'], quiz_id = scoreObj['quiz_id'], quiz_score = scoreObj['quiz_score'], result = scoreObj['result'], time_inserted = datetime.now())
+        db.session.add(scoreRecord)
+        db.session.commit()
+        db.session.close()
+        return "Success"
 
 # list of controllers
 # 1. assign_controller (REMOVED)
@@ -1872,9 +1912,9 @@ def add_MCQ_options():
 @app.route("/get_Quiz_Questions_Options", methods=['GET'])
 def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = Quiz()
-    data = da.get_quiz_by_id(quiz_id)
-    return data
+    da = QuizQuestions()
+    questions = da.get_quiz_questions(quiz_id)
+    return questions
 
 @app.route("/get_MCQ", methods=['GET'])
 def get_MCQ():
@@ -1896,6 +1936,7 @@ def delete_Questions():
     da = SectionMaterialQuizController()
     status = da.delete_Quiz(quiz_id)
     return status
+
 @app.route("/submitScore", methods=['POST'])
 def submitScore():
     quiz_id = int(request.args.get('quiz_id', None))

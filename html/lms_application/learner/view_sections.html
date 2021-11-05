@@ -314,7 +314,7 @@
         var section_title_this= "";
         $(async() => {           
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_class_sections?class_id="+class_id;
+            var serviceURL = "http://localhost:5000/view_class_sections?class_id="+class_id;
     
             try {
                 const response =
@@ -381,7 +381,7 @@
         $(async() => {     
             console.log(section_id)      
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_section_materials?section_id="+section_id;
+            var serviceURL = "http://localhost:5000/view_section_materials?section_id="+section_id;
             console.log('hehe');
             try {
                 const response =
@@ -444,7 +444,7 @@
             $(async() => {     
             console.log(section_id)      
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_section_quiz?section_id="+section_id;
+            var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
             console.log('hehe');
             try {
                 const response =
