@@ -85,7 +85,6 @@ class Classes(db.Model):
         self.enddate = end_date
         self.trainer_name = trainer_name
     
-
     def getSlots(self, cid):
         slots = Classes.query.filter_by(class_id = cid).first()
         return str(slots.slots)
@@ -102,6 +101,11 @@ class Classes(db.Model):
     def get_class_startdate(self, class_id):
         class_A = Classes.query.filter_by(class_id = class_id).first()
         return str(class_A.startdate)
+
+    def get_all_class_sections(self,class_id):
+        section_ctrl = Section()
+        sections  = section_ctrl.get_section_all(class_id)
+        return sections
 
     def json(self):
         return {"class_id":self.class_id,"course_id":self.course_id,"slots":self.slots,"startdate":self.startdate, "enddate":self.enddate, "trainer_name": self.trainer_name}
@@ -388,7 +392,7 @@ class FinalQuiz(db.Model):
     def get_passing_score(self):
         return self.passing_score
 
-    def get_quiz(self,quiz_id):
+    def get_quiz_section(self,quiz_id):
         section = FinalQuiz.query.filter_by(quiz_id = quiz_id).first()
         return section
 
@@ -630,23 +634,30 @@ class multiplechoiceoptions(db.Model):
         return self.correct_option
         
     def get_options_by_question_id(self,question_id):
-        option= multiplechoiceoptions.query.filter_by(question_id = question_id)
+        option= self.query.filter_by(question_id = question_id)
         db.session.close()
-        count =0
-        for x in option:
-            count+=1
-        if count!=0:
-            return jsonify(
+        return option
+    
+    def create_MCQ_options(self):
+        try: 
+            db.session.add(self)
+            db.session.commit()
+            # db.session.close()
+        except Exception as error:
+            return jsonify (
                 {
-                    
-                    "data": [question.json() for question in option]
-                })
+                    "code": 500,
+                    "message": "An error occured while creating the option. " + str(error)
+                }
+            ), 500
+
         return jsonify(
             {
-                "code": 404,
-                "message": "There are no section."
+                "code": 200,
+                "message": "The option has been successfully created",
+                "data":self.json()
             }
-        )
+        ), 200
 
 class QuizQuestions(db.Model):
     __tablename__ = 'QUIZ_QUESTION'
@@ -677,18 +688,39 @@ class QuizQuestions(db.Model):
     def get_question(self):
         return self.question
 
-    def get_quiz_questions(self,quiz_id):
-        questions = QuizQuestions.query.filter_by(quiz_id = quiz_id)
-        #check if empty
-        count =0
-        for x in questions:
-            count+=1
+    def get_all_questions(self,quiz_id):
+        questions = self.query.filter_by(quiz_id = quiz_id)
+        return questions
 
-        if count!=0:
+    def create_MCQ(self):
+        try: 
+            db.session.add(self)
+            db.session.commit()
+            # db.session.close()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while creating the question. " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The question has been successfully created",
+                "id": self.get_question_id()
+            }
+        ), 200
+    
+    def get_mcq_question_options(self,question_id):
+        mcq_ctrl = multiplechoiceoptions()
+        option = mcq_ctrl.get_options_by_question_id(question_id)
+        if option:
             return jsonify(
                 {
-                    "code": 200,
-                    "data": [question.json() for question in questions]
+                    
+                    "data": [question.json() for question in option]
                 })
         return jsonify(
             {
@@ -714,8 +746,8 @@ class Quiz(db.Model):
     def get_section_id(self):
         return self.section_id
 
-    def get_time_limit_with_id(self, quiz_id_input):
-        quizObj = Quiz.query.filter_by(quiz_id= quiz_id_input).first()
+    def get_time_limit_with_id(self, quiz_id):
+        quizObj = Quiz.query.filter_by(quiz_id= quiz_id).first()
         timer = quizObj.time_limit
         db.session.close()
         return str(timer)
@@ -726,17 +758,10 @@ class Quiz(db.Model):
         db.session.close()
         return section_id
 
-    def get_quiz(self,section_id):
-        qid = self.quiz_id
-        quizzes = Quiz.query.filter_by(section_id=section_id)
-        #get last value
+    def get_quizzes(self,section_id):
+        quizzes = self.query.filter_by(section_id=section_id)
         db.session.close()
-        last_id = quizzes[-1]
-        return jsonify(
-            {
-                "code": 200,
-                "data": last_id.json()
-            })
+        return quizzes
         
     def add_questions(self,questions):
         self.question.append(questions)
@@ -753,12 +778,77 @@ class Quiz(db.Model):
                 }
             )
         
-      
         return jsonify(
             {
                 "code": 200,
                 "data": quizzes.json()
             })
+    
+    def create_quiz(self):
+        try: 
+            db.session.add(self)
+            db.session.commit()
+            # db.session.close()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while creating the section. " + str(error)
+                }
+            ), 500
+
+        # print("quiz_entry.get_quiz_id(): " + str(quiz_entry.get_quiz_id()))
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The section has been successfully created",
+                "quiz_id": self.get_quiz_id()
+            }
+        ), 200
+
+    def delete_Quiz(self,quiz_id):
+        record_obj = self.query.filter(quiz_id== quiz_id)
+        try:
+            db.session.delete(record_obj)
+            db.session.commit()
+            db.session.close()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while deleting the quiz. " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The quiz has been successfully deleted"
+            }
+        ), 200
+
+    def get_quiz_questions(self,quiz_id):
+        quiz_qn_ctrl = QuizQuestions()
+        questions = quiz_qn_ctrl.get_all_questions(quiz_id)
+        
+        if questions:
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": [question.json() for question in questions]
+                })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no section."
+            }
+        )
+
+    def get_final_quiz(self,quiz_id):
+        final_quiz_ctrl = FinalQuiz()
+        section = final_quiz_ctrl.get_quiz_section(quiz_id)
+        return section
         
 class Section(db.Model):
     __tablename__ = 'SECTIONS'
@@ -779,8 +869,8 @@ class Section(db.Model):
     def get_section_title(self):
         return self.section_title
 
-    def get_section_title_with_id(self, sect_id):
-        section = Section.query.filter_by(section_id= sect_id).first()
+    def get_section_title_with_id(self, section_id):
+        section = Section.query.filter_by(section_id= section_id).first()
         section_title = section.section_title
         db.session.close()
         return section_title
@@ -791,14 +881,10 @@ class Section(db.Model):
         return section
 
     def get_section_all(self,class_id):
-        sections  = Section.query.filter_by(class_id=class_id)
-        #check if empty
-        count =0
+        sections  = self.query.filter_by(class_id=class_id)
         db.session.close()
-        for x in sections:
-            count+=1
-
-        if count!=0:
+        
+        if sections:
             return jsonify(
                 {
                     "code": 200,
@@ -810,6 +896,57 @@ class Section(db.Model):
                 "message": "There are no section."
             }
         )
+    
+    def create_section(self):
+        try: 
+            db.session.add(self)
+            db.session.commit()
+            db.session.close()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while creating the section. " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The section has been successfully created"
+            }
+        ), 200
+
+    def get_all_section_materials(self, section_id):
+        section_materials_ctrl = SectionMaterials()
+        materials = section_materials_ctrl.get_materials_all(section_id)
+        #check if empty
+        count =0
+        for x in materials:
+            count+=1
+
+        if count!=0:
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": [material.json() for material in  materials]
+                })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no materials in this section."
+            }
+        )
+
+    def get_latest_quiz(self,section_id):
+        quiz_ctrl = Quiz()
+        quizzes = quiz_ctrl.get_quizzes(section_id)
+        last_id = quizzes[-1]
+        return jsonify(
+            {
+                "code": 200,
+                "data": last_id.json()
+            })
 
 class SectionMaterials(db.Model):
     __tablename__ = 'SECTIONS_MATERIALS'
@@ -843,24 +980,28 @@ class SectionMaterials(db.Model):
         return material
 
     def get_materials_all(self, section_id):
-        materials  = SectionMaterials.query.filter_by(section_id=section_id)
-        #check if empty
-        count =0
-        for x in materials:
-            count+=1
+        materials = self.query.filter_by(section_id=section_id).all
+        return materials
 
-        if count!=0:
-            return jsonify(
+    def create_material(self):
+        try: 
+            db.session.add(self)
+            db.session.commit()
+            db.session.close()
+        except Exception as error:
+            return jsonify (
                 {
-                    "code": 200,
-                    "data": [material.json() for material in  materials]
-                })
+                    "code": 500,
+                    "message": "An error occured while creating the material. " + str(error)
+                }
+            ), 500
+
         return jsonify(
             {
-                "code": 404,
-                "message": "There are no materials in this section."
+                "code": 200,
+                "message": "The material has been successfully created"
             }
-        )
+        ), 200
 
 class Trainer_Assignment(db.Model):
     __tablename__ = 'TRAINERASSIGNMENT'
@@ -992,6 +1133,26 @@ class TrueFalse(QuizQuestions):
                 "message": "There are no section."
             }
         )
+
+    def create_TrueFalse(self):        
+        try: 
+            db.session.add(self)
+            db.session.commit()
+            db.session.close()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while creating the question. " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The question has been successfully created"
+            }
+        ), 200
 
 class multiplechoice(QuizQuestions):
     __tablename__ = 'MCQ'
@@ -1243,7 +1404,7 @@ class EnrollmentController():
 '''
 Functionalities of section_material_quiz_controller
 '''
-class SectionMaterialQuizController():
+# class SectionMaterialQuizController(): # all functionalities of this controller have been moved into the routes
     # def view_qn(self,quiz_id):
     #     da = TrueFalse()
     #     questions = da.get_quiz_questions(quiz_id)
@@ -1275,179 +1436,179 @@ class SectionMaterialQuizController():
 
     
 
-    def create_section(self,class_id,section_title):
+    # def create_section(self,class_id,section_title):
         
-        section_entry = Section(class_id = class_id,section_title=section_title)
-        try: 
-            db.session.add(section_entry)
-            db.session.commit()
-            db.session.close()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while creating the section. " + str(error)
-                }
-            ), 500
+    #     section_entry = Section(class_id = class_id,section_title=section_title)
+    #     try: 
+    #         db.session.add(section_entry)
+    #         db.session.commit()
+    #         db.session.close()
+    #     except Exception as error:
+    #         return jsonify (
+    #             {
+    #                 "code": 500,
+    #                 "message": "An error occured while creating the section. " + str(error)
+    #             }
+    #         ), 500
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The section has been successfully created"
-            }
-        ), 200
+    #     return jsonify(
+    #         {
+    #             "code": 200,
+    #             "message": "The section has been successfully created"
+    #         }
+    #     ), 200
     
-    def create_quiz(self,section_id,time_limit):
-        quiz_entry = Quiz(section_id = section_id,time_limit=time_limit)
-        try: 
-            db.session.add(quiz_entry)
-            db.session.commit()
-            # db.session.close()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while creating the section. " + str(error)
-                }
-            ), 500
+    # def create_quiz(self,section_id,time_limit):
+    #     quiz_entry = Quiz(section_id = section_id,time_limit=time_limit)
+    #     try: 
+    #         db.session.add(quiz_entry)
+    #         db.session.commit()
+    #         # db.session.close()
+    #     except Exception as error:
+    #         return jsonify (
+    #             {
+    #                 "code": 500,
+    #                 "message": "An error occured while creating the section. " + str(error)
+    #             }
+    #         ), 500
 
-        print("quiz_entry.get_quiz_id(): " + str(quiz_entry.get_quiz_id()))
+    #     print("quiz_entry.get_quiz_id(): " + str(quiz_entry.get_quiz_id()))
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The section has been successfully created",
-                "quiz_id": quiz_entry.get_quiz_id()
-            }
-        ), 200
+    #     return jsonify(
+    #         {
+    #             "code": 200,
+    #             "message": "The section has been successfully created",
+    #             "quiz_id": quiz_entry.get_quiz_id()
+    #         }
+    #     ), 200
 
-    def create_material(self,section_id,material_title,material_content,material_type):
-        material_entry = SectionMaterials(section_id=section_id,material_title=material_title,material_content=material_content,material_type=material_type)
+    # def create_material(self,section_id,material_title,material_content,material_type):
+    #     material_entry = SectionMaterials(section_id=section_id,material_title=material_title,material_content=material_content,material_type=material_type)
 
-        try: 
-            db.session.add(material_entry)
-            db.session.commit()
-            db.session.close()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while creating the material. " + str(error)
-                }
-            ), 500
+    #     try: 
+    #         db.session.add(material_entry)
+    #         db.session.commit()
+    #         db.session.close()
+    #     except Exception as error:
+    #         return jsonify (
+    #             {
+    #                 "code": 500,
+    #                 "message": "An error occured while creating the material. " + str(error)
+    #             }
+    #         ), 500
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The material has been successfully created"
-            }
-        ), 200
+    #     return jsonify(
+    #         {
+    #             "code": 200,
+    #             "message": "The material has been successfully created"
+    #         }
+    #     ), 200
 
-    def create_TrueFalse(self,answer,quiz_id,qorder,question_type,question):
-        question_entry = TrueFalse(quiz_id = quiz_id, answer = answer, qorder = qorder, question_type = question_type, question=question)
+    # def create_TrueFalse(self,answer,quiz_id,qorder,question_type,question):
+    #     question_entry = TrueFalse(quiz_id = quiz_id, answer = answer, qorder = qorder, question_type = question_type, question=question)
         
-        try: 
-            db.session.add(question_entry)
-            db.session.commit()
-            db.session.close()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while creating the question. " + str(error)
-                }
-            ), 500
+    #     try: 
+    #         db.session.add(question_entry)
+    #         db.session.commit()
+    #         db.session.close()
+    #     except Exception as error:
+    #         return jsonify (
+    #             {
+    #                 "code": 500,
+    #                 "message": "An error occured while creating the question. " + str(error)
+    #             }
+    #         ), 500
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The question has been successfully created"
-            }
-        ), 200
+    #     return jsonify(
+    #         {
+    #             "code": 200,
+    #             "message": "The question has been successfully created"
+    #         }
+    #     ), 200
 
-    def create_MCQ(self,quiz_id,qorder,question_type,question):
-        question_entry = QuizQuestions(quiz_id=quiz_id,question_type=question_type,qorder=qorder,question=question)
-        try: 
-            db.session.add(question_entry)
-            db.session.commit()
-            # db.session.close()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while creating the question. " + str(error)
-                }
-            ), 500
+    # def create_MCQ(self,quiz_id,qorder,question_type,question):
+    #     question_entry = QuizQuestions(quiz_id=quiz_id,question_type=question_type,qorder=qorder,question=question)
+    #     try: 
+    #         db.session.add(question_entry)
+    #         db.session.commit()
+    #         # db.session.close()
+    #     except Exception as error:
+    #         return jsonify (
+    #             {
+    #                 "code": 500,
+    #                 "message": "An error occured while creating the question. " + str(error)
+    #             }
+    #         ), 500
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The question has been successfully created",
-                "id": question_entry.get_question_id()
-            }
-        ), 200
+    #     return jsonify(
+    #         {
+    #             "code": 200,
+    #             "message": "The question has been successfully created",
+    #             "id": question_entry.get_question_id()
+    #         }
+    #     ), 200
 
-    def create_MCQ_options(self,question_id,option_order,option_content,correct_option):
+    # def create_MCQ_options(self,question_id,option_order,option_content,correct_option):
         
-        option_entry = multiplechoiceoptions(question_id = question_id,option_order =option_order,option_content = option_content,correct_option = correct_option)
-        print('entry c-option is ',option_entry.get_correct_option())
-        try: 
-            db.session.add(option_entry)
-            db.session.commit()
-            # db.session.close()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while creating the option. " + str(error)
-                }
-            ), 500
+    #     option_entry = multiplechoiceoptions(question_id = question_id,option_order =option_order,option_content = option_content,correct_option = correct_option)
+    #     print('entry c-option is ',option_entry.get_correct_option())
+    #     try: 
+    #         db.session.add(option_entry)
+    #         db.session.commit()
+    #         # db.session.close()
+    #     except Exception as error:
+    #         return jsonify (
+    #             {
+    #                 "code": 500,
+    #                 "message": "An error occured while creating the option. " + str(error)
+    #             }
+    #         ), 500
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The option has been successfully created",
-                "data":option_entry.json()
-            }
-        ), 200
+    #     return jsonify(
+    #         {
+    #             "code": 200,
+    #             "message": "The option has been successfully created",
+    #             "data":option_entry.json()
+    #         }
+    #     ), 200
 
-    def get_TrueFalse(self,question_id):
-        da = TrueFalse()
-        questions = da.get_quiz_questions(question_id)
-        return questions
+    # def get_TrueFalse(self,question_id):
+    #     da = TrueFalse()
+    #     questions = da.get_quiz_questions(question_id)
+    #     return questions
     
-    def get_MCQ(self,question_id):
-        da = multiplechoiceoptions()
-        questions = da.get_options_by_question_id(question_id)
-        return questions
+    # def get_MCQ(self,question_id):
+    #     da = multiplechoiceoptions()
+    #     questions = da.get_options_by_question_id(question_id)
+    #     return questions
 
-    def delete_Quiz(self,quiz_id):
-        '''delete_quiz =QuizQuestions.query.filter_by(quiz_id = quiz_id).delete()
-        delete_tf = TrueFalse.query.filter_by(quiz_id = quiz_id).delete()'''
-        record_obj = db.session.query(TrueFalse).filter(TrueFalse.quiz_id== quiz_id)
-        db.session.delete(record_obj)
-        db.session.commit()
-        db.session.close()
-        '''
-        try: 
-            db.session.delete(delete_tf)
-            db.session.delete(delete_quiz)
-            db.session.commit()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while deleting the quiz. " + str(error)
-                }
-            ), 500
+    # def delete_Quiz(self,quiz_id):
+    #     '''delete_quiz =QuizQuestions.query.filter_by(quiz_id = quiz_id).delete()
+    #     delete_tf = TrueFalse.query.filter_by(quiz_id = quiz_id).delete()'''
+    #     record_obj = db.session.query(TrueFalse).filter(TrueFalse.quiz_id== quiz_id)
+    #     db.session.delete(record_obj)
+    #     db.session.commit()
+    #     db.session.close()
+        # '''
+        # try: 
+        #     db.session.delete(delete_tf)
+        #     db.session.delete(delete_quiz)
+        #     db.session.commit()
+        # except Exception as error:
+        #     return jsonify (
+        #         {
+        #             "code": 500,
+        #             "message": "An error occured while deleting the quiz. " + str(error)
+        #         }
+        #     ), 500
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The questions has been successfully quiz",
+        # return jsonify(
+        #     {
+        #         "code": 200,
+        #         "message": "The questions has been successfully quiz",
                 
-            }
-        ), 200'''
+        #     }
+        # ), 200'''
 
 
 '''
@@ -1787,8 +1948,8 @@ Routes of section_material_controler
 def view_Materials():
     section_id = int(request.args.get('section_id', None))
     if section_id >0:
-        da = SectionMaterials()
-        materials = da.get_materials_all(section_id)
+        da = Section()
+        materials = da.get_all_section_materials(section_id)
         return materials
     else:
         raise Exception ("Section Id must be above 0");
@@ -1796,38 +1957,37 @@ def view_Materials():
 @app.route("/view_class_sections", methods=['GET'])
 def view_Sections():
     class_id = int(request.args.get('class_id', None))
-    da = Section()
-    sections = da.get_section_all(class_id)
+    da = Classes()
+    sections = da.get_all_class_sections(class_id)
     return sections
 
 @app.route("/view_section_quiz", methods=['GET'])
 def view_Quiz():
     section_id = int(request.args.get('section_id', None))
     da = Quiz()
-    quiz = da.get_quiz(section_id)
+    quiz = da.get_latest_quiz(section_id)
     return quiz
-
 
 @app.route("/create_section", methods=['GET'])
 def create_section():
     class_id = int(request.args.get('class_id', None))
     section_title = str(request.args.get('section_title', None))
-    da = SectionMaterialQuizController()
-    status = da.create_section(class_id,section_title)
+    da = Section(class_id,section_title)
+    status = da.create_section()
     return status
 
 @app.route("/create_quiz", methods=['GET'])
 def create_quiz():
     section_id = int(request.args.get('section_id', None))
     time_limit = int(request.args.get('time_limit', None))
-    da = SectionMaterialQuizController()
-    status = da.create_quiz(section_id,time_limit)
+    da = Quiz(section_id, time_limit)
+    status = da.create_quiz()
     return status
     
 @app.route("/get_quiz_questions", methods=['GET'])
 def get_quiz_questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = QuizQuestions()
+    da = Quiz()
     questions = da.get_quiz_questions(quiz_id)
     return questions
 
@@ -1854,8 +2014,8 @@ def create_section_materials():
     material_title = str(request.args.get('material_title', None))
     material_content = str(request.args.get('material_content', None))
     material_type = str(request.args.get('material_type', None))
-    da = SectionMaterialQuizController()
-    status = da.create_material(section_id,material_title,material_content,material_type)
+    da = SectionMaterials(section_id, material_title, material_content, material_type)
+    status = da.create_material()
     return status
 
 '''
@@ -1883,8 +2043,8 @@ def create_TrueFalse():
     question_type = str(request.args.get('question_type', None))
     question = str(request.args.get('question', None))
     print(answer)
-    da = SectionMaterialQuizController()
-    status = da.create_TrueFalse(answer,quiz_id,qorder,question_type,question)
+    da = TrueFalse(quiz_id, answer, qorder, question_type, question)
+    status = da.create_TrueFalse()
     return status
 
 @app.route("/create_MCQ_Question", methods=['GET'])
@@ -1893,8 +2053,8 @@ def create_MCQ():
     qorder = int(request.args.get('qorder', None))
     question_type = str(request.args.get('question_type', None))
     question = str(request.args.get('question', None))
-    da = SectionMaterialQuizController()
-    status = da.create_MCQ(quiz_id,qorder,question_type,question)
+    da = QuizQuestions(quiz_id, question_type, qorder, question)
+    status = da.create_MCQ()
     return status
 
 @app.route("/add_MCQ_Options", methods=['GET'])
@@ -1904,8 +2064,8 @@ def add_MCQ_options():
     option_content = str(request.args.get('option_content', None))
     correct_option = int(request.args.get('correct_option',None))
     print('controller option',correct_option)
-    da = SectionMaterialQuizController()
-    status = da.create_MCQ_options(question_id,option_order,option_content,correct_option)
+    da = multiplechoiceoptions(question_id,option_order,option_content,correct_option)
+    status = da.create_MCQ_options()
     
     return status 
 
@@ -1919,21 +2079,21 @@ def get_Quiz_Questions():
 @app.route("/get_MCQ", methods=['GET'])
 def get_MCQ():
     question_id = int(request.args.get('question_id', None))
-    da = SectionMaterialQuizController()
-    status = da.get_MCQ(question_id)
-    return status
+    da = QuizQuestions()
+    questions = da.get_mcq_question_options(question_id)
+    return questions
 
 @app.route("/get_TrueFalse", methods=['GET'])
 def get_TrueFalse():
     question_id = int(request.args.get('question_id', None))
-    da = SectionMaterialQuizController()
-    status = da.get_TrueFalse(question_id)
-    return status
+    da = TrueFalse()
+    questions = da.get_quiz_questions(question_id)
+    return questions
 
 @app.route("/delete_quiz", methods=['GET'])
 def delete_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = SectionMaterialQuizController()
+    da = Quiz()
     status = da.delete_Quiz(quiz_id)
     return status
 
