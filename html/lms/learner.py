@@ -34,9 +34,9 @@ class Learner(User):
         records = Learner.query.with_entities(Learner.userid).all()
         return records
     
-    def is_learner(self, user_id):
-        lrnr = Learner.query.filter_by(userid=user_id).first()
-        return lrnr
+    # def is_learner(self, user_id):
+    #     lrnr = Learner.query.filter_by(userid=user_id).first()
+    #     return lrnr
     
     def get_course_class (self, course_list):
         course_class = Course()

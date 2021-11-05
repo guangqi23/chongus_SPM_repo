@@ -57,8 +57,8 @@ class Course_Enrollment(db.Model):
             }
         ), 200
 
-    def get_user_enrolled_courses(self, userid):
-        record = Course_Enrollment.query.filter_by(userid=userid).all()
+    def get_user_enrolled_courses(self, user_id):
+        record = Course_Enrollment.query.filter_by(userid=user_id).all()
         return record
     
     def json(self):
@@ -88,21 +88,52 @@ class Course_Enrollment(db.Model):
         ),404
 
 
-    def set_enrollment_status(self,selectedEnrollId):
-        courseEnrollRecord = Course_Enrollment.query.filter_by(enrollment_id = selectedEnrollId).first()
+    def set_enrollment_status(self,enrollment_id):
+        courseEnrollRecord = Course_Enrollment.query.filter_by(enrollment_id = enrollment_id).first()
         if courseEnrollRecord.is_enrolled == False:
             courseEnrollRecord.is_enrolled = True
-            db.session.commit()
-            return "Changed enrollment status to True!"
+            try:
+                db.session.commit()
+            except Exception as error:
+                return jsonify({
+                    "code": 500,
+                    "message": "An error occured while changing the enrollment status " + str(error)
+                })
+
+            return jsonify({
+                    "code": 500,
+                    "message": "Changed enrollment status to True!"
+                })
+
         else:
             courseEnrollRecord.is_enrolled = False
-            db.session.commit()
-            return "Changed enrollment status to False!"
+            try:
+                db.session.commit()
+            except Exception as error:
+                return jsonify({
+                    "code": 500,
+                    "message": "An error occured while changing the enrollment status " + str(error)
+                })
+
+            return jsonify({
+                    "code": 500,
+                    "message": "Changed enrollment status to False!"
+                })
     
-    def rejectEnrollment(self, rejectedEnrollId):
-        Course_Enrollment.query.filter_by(enrollment_id = rejectedEnrollId).delete()
-        db.session.commit()
-        return "200"
+    def rejectEnrollment(self, enrollment_id):
+        Course_Enrollment.query.filter_by(enrollment_id = enrollment_id).delete()
+        try:
+            db.session.commit()
+        except Exception as error:
+            return jsonify({
+                "code": 500,
+                "message": "There was an error when rejecting enrollment record " + str(error)
+            })
+
+        return jsonify({
+                "code": 200,
+                "message": "Enrollment status of this learner has been rejected"
+            })
 
     def get_course_and_class_id(self):
         return self.course_id,self.class_id

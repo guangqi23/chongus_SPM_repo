@@ -20,7 +20,7 @@ class Learner_Badges(db.Model):
     def json(self):
         return {"user_id": self.userid, "course_id": self.course_id}
 
-    def get_learner_badges(self, userid):
-        record = self.query.filter_by(userid=userid).all()
+    def get_learner_badges(self, user_id):
+        record = self.query.filter_by(userid=user_id).all()
         return record
 

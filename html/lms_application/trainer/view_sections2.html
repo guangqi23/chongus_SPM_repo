@@ -315,7 +315,7 @@
         var section_title_this= "";
         $(async() => {           
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_class_sections?class_id="+class_id;
+            var serviceURL = "http://localhost:5000/view_class_sections?class_id="+class_id;
     
             try {
                 const response =
@@ -382,7 +382,7 @@
         $(async() => {     
             console.log(section_id)      
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_section_materials?section_id="+section_id;
+            var serviceURL = "http://localhost:5000/view_section_materials?section_id="+section_id;
             console.log('hehe');
             try {
                 const response =
@@ -445,7 +445,7 @@
             $(async() => {     
             console.log(section_id)      
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5001/view_section_quiz?section_id="+section_id;
+            var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
             console.log('retrieving quiz');
             try {
                 const response =
@@ -473,7 +473,7 @@
                     //Adding on more rows
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                 console.log('printing quiz row');
-                redirectURL = "./edit_quiz2.html?section_id="+index+"&quiz_id="+section.quiz_id;
+                let redirectURL = "./edit_quiz.html?section_id="+section_id+"&quiz_id="+section.quiz_id;
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
                 rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
                 
@@ -506,13 +506,13 @@
             section_id = params.get('section_id');
             console.log(section_id);
             console.log('initializing sections')    
-            window.location.href = "./upload_materials2?response=" + section_id;  
+            window.location.href = "./upload_materials2.html?response=" + section_id;  
         }
         function create_quiz() {
             section_id = params.get('section_id');
             console.log(section_id);
             console.log('initializing sections')    
-            window.location.href = "./create_quiz2?class_id="+class_id+"&section_id=" + section_id;  
+            window.location.href = "./create_quiz2.html?class_id="+class_id+"&section_id=" + section_id;  
         }
         
     

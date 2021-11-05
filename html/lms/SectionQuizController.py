@@ -111,26 +111,26 @@ class SectionQuizController():
 
 
 ############## View Functions ###############################
-@app.route("/view_section_materials", methods=['GET'])
-def view_Materials():
-    section_id = int(request.args.get('section_id', None))
-    da = SectionQuizController()
-    materials = da.view_all_materials(section_id)
-    return materials
+# @app.route("/view_section_materials", methods=['GET'])
+# def view_Materials():
+#     section_id = int(request.args.get('section_id', None))
+#     da = SectionQuizController()
+#     materials = da.view_all_materials(section_id)
+#     return materials
 
     
 @app.route("/view_class_sections", methods=['GET'])
 def view_Sections():
     class_id = int(request.args.get('class_id', None))
-    da = SectionQuizController()
-    sections = da.view_all_sections(class_id)
+    da = SectionMaterialQuizController()
+    sections = da.get_sections_by_class(class_id)
     return sections
 
 @app.route("/view_section_quiz", methods=['GET'])
 def view_Quiz():
     section_id = int(request.args.get('section_id', None))
-    da = SectionQuizController()
-    quiz = da.view_section_quiz(section_id)
+    da = SectionMaterialQuizController()
+    quiz = da.get_section_quiz(section_id)
     return quiz
 
 
@@ -138,7 +138,7 @@ def view_Quiz():
 def create_quiz():
     section_id = int(request.args.get('section_id', None))
     time_limit = int(request.args.get('time_limit', None))
-    da = SectionQuizController()
+    da = SectionMaterialQuizController()
     status = da.create_quiz(section_id,time_limit)
     return status
     
@@ -156,15 +156,15 @@ def create_quiz_questions():
     question_type = str(request.args.get('quiz_id', None))
     qorder = str(request.args.get('qorder', None))
     question =str(request.args.get('question', None))
-    da = SectionQuizController()
-    status = da.create_quiz_questions(quiz_id,question_type,qorder,question)
+    da = SectionMaterialQuizController()
+    status = da.create_quiz(quiz_id,question_type,qorder,question)
     return status
 
 
 @app.route("/view_quiz_questions", methods=['GET'])
 def get_qn():
     qn_id = int(request.args.get('qn_id', None))
-    da =  SectionMaterialQuizDataAccess()
+    da =  SectionMaterialQuizController()
     quiz = da.view_qn(qn_id)
     return quiz
 
@@ -174,8 +174,8 @@ def create_section_materials():
     material_title = str(request.args.get('material_title', None))
     material_content = str(request.args.get('material_content', None))
     material_type = str(request.args.get('material_type', None))
-    da = SectionQuizController()
-    status = da.create_section_materials(section_id,material_title,material_content,material_type)
+    da = SectionMaterialQuizController()
+    status = da.create_material(section_id,material_title,material_content,material_type)
     return status
 
 @app.route("/create_TrueFalse", methods=['GET', 'POST'])
@@ -186,8 +186,8 @@ def create_TrueFalse():
     question_type = str(request.args.get('question_type', None))
     question = str(request.args.get('question', None))
     print(answer)
-    da = SectionQuizController()
-    status = da.create_TrueFalse_qn(answer,quiz_id,qorder,question_type,question)
+    da = SectionMaterialQuizController()
+    status = da.create_TrueFalse(answer,quiz_id,qorder,question_type,question)
     return status
 
 @app.route("/create_MCQ_Question", methods=['GET'])
@@ -196,8 +196,8 @@ def create_MCQ():
     qorder = int(request.args.get('qorder', None))
     question_type = str(request.args.get('question_type', None))
     question = str(request.args.get('question', None))
-    da = SectionQuizController()
-    status = da.create_MCQ_qn(quiz_id,qorder,question_type,question)
+    da = SectionMaterialQuizController()
+    status = da.create_MCQ(quiz_id,qorder,question_type,question)
     return status
 
 @app.route("/add_MCQ_Options", methods=['GET'])
@@ -207,7 +207,7 @@ def add_MCQ_options():
     option_content = str(request.args.get('option_content', None))
     correct_option = int(request.args.get('correct_option',None))
     print('controller option',correct_option)
-    da = SectionQuizController()
+    da = SectionMaterialQuizController()
     status = da.create_MCQ_options(question_id,option_order,option_content,correct_option)
     
     return status 
@@ -215,33 +215,31 @@ def add_MCQ_options():
 @app.route("/get_Quiz_Questions_Options", methods=['GET'])
 def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = SectionQuizController()
-
-    allQuestions = da.get_Quiz_Questions(quiz_id)
-
+    da = SectionMaterialQuizController()
+    status = da.get_quiz_questions(quiz_id)
 
     #print(dictz["code"], file=sys.stderr)
     #Return list of questions, options, correct option
-    return allQuestions
+    return status
 
 @app.route("/get_MCQ", methods=['GET'])
 def get_MCQ():
     question_id = int(request.args.get('question_id', None))
-    da = SectionQuizController()
+    da = SectionMaterialQuizController()
     status = da.get_MCQ(question_id)
     return status
 
 @app.route("/get_TrueFalse", methods=['GET'])
 def get_TrueFalse():
     question_id = int(request.args.get('question_id', None))
-    da = SectionQuizController()
+    da = SectionMaterialQuizController()
     status = da.get_TrueFalse(question_id)
     return status
 
 @app.route("/delete_quiz", methods=['GET'])
 def delete_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = SectionQuizController()
+    da = SectionMaterialQuizController()
     status = da.delete_Quiz(quiz_id)
     return status
 
@@ -276,16 +274,18 @@ def submitScore():
 
 @app.route("/get_Quiz_Timer", methods=['GET'])
 def get_quiz_timer():
-    da = SectionQuizController()
     quiz_id = int(request.args.get('quiz_id', None))
-    timer = da.get_Quiz_Timer(quiz_id)
+    da = Quiz()
+    timer = da.get_time_limit_with_id(quiz_id)
     return timer
 
 @app.route("/get_Section_Title", methods=['GET'])
 def get_section_title():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = SectionQuizController()
-    quiz_title = da.get_Quiz_Title(quiz_id)
+    qa = Quiz()
+    section_id = qa.get_section_id_with_quiz_id(quiz_id)
+    da = Section()
+    quiz_title = da.get_section_title_with_id(section_id)
     
     return quiz_title
 

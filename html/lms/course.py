@@ -50,8 +50,8 @@ class Course(db.Model):
             }
         ), 200
     
-    def get_course_name(self):
-        return self.course_name
+    # def get_course_name(self):
+    #     return self.course_name
 
     def del_course(self, course_id):
         course = self.query.filter_by(course_id=course_id).first()

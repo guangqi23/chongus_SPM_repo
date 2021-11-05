@@ -335,8 +335,10 @@
         {
           data = res.data
           if(data['code'] == 200){
-            document.getElementById(course_id + "_start").innerHTML = start_date
-            document.getElementById(course_id + "_end").innerHTML = end_date
+            new_start_date = new Date(start_date).toUTCString()
+            new_end_date = new Date(end_date).toUTCString()
+            document.getElementById(course_id + "_start").innerHTML = new_start_date
+            document.getElementById(course_id + "_end").innerHTML = new_end_date
             document.getElementById(course_id + "_change_date").innerHTML = '<div class="alert alert-success" role="alert">' + data['message']
           }
           else{
