@@ -46,12 +46,7 @@
   <link href="assets/css/style.css" rel="stylesheet">
   <link href="assets/css/sidebar.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Mentor - v4.6.0
-  * Template URL: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500&display=swap">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -107,11 +102,6 @@
 
 
         
-
-
-
-
-
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -198,83 +188,6 @@
 
     
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6 footer-contact">
-            <h3>Mentor</h3>
-            <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
-            </p>
-          </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
-
-
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-
-        </div>
-      </div>
-    </div>
-    
-    <div class="container d-md-flex py-4">
-
-      <div class="me-md-auto text-center text-md-start">
-        <div class="copyright">
-          &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-      </div>
-      <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
-
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -301,7 +214,6 @@
                 .append("<label>"+message+"</label>");
         }
 
-    //Seeing the Menu for the reservation
 
             // let params = new URLSearchParams(location.search);
             //var restaurantID = params.get('query');
@@ -418,7 +330,7 @@
                     material_type = '<span class="badge badge-danger badge-pill" style =  "float:left">'+type+'</span>';
                   else if (type == 'ppt')
                     material_type = '<span class="badge badge-success badge-pill" style =  "float:left">'+type+'</span>';
-                  rows +='<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
+                  rows +='<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a>'
                   index = index+1;
                 }
                 //Set counter back to 0 
@@ -471,7 +383,7 @@
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                  
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
-                rows +='<a href="take_quiz.html" id = "quiz_list_id"  target = '+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">attempt</p></a>'
+                rows +='<a href="take_quiz.html" id = "quiz_list_id"  target = '+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">Click to attempt</p></a>'
                   
                 
                 //Set counter back to 0 
@@ -496,9 +408,7 @@
             
             function takeQuiz()
             {
-              alert("Hello! I am an alert box!!");
               qid =document.getElementById('quiz_list_id').getAttribute('target')
-              console.log('quiz id ,',qid)
               sessionStorage.setItem('quiz_id', qid);
             }
     
