@@ -308,11 +308,11 @@
                   ${data["message"]}
                 </div>`
               }
-              else{
+              else if(data["code"] == 500){
                 output = `<div class="alert alert-danger" role="alert">
-                  ${data["message"]}
+                  The course cannot be deleted as there are still dependent classes of this course
                 </div>`
-                console.log(data['message'])
+                // console.log(data['message'])
               }
               
               document.getElementById("status_output").innerHTML = output
@@ -321,7 +321,6 @@
         )
         .catch(error => console.error(error.response.data));
     }
-
     
   </script>
 

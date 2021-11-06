@@ -149,32 +149,79 @@
               .then(res => 
                 {
                     records = res.data.data.record;
+                    console.log(records)
                     let value = '';
                         for(course of records) {
                           console.log(course)
+                          let course_id = course.course_id
+                          let class_id = course.class_id
                           let coursename = course.course_name
                           let coursedescription = course.course_description
                           let start_date = course.startdate
                           let end_date = course.enddate
+                          let start_enrollment_date = course.startenrollmentdate
+                          let end_enrollment_date = course.endenrollmentdate
                         
                           value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                     <div class="course-item">
                                       <div class="course-content">
                                         <h3>${coursename}</h3>
                                         <p>${coursedescription}</p>
-                                        <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
-                                      </div>
-                                    </div>
-                                  </div>`;
+                                        <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>`;
+
+                          start_enrollment_date = new Date(start_enrollment_date)
+                          end_enrollment_date = new Date(end_enrollment_date)
+                          today = new Date()
+                          // console.log(start_date)
+                          // console.log(end_date)
+                          // console.log(today)
+                          if (start_enrollment_date < today && today < end_enrollment_date){
+                            value+= `<div id="${class_id}_${course_id}_drop_status"><button type="submit" id="${class_id}_${course_id}_drop_class">Drop Class</button></div>`
+                          }
+                        
+                          value += `
+                            </div>
+                            </div>
+                            </div>
+                          `
                                   
                           let body = document.getElementById('enrolled_courses');
                           body.innerHTML = value; 
                         }
+                        
+                        for(course of records){
+                          let course_id = course.course_id
+                          let class_id = course.class_id
+                          document.getElementById(class_id + "_" +course_id + "_drop_class").addEventListener('click', function(event){
+                              drop_class(course_id, userId, class_id);
+                          })
+                        }
+                        
                 }
               )
               .catch(error => console.error(error.response.data));
           }
           viewEnrolledCourses(4);
+          function drop_class(course_id, userId, class_id){
+            axios
+            .post('http://localhost:5000/drop_class', 
+                {
+                    user_id: userId,
+                    course_id: course_id,
+                    class_id: class_id
+                }
+            )
+            .then(res =>
+                {
+                    status = res.data
+                    console.log(res)
+                    output = `<div class="alert alert-success" role="alert">
+                      "You have successfully dropped the class"
+                    </div>`
+                    document.getElementById(class_id + "_" + course_id + "_drop_status").innerHTML = output
+                }
+            )
+          }
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Classes Eligible for Enrollment</h1>
@@ -189,8 +236,11 @@
                 .then(res => 
                   {
                     records = res.data.data.record;
+                    // console.log(records)
                     let value = '';
                     for(course of records) {
+                      let course_id = course.course_id
+                      let class_id = course.class_id
                       let course_name = course.course_name
                       let course_description = course.course_description
                       let start_date = course.startdate
@@ -204,18 +254,60 @@
                                 <p>${course_description}</p>
                                 <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
                                 <p><strong>Enrollment Period:</strong> ${start_enrollment_date}-${end_enrollment_date}</p>
-                                </div>
-                                </div>
-                                </div>`;
-                                    
+                                `;
+                      
+                      start_enrollment_date = new Date(start_enrollment_date)
+                      end_enrollment_date = new Date(end_enrollment_date)
+                      today = new Date()
+                      // console.log(start_date)
+                      // console.log(end_date)
+                      // console.log(today)
+                      if (start_enrollment_date < today && today < end_enrollment_date){
+                        value+= `<div id="${class_id}_${course_id}_enroll_status"><button type="submit" id="${class_id}_${course_id}_enroll">Enroll</button></div>`
+                      }
+                    
+                      value += `
+                        </div>
+                        </div>
+                        </div>
+                      `
+                      
                       let body = document.getElementById('eligible_classes');
                       body.innerHTML = value; 
+                    }
+
+                    for(course of records){
+                      let class_id = course.class_id
+                      let course_id = course.course_id
+                      document.getElementById(class_id + "_" + course_id + "_enroll").addEventListener('click', function(event){
+                        enroll_into_class(course_id, class_id, userId);
+                      })
                     }
                   }
                 )
                 .catch(error => console.error(error.response.data));
             }
-            viewEligibleCourses(1);
+            viewEligibleCourses(2);
+            function enroll_into_class(course_id, class_id, userId){
+              console.log(course_id)
+              console.log(class_id)
+              console.log(userId)
+              axios
+                .post(
+                  'http://localhost:5000/enroll', {user_id: userId, course_id: course_id, class_id: class_id
+                }
+                )
+                .then(res =>
+                  {
+                    enroll_status = res;
+                    output = `<div class="alert alert-success" role="alert">
+                      "You have been successfully enrolled. The HR will proceed to approve your enrollment"
+                    </div>`
+                    document.getElementById(class_id + "_" + course_id + "_enroll_status").innerHTML = output
+                  }
+                )
+                .catch(error => console.error(error.response.data))
+            }
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Completed Courses</h1>
