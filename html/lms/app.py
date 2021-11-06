@@ -2072,7 +2072,7 @@ def add_MCQ_options():
 @app.route("/get_Quiz_Questions_Options", methods=['GET'])
 def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = QuizQuestions()
+    da = Quiz()
     questions = da.get_quiz_questions(quiz_id)
     return questions
 
