@@ -622,12 +622,13 @@ class multiplechoiceoptions(db.Model):
         option= self.query.filter_by(question_id = question_id)
         db.session.close()
         return option
-    
-    def create_MCQ_options(self):
+   
+    def create_MCQ_options(self,question_id,option_order,option_content,correct_option):
+        option_entry = multiplechoiceoptions(question_id = question_id,option_order =option_order,option_content = option_content,correct_option = correct_option)
+        print('entry c-option is ',option_entry.get_correct_option())
         try: 
-            db.session.add(self)
+            db.session.add(option_entry)
             db.session.commit()
-            # db.session.close()
         except Exception as error:
             return jsonify (
                 {
@@ -640,9 +641,13 @@ class multiplechoiceoptions(db.Model):
             {
                 "code": 200,
                 "message": "The option has been successfully created",
-                "data":self.json()
+                "data":option_entry.json()
             }
         ), 200
+
+    
+    
+    
 
 class QuizQuestions(db.Model):
     __tablename__ = 'QUIZ_QUESTION'
@@ -677,11 +682,11 @@ class QuizQuestions(db.Model):
         questions = self.query.filter_by(quiz_id = quiz_id)
         return questions
 
-    def create_MCQ(self):
+    def create_MCQ(self,quiz_id,qorder,question_type,question):
+        question_entry = QuizQuestions(quiz_id=quiz_id,question_type=question_type,qorder=qorder,question=question)
         try: 
-            db.session.add(self)
+            db.session.add(question_entry)
             db.session.commit()
-            # db.session.close()
         except Exception as error:
             return jsonify (
                 {
@@ -694,7 +699,7 @@ class QuizQuestions(db.Model):
             {
                 "code": 200,
                 "message": "The question has been successfully created",
-                "id": self.get_question_id()
+                "id": question_entry.get_question_id()
             }
         ), 200
     
@@ -769,11 +774,11 @@ class Quiz(db.Model):
                 "data": quizzes.json()
             })
     
-    def create_quiz(self):
+    def create_quiz(self,section_id,time_limit):
+        quiz_entry = Quiz(section_id = section_id,time_limit=time_limit)
         try: 
-            db.session.add(self)
+            db.session.add(quiz_entry)
             db.session.commit()
-            # db.session.close()
         except Exception as error:
             return jsonify (
                 {
@@ -782,16 +787,13 @@ class Quiz(db.Model):
                 }
             ), 500
 
-        # print("quiz_entry.get_quiz_id(): " + str(quiz_entry.get_quiz_id()))
-
         return jsonify(
             {
                 "code": 200,
                 "message": "The section has been successfully created",
-                "quiz_id": self.get_quiz_id()
+                "quiz_id": quiz_entry.get_quiz_id()
             }
         ), 200
-
     def delete_Quiz(self,quiz_id):
         record_obj = self.query.filter(quiz_id== quiz_id)
         try:
@@ -1119,11 +1121,12 @@ class TrueFalse(QuizQuestions):
             }
         )
 
-    def create_TrueFalse(self):        
+    def create_TrueFalse(self,answer,quiz_id,qorder,question_type,question):
+        question_entry = TrueFalse(quiz_id = quiz_id, answer = answer, qorder = qorder, question_type = question_type, question=question)
+        
         try: 
-            db.session.add(self)
+            db.session.add(question_entry)
             db.session.commit()
-            db.session.close()
         except Exception as error:
             return jsonify (
                 {
@@ -1964,8 +1967,8 @@ def create_section():
 def create_quiz():
     section_id = int(request.args.get('section_id', None))
     time_limit = int(request.args.get('time_limit', None))
-    da = Quiz(section_id, time_limit)
-    status = da.create_quiz()
+    da = Quiz()
+    status = da.create_quiz(section_id, time_limit)
     return status
     
 @app.route("/get_quiz_questions", methods=['GET'])
@@ -2026,9 +2029,8 @@ def create_TrueFalse():
     qorder = int(request.args.get('qorder', None))
     question_type = str(request.args.get('question_type', None))
     question = str(request.args.get('question', None))
-    print(answer)
-    da = TrueFalse(quiz_id, answer, qorder, question_type, question)
-    status = da.create_TrueFalse()
+    da = TrueFalse()
+    status = da.create_TrueFalse(answer,quiz_id,qorder,question_type,question)
     return status
 
 @app.route("/create_MCQ_Question", methods=['GET'])
@@ -2037,8 +2039,8 @@ def create_MCQ():
     qorder = int(request.args.get('qorder', None))
     question_type = str(request.args.get('question_type', None))
     question = str(request.args.get('question', None))
-    da = QuizQuestions(quiz_id, question_type, qorder, question)
-    status = da.create_MCQ()
+    da = QuizQuestions()
+    status = da.create_MCQ(quiz_id, qorder,question_type, question)
     return status
 
 @app.route("/add_MCQ_Options", methods=['GET'])
@@ -2048,8 +2050,8 @@ def add_MCQ_options():
     option_content = str(request.args.get('option_content', None))
     correct_option = int(request.args.get('correct_option',None))
     print('controller option',correct_option)
-    da = multiplechoiceoptions(question_id,option_order,option_content,correct_option)
-    status = da.create_MCQ_options()
+    da = multiplechoiceoptions()
+    status = da.create_MCQ_options(question_id,option_order,option_content,correct_option)
     
     return status 
 
@@ -2492,6 +2494,7 @@ def get_all_enrolled_classes_of_user():
             "message": "There are no enrolled classes"
             }
         ), 404
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
