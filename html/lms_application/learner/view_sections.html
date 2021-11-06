@@ -382,7 +382,7 @@
             console.log(section_id)      
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_section_materials?section_id="+section_id;
-            console.log('hehe');
+          
             try {
                 const response =
                 await fetch(
@@ -445,7 +445,6 @@
             console.log(section_id)      
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
-            console.log('hehe');
             try {
                 const response =
                 await fetch(
@@ -472,7 +471,7 @@
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                  
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
-                rows +='<a href=# class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">attempt</p></a>'
+                rows +='<a href="take_quiz.html" id = "quiz_list_id"  target = '+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">attempt</p></a>'
                   
                 
                 //Set counter back to 0 
@@ -495,7 +494,13 @@
                     } // error
             });
             
-    
+            function takeQuiz()
+            {
+              alert("Hello! I am an alert box!!");
+              qid =document.getElementById('quiz_list_id').getAttribute('target')
+              console.log('quiz id ,',qid)
+              sessionStorage.setItem('quiz_id', qid);
+            }
     
         </script>
         <script src="drpdown/js/jquery-3.3.1.min.js"></script>
