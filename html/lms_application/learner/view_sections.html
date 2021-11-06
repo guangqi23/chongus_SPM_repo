@@ -341,7 +341,7 @@
                 
                 var count =0;
                  for (var section of sectionList) {
-                    redirectURL = "./view_sections2.html?class_id=" + class_id+"&section_id="+index;
+                    redirectURL = "./view_sections.html?class_id=" + class_id+"&section_id="+index;
                     rows += '<li id = '+index+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
                     index = index+1;
                 }
