@@ -408,7 +408,6 @@ class FinalQuiz(db.Model):
 
 class Learner_Assignment(db.Model):
     __tablename__ = 'LEARNERASSIGNMENT'
-
     course_id = db.Column(db.Integer, primary_key=True)
     class_id = db.Column(db.Integer, primary_key=True, index=True)
     userid = db.Column(db.Integer, primary_key=True, index=True)
@@ -1964,7 +1963,7 @@ def view_Sections():
 @app.route("/view_section_quiz", methods=['GET'])
 def view_Quiz():
     section_id = int(request.args.get('section_id', None))
-    da = Quiz()
+    da = Section()
     quiz = da.get_latest_quiz(section_id)
     return quiz
 
