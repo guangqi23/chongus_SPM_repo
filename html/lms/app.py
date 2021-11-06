@@ -191,7 +191,6 @@ class Course_Enrollment(db.Model):
             }
         ),404
 
-
     def set_enrollment_status(self,enrollment_id):
         courseEnrollRecord = Course_Enrollment.query.filter_by(enrollment_id = enrollment_id).first()
         if courseEnrollRecord.is_enrolled == False:
@@ -326,13 +325,13 @@ class Course(db.Model):
             db.session.delete(course)
             db.session.commit()
             db.session.close()
-        except Exception as error:
+        except Exception as error:       
             return jsonify (
                 {
                     "code": 500,
                     "message": "An error occured while deleting the course. " + str(error)
                 }
-            ), 500
+            ), 200
 
         return jsonify(
             {
