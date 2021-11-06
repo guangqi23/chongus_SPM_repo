@@ -500,6 +500,7 @@ class Learner(User):
     def get_course_class (self, course_list):
         course_class = Course()
         classes_class = Classes()
+        course_pre_req = Course_Prerequisites()
         courses = [course_class.get_course_by_id(a_course.course_id) for a_course in course_list]
         classes = []
         for a_course in course_list:
@@ -534,9 +535,12 @@ class Learner(User):
 
     def get_completed_courses(self, user_id):
         completed_courses = Learner_Badges()
-        course_class = Course()
         completed_courses_list = completed_courses.get_learner_badges(user_id)
-        output = [course_class.get_course_by_id(completed_course.course_id) for completed_course in completed_courses_list]
+        return completed_courses_list
+    
+    def get_completed_course_class(self, user_id):
+        completed_courses = self.get_completed_courses(user_id)
+        output = self.get_course_class(completed_courses)
         return output
 
     def get_remaining_courses(self, user_id):
@@ -553,25 +557,29 @@ class Learner(User):
 
     def get_eligible_courses(self, userid):
         course_class = Course()
-        classes_class = Classes()
         course_pre_req = Course_Prerequisites()
         learner_badges = Learner_Badges()
         completed_courses = learner_badges.get_learner_badges(userid)
 
         course_list = [course.course_id for course in self.get_remaining_courses(userid)]
-        
-        # output = []
         course_query_list = []
 
         for course_query in course_list: 
             prereqlist = course_pre_req.prereq_by_course(course_query)
-            if len(prereqlist) == 0: 
+            course_info = course_class.get_course_by_id(course_query)
+            if len(prereqlist) == 0 and course_info.startenrollmentdate and course_info.endenrollmentdate != '': 
                 course_query_list.append(course_query)
             else: 
                 for course in prereqlist: 
                     if course.prereq_course_id in completed_courses:
                         course_query_list.append(course_query)
-        
+            
+        return course_query_list
+
+    def get_eligible_classes(self, user_id):
+        course_class = Course()
+        classes_class = Classes()
+        course_query_list= self.get_eligible_courses(user_id)
         courses = []
         classes = []
         for course in course_query_list:
@@ -581,33 +589,16 @@ class Learner(User):
                     course_info = course_class.get_course_by_id(course)
                     courses.append(course_info)
                     classes.append(a_class)
-
-        return [courses, classes]
-
-    def get_eligible_classes(self, user_id):
-        course_class = Course()
-        classes_class = Classes()
-        output = self.get_eligible_courses(user_id)
-        course_query_list = output[0]
-        courses = []
-        classes = []
-        for course in course_query_list:
-            print("course: " + str(course))
-            course_classes = classes_class.get_classes_by_course(course.course_id)
-            for a_class in course_classes:
-                if a_class.slots > 0: 
-                    course_info = course_class.get_course_by_id(course.course_id)
-                    courses.append(course_info)
-                    classes.append(a_class)
         
         return [courses, classes]
-
-    def get_uneligible_courses(self, user_id):
+    
+    def get_uneligible_course_class(self, user_id):
         course_class = Course()
         course_list = [course.course_id for course in self.get_remaining_courses(user_id)]
         eligible_courses = [course for course in self.get_eligible_courses(user_id)]
         other_courses = [course for course in course_list if course not in eligible_courses]
-        output = [course_class.get_course_by_id(course_query) for course_query in other_courses]
+        uneligible_courses = [course_class.get_course_by_id(course_query) for course_query in other_courses]
+        output = self.get_course_class(uneligible_courses)
         return output
 
 class multiplechoiceoptions(db.Model):
@@ -1729,7 +1720,6 @@ def delete_assigned_classes():
     lrnr_as_class = Learner_Assignment()
     return lrnr_as_class.delete_learner_assignment(course_id,class_id,user_id)
 
-
 '''
 Routes of class_controller
 '''
@@ -2146,36 +2136,27 @@ def get_section_title():
 '''
 Routes of view_controller
 '''
-@app.route("/eligible_courses", methods=['POST'])
-def get_eligible_courses():
-    application = request.get_json()
-    user_id = application['user_id']
-    learner = Learner()
-    record = learner.get_eligible_courses(user_id)
-    courses = record[0]
-    classes = record[1]
-    final_list = []
-    for i in range(len(courses)):
-        course_info = courses[i].json()
-        class_info = classes[i].json()
-        course_info.update(class_info)
-        final_list.append(course_info)
-
-    if len(final_list):
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "record": [a_record for a_record in final_list]
-                }
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no eligible courses."
-            }
-        ), 404
+# @app.route("/eligible_courses", methods=['POST'])
+# def get_eligible_courses():
+#     application = request.get_json()
+#     user_id = application['user_id']
+#     learner = Learner()
+#     record = learner.get_eligible_courses(user_id)
+#     if len(record):
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "course_id": [a_record for a_record in record]
+#                 }
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "There are no eligible courses."
+#             }
+#         ), 404
 
 @app.route("/eligible_classes", methods=['POST'])
 def get_eligible_classes():
@@ -2208,25 +2189,58 @@ def get_eligible_classes():
             }
         ), 404
 
-@app.route("/uneligible_courses", methods=['POST'])
-def get_uneligible_courses():
+# @app.route("/uneligible_courses", methods=['POST'])
+# def get_uneligible_courses():
+#     application = request.get_json()
+#     user_id = application['user_id']
+#     learner = Learner()
+#     record = learner.get_uneligible_courses(user_id)
+#     if len(record):
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "record": [a_record.json() for a_record in record]
+#                 }
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "There are no uneligible courses."
+#             }
+#         ), 404
+
+@app.route("/uneligible_classes", methods=["POST"])
+def get_uneligible_course_class():
     application = request.get_json()
     user_id = application['user_id']
     learner = Learner()
-    record = learner.get_uneligible_courses(user_id)
-    if len(record):
+    record = learner.get_uneligible_course_class(user_id)
+    courses = record[0]
+    classes = record[1]
+    final_list = []
+    for i in range(len(courses)):
+        course_info = courses[i]
+        class_info = classes[i]
+        course_info = course_info.json()
+        class_info = class_info.json()
+        course_info.update(class_info)
+        final_list.append(course_info)
+
+    if len(final_list):
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "record": [a_record.json() for a_record in record]
+                    "record": [a_record for a_record in final_list]
                 }
             }
         )
     return jsonify(
         {
             "code": 404,
-            "message": "There are no uneligible courses."
+            "message": "There are no enrolled classes."
             }
         ), 404
 
