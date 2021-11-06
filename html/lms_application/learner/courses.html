@@ -116,13 +116,15 @@
                           let coursedescription = course.course_description
                           let start_date = course.startdate
                           let end_date = course.enddate
+                          let trainer_name = course.trainer_name
                         
                           value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                     <div class="course-item">
                                       <div class="course-content">
                                         <h3>${coursename}</h3>
                                         <p>${coursedescription}</p>
-                                        <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
+                                        <p><strong>Class Period:</strong> ${start_date}-${end_date}</p>
+                                        <p><strong>Trainer Name:</strong> ${trainer_name}</p>
                                       </div>
                                     </div>
                                   </div>`;
@@ -159,6 +161,7 @@
                           let coursedescription = course.course_description
                           let start_date = course.startdate
                           let end_date = course.enddate
+                          let trainer_name = course.trainer_name
                           let start_enrollment_date = course.startenrollmentdate
                           let end_enrollment_date = course.endenrollmentdate
                         
@@ -167,6 +170,11 @@
                                       <div class="course-content">
                                         <h3>${coursename}</h3>
                                         <p>${coursedescription}</p>
+                                        <p><strong>Class Period:</strong> ${start_date}-${end_date}</p>
+                                        <p><strong>Trainer Name:</strong> ${trainer_name}</p>
+                                      </div>
+                                    </div>
+                                  </div>`;
                                         <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>`;
 
                           start_enrollment_date = new Date(start_enrollment_date)
@@ -247,6 +255,7 @@
                       let end_date = course.enddate
                       let start_enrollment_date = course.startenrollmentdate
                       let end_enrollment_date = course.endenrollmentdate
+                      let trainer_name = course.trainer_name
                       value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                 <div class="course-item">
                                 <div class="course-content">
@@ -254,6 +263,11 @@
                                 <p>${course_description}</p>
                                 <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
                                 <p><strong>Enrollment Period:</strong> ${start_enrollment_date}-${end_enrollment_date}</p>
+                                <p><strong>Trainer Name:</strong> ${trainer_name}</p>
+                                </div>
+                                </div>
+                                </div>`;
+                                    
                                 `;
                       
                       start_enrollment_date = new Date(start_enrollment_date)
@@ -326,11 +340,16 @@
                     for(course of records) {
                       let coursename = course.course_name
                       let coursedescription = course.course_description
+                      let trainer_name = course.trainer_name
                       value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                 <div class="course-item">
+                                <button type="button" class="btn btn-primary">
+                                <span class="badge badge-primary">Badge of Completion</span>
+                                </button>
                                 <div class="course-content">
                                 <h3>${coursename}</h3>
                                 <p>${coursedescription}</p>
+                                <p><strong>Trainer Name:</strong> ${trainer_name}</p>
                                 </div>
                                 </div>
                                 </div>`;
@@ -345,14 +364,14 @@
             viewCompletedCourses(2);
           </script>
       <div class="container" data-aos="fade-up">
-        <h1>View Courses Ineligible for Enrollment</h1>
-        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="uneligible_courses">
+        <h1>View Classes Ineligible for Enrollment</h1>
+        <div class="row" data-aos="zoom-in" data-aos-delay="100" id="uneligible_classes">
           </div>
         </div>
           <script>
-            function viewUneligibleCourses(userId) {
+            function viewUneligibleClasses(userId) {
               axios
-                .post('http://localhost:5000/uneligible_courses', {user_id: userId
+                .post('http://localhost:5000/uneligible_classes', {user_id: userId
                 })
                 .then(res => 
                   {
@@ -361,23 +380,31 @@
                     for(course of records) {
                       let coursename = course.course_name
                       let coursedescription = course.course_description
+                      let slots = course.slots
+                      if (slots > 0){
+                        reason = 'Did not meet pre-requisites';
+                      }
+                      else {
+                        reason = 'Not enough slots';
+                      }
                       value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                 <div class="course-item">
                                 <div class="course-content">
                                 <h3>${coursename}</h3>
                                 <p>${coursedescription}</p>
+                                <p><strong>Reason for ineligibility:</strong> ${reason}</p>
                                 </div>
                                 </div>
                                 </div>`;
                                     
-                      let body = document.getElementById('uneligible_courses');
+                      let body = document.getElementById('uneligible_classes');
                       body.innerHTML = value; 
                     }
                   }
                 )
                 .catch(error => console.error(error.response.data));
             }
-            viewUneligibleCourses(1);
+            viewUneligibleClasses(4);
       </script>
     </section><!-- End Courses Section -->
 
