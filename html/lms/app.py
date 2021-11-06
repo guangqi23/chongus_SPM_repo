@@ -498,7 +498,6 @@ class Learner(User):
     def get_course_class (self, course_list):
         course_class = Course()
         classes_class = Classes()
-        course_pre_req = Course_Prerequisites()
         courses = [course_class.get_course_by_id(a_course.course_id) for a_course in course_list]
         classes = []
         for a_course in course_list:
@@ -533,13 +532,10 @@ class Learner(User):
 
     def get_completed_courses(self, user_id):
         completed_courses = Learner_Badges()
+        course_class = Course()
         completed_courses_list = completed_courses.get_learner_badges(user_id)
-        return completed_courses_list
-    
-    def get_completed_course_class(self, user_id):
-        completed_courses = self.get_completed_courses(user_id)
-        output = self.get_course_class(completed_courses)
-        return output
+        courses = [course_class.get_course_by_id(a_course.course_id) for a_course in completed_courses_list ]
+        return courses
 
     def get_remaining_courses(self, user_id):
         learner_badges = Learner_Badges()
