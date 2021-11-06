@@ -125,6 +125,7 @@
                                         <p>${course_description}</p>
                                         <p><strong>Class Period:</strong> ${start_date}-${end_date}</p>
                                         <p><strong>Trainer Name:</strong> ${trainer_name}</p>
+                                        <button type="submit" id="${class_id}_section_materials">View Section Materials</button>
                                       </div>
                                     </div>
                                   </div>`;
@@ -173,7 +174,8 @@
                                         <h3>${course_name} - Class #${class_id}</h3>
                                         <p>${course_description}</p>
                                         <p><strong>Class Period:</strong> ${start_date}-${end_date}</p>
-                                        <p><strong>Trainer Name:</strong> ${trainer_name}</p>`;
+                                        <p><strong>Trainer Name:</strong> ${trainer_name}</p>
+                                        <button type="submit" id="${class_id}_section_materials">View Section Materials</button>`;
                           if (start_enrollment_date < today && today < end_enrollment_date){
                             value+= `<div id="${class_id}_${course_id}_drop_status"><button type="submit" id="${class_id}_${course_id}_drop_class">Drop Class</button></div>`
                           }
