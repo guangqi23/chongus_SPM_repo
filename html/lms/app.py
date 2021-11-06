@@ -980,7 +980,7 @@ class SectionMaterials(db.Model):
         return material
 
     def get_materials_all(self, section_id):
-        materials = self.query.filter_by(section_id=section_id).all
+        materials = self.query.filter_by(section_id=section_id).all()
         return materials
 
     def create_material(self):
