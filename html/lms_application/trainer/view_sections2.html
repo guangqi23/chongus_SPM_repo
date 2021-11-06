@@ -333,25 +333,20 @@
                 console.log('retrieving title');
                 console.log('section title = ',sectionList[0].section_title);
                 section_title_this = sectionList[section_id-1].section_title.toString();
-
                 document.getElementById("section_name").textContent=sectionList[section_id-1].section_title.toString();
-                document.getElementById("quiz_title").textContent = 'Quiz - '+sectionList[section_id-1].section_title.toString();
+                //document.getElementById("quiz_ttle").textContent = 'Quiz - '+sectionList[section_id-1].section_title.toString();
                 // console.log(menuList);
                 index =1;
                 var rows = "";
-                
+                console.log('appending rows1');                
                 var count =0;
                  for (var section of sectionList) {
                     redirectURL = "./view_sections2.html?class_id=" + class_id+"&section_id="+index;
                     rows += '<li id = '+index+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
                     index = index+1;
                 }
-                
-                //Set counter back to 0 
-               
-
-                
-                // add all the rows to the table
+                console.log('appending rows');
+                // add all the rows to the sidebar
                 $('#section-menu').append(rows);
 
                 } else if (response.status == 404) {
