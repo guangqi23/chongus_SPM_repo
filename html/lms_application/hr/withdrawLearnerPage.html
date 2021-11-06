@@ -249,7 +249,7 @@
     
     function getEnrolledCourses(learner_id){
       axios
-      .post("http://127.0.0.1:5002/get_all_enrolled_classes_of_user",{user_id:learner_id})
+      .post("http://localhost:5000/get_all_enrolled_classes_of_user",{user_id:learner_id})
       .then(res => {
           records = res.data.data.record;
           console.log(records);
@@ -402,7 +402,7 @@
 
     function send_dropenrolled_application(course_id,class_id,user_id){
       axios
-      .post("http://127.0.0.1:5010/drop_class",{course_id:course_id,class_id:class_id,user_id:learner_id})
+      .post("http://localhost:5000/drop_class",{course_id:course_id,class_id:class_id,user_id:learner_id})
       .then(res => {
             data = res.data;
             console.log(data);

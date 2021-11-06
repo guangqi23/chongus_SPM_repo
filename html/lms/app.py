@@ -191,7 +191,6 @@ class Course_Enrollment(db.Model):
             }
         ),404
 
-
     def set_enrollment_status(self,enrollment_id):
         courseEnrollRecord = Course_Enrollment.query.filter_by(enrollment_id = enrollment_id).first()
         if courseEnrollRecord.is_enrolled == False:
@@ -326,13 +325,13 @@ class Course(db.Model):
             db.session.delete(course)
             db.session.commit()
             db.session.close()
-        except Exception as error:
+        except Exception as error:       
             return jsonify (
                 {
                     "code": 500,
                     "message": "An error occured while deleting the course. " + str(error)
                 }
-            ), 500
+            ), 200
 
         return jsonify(
             {
@@ -408,7 +407,6 @@ class FinalQuiz(db.Model):
 
 class Learner_Assignment(db.Model):
     __tablename__ = 'LEARNERASSIGNMENT'
-
     course_id = db.Column(db.Integer, primary_key=True)
     class_id = db.Column(db.Integer, primary_key=True, index=True)
     userid = db.Column(db.Integer, primary_key=True, index=True)
@@ -971,7 +969,7 @@ class SectionMaterials(db.Model):
         return material
 
     def get_materials_all(self, section_id):
-        materials = self.query.filter_by(section_id=section_id).all
+        materials = self.query.filter_by(section_id=section_id).all()
         return materials
 
     def create_material(self):
@@ -1665,14 +1663,14 @@ class ViewController():
     #     return crse_enrol_class.get_user_enrolled_courses(user_id)
 
 
-'''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
 SACRED MOSES SPLIT
 
 
 
-'''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
 '''
@@ -1954,7 +1952,7 @@ def view_Sections():
 @app.route("/view_section_quiz", methods=['GET'])
 def view_Quiz():
     section_id = int(request.args.get('section_id', None))
-    da = Quiz()
+    da = Section()
     quiz = da.get_latest_quiz(section_id)
     return quiz
 
@@ -2062,7 +2060,7 @@ def add_MCQ_options():
 @app.route("/get_Quiz_Questions_Options", methods=['GET'])
 def get_Quiz_Questions():
     quiz_id = int(request.args.get('quiz_id', None))
-    da = QuizQuestions()
+    da = Quiz()
     questions = da.get_quiz_questions(quiz_id)
     return questions
 
