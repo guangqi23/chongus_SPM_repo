@@ -921,8 +921,8 @@
                 if(qqn_type =='TF'){
                     var answer = document.getElementsByClassName('answer');
                     var question = document.getElementsByClassName('question');
-                    qanswer = answer[x].innerHTML;
-                    //is_tf_counter +=1;
+                    qanswer = answer[is_tf_counter].innerHTML;
+                    is_tf_counter +=1;
                     final_answer = 1;
                     qquestion = question[x].textContent;
                     tf_order = order;
