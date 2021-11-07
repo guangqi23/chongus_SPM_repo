@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy.sql.elements import Null
+import json
 
 # from classes import Classes
 # from course_enrollment import Course_Enrollment
@@ -96,6 +97,16 @@ class Classes(db.Model):
     def get_classes_by_course(self, course_id):
         record = Classes.query.filter_by(course_id=course_id).all()
         return record
+    
+    def get_classes_by_cid(self,class_id,course_id):
+        record = Classes.query.filter_by(class_id=class_id,course_id=course_id).first()
+        return jsonify(
+            {
+                "code": 200,
+                "data": record.json()
+            })
+    
+
 
     #By Xing Jie 
     def get_class_startdate(self, class_id):
@@ -1034,8 +1045,31 @@ class Trainer_Assignment(db.Model):
     def get_all_trainer_assignments(self):
         return Trainer_Assignment.query.all()
 
-    def assign_class(self):
+    def json(self):
+        return {"course_id": self.course_id, "class_id": self.class_id, "userid": self.userid}
 
+
+    def get_trainer_assignment_by_trainer_id(self,userid):
+        classes = Trainer_Assignment.query.filter_by(userid=userid)
+        count =0
+        db.session.close()
+        for x in classes:
+            count+=1
+        if count!=0:
+            return jsonify(
+                {
+                    
+                    "data": [c.json() for c in classes]
+                })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no class under this trainer."
+            }
+        )
+
+
+    def assign_class(self):
         try:
             db.session.add(self)
             db.session.commit()
@@ -2483,6 +2517,42 @@ def get_all_enrolled_classes_of_user():
             "message": "There are no enrolled classes"
             }
         ), 404
+
+@app.route("/get_classes_of_trainer", methods = ['POST','GET'])
+def get_classes_of_trainer():
+    #temp get method for testing
+    t_id = request.args.get('trainer_id', None)
+    application = request.get_json()
+    # print(application)
+    #user_id = application['trainer_id']
+    trainer_assignment = Trainer_Assignment()
+    result_arr = [];
+    courses_arr =[];
+    record = trainer_assignment.get_trainer_assignment_by_trainer_id(t_id);
+    result = json.loads(record.data)
+    for x in result['data']:
+        class_id = x['class_id'];
+        course_id=x['course_id'];
+        classes_class = Classes()
+        record = classes_class.get_classes_by_cid(class_id,course_id)
+        values = json.loads(record.data)
+        result_arr.append(values['data'])
+        courses = Course()
+        course_record = courses.get_course_by_id(course_id)
+        courses_arr.append(course_record.json())
+    print(courses_arr)
+    return jsonify(
+                {
+                    "code": 200,
+                    "data": [records for records in  result_arr],
+                    "courses": [records for records in courses_arr]
+                    
+                }
+            )
+
+
+
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
