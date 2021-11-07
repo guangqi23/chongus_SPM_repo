@@ -3,4 +3,4 @@ WORKDIR /usr/src/app
 COPY http.reqs.txt ./
 RUN pip install --no-cache-dir -r http.reqs.txt
 COPY ./html/ .
-CMD [ "python", "./html/lms/app.py" ]
+CMD [ "python", "lms/app.py" ]

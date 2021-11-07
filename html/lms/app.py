@@ -2480,14 +2480,14 @@ def get_all_enrolled_classes_of_user():
         
 
     if len(record):
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "record": [a_record for a_record in new_record]
-                    }
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "record": [a_record for a_record in new_record]
                 }
-            )
+            }
+        )
     return jsonify(
         {
             "code": 404,
@@ -2498,4 +2498,3 @@ def get_all_enrolled_classes_of_user():
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-
