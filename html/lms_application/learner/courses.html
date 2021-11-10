@@ -53,7 +53,7 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="courses.html">Courses</a></li>
-          <li><a href="trainers.html">Trainers</a></li>
+          <li><a id="myClasses">My classes</a></li>
           <li><a href="events.html">Events</a></li>
 
           <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
@@ -125,17 +125,11 @@
                           value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                     <div class="course-item">
                                       <div class="course-content">
-<<<<<<< Updated upstream
-                                        <h3>${coursename}</h3>
-                                        <p>${coursedescription}</p>
-                                        <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
-=======
                                         <h3>${course_name} - Class #${class_id}</h3>
                                         <p>${course_description}</p>
                                         <p><strong>Class Period:</strong> ${start_date}-${end_date}</p>
                                         <p><strong>Trainer Name:</strong> ${trainer_name}</p>
                                         <button type="submit" id="${class_id}_section_materials" onclick="onclickViewSectionMaterial(${class_id})">View Section Materials</button>
->>>>>>> Stashed changes
                                       </div>
                                     </div>
                                   </div>`;
@@ -194,9 +188,6 @@
               )
               .catch(error => console.error(error.response.data));
           }
-<<<<<<< Updated upstream
-          viewEnrolledCourses(4);
-=======
           viewEnrolledCourses(user_Id);
           function drop_class(course_id, userId, class_id){
             axios
@@ -218,7 +209,6 @@
                 }
             )
           }
->>>>>>> Stashed changes
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Classes Eligible for Enrollment</h1>
@@ -259,9 +249,6 @@
                 )
                 .catch(error => console.error(error.response.data));
             }
-<<<<<<< Updated upstream
-            viewEligibleCourses(1);
-=======
             viewEligibleCourses(user_Id);
             function enroll_into_class(course_id, class_id, userId){
               axios
@@ -280,7 +267,6 @@
                 )
                 .catch(error => console.error(error.response.data))
             }
->>>>>>> Stashed changes
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Completed Courses</h1>
@@ -350,11 +336,9 @@
                 )
                 .catch(error => console.error(error.response.data));
             }
-<<<<<<< Updated upstream
-            viewUneligibleCourses(1);
-=======
-            viewUneligibleClasses(user_Id);
->>>>>>> Stashed changes
+            viewUneligibleCourses(user_Id);
+            var a = document.getElementById('myClasses');
+            a.href = "./assigned_classes?learner_id=" + sessionStorage["learner_id"];
       </script>
     </section><!-- End Courses Section -->
 
