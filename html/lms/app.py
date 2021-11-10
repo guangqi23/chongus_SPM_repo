@@ -2531,7 +2531,8 @@ def get_classes_of_trainer():
     result_arr = [];
     courses_arr =[];
     record = trainer_assignment.get_trainer_assignment_by_trainer_id(t_id);
-    result = json.loads(record.data)
+    #Object Response; need to convert it into data
+    result = json.loads(record.data)#Now its just a normal dictionary
     for x in result['data']:
         class_id = x['class_id'];
         course_id=x['course_id'];
@@ -2546,7 +2547,7 @@ def get_classes_of_trainer():
     return jsonify(
                 {
                     "code": 200,
-                    "data": [records for records in  result_arr],
+                    "data": [records for records in  result_arr],#convert back to a response object
                     "courses": [records for records in courses_arr]
                     
                 }

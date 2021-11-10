@@ -296,7 +296,7 @@
         var button = $(event.relatedTarget) 
         var modal = $(this)
         var recipient = button.data('whatever')
-        modal.find('.modal-title').text('Create a quiz for section_id '+section_id )
+        modal.find('.modal-title').text('Create a quiz' )
         modal.find('.modal-body input').val(recipient)
         })
         //reset everytime user try to create
@@ -466,6 +466,10 @@
                     }).done(function(data){
                             console.log(data);
                             console.log(theRequest.responseText);
+                    if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                     });
                 }
                 else
@@ -534,6 +538,10 @@
                                         console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                             });
                                 if (actual_ans == qopt2)
                                 {
@@ -551,6 +559,10 @@
                                 }).done(function(data){
                                         console.log('added MCQ');
                                         console.log(data);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                                     
                             });
                                 if (actual_ans == qopt3)
@@ -570,6 +582,11 @@
                                         console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
+                                        
                             });
                                 if (actual_ans == qopt4)
                                 {
@@ -588,6 +605,10 @@
                                         console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                             }); 
                             is_mcq_counter+=1;                       
                         });                    
@@ -596,7 +617,7 @@
 
                 }
 
-            //window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+            
             }
 
 

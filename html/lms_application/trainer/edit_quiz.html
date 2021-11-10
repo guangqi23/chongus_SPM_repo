@@ -160,7 +160,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="get-started-btn" style = 'border: none;' onclick="create_mcq()"  data-dismiss="modal">Create True False Question</button>
+                <button type="button" class="get-started-btn" style = 'border: none;' onclick="create_mcq()"  data-dismiss="modal">Create MCQ </button>
                 
             </div>
             </div>
@@ -312,6 +312,7 @@
     <!-- ======= Courses Section ======= -->
     <section id="courses" class="courses">
       <div class="container" data-aos="fade-up">
+      <button type="button" class="get-started-btn" data-toggle="modal" onclick = 'go_back()'style="border:none; margin-bottom:30px">Back</button>
       <div class="form-group">
                         <label for="time_limit" class="col-form-label">Time Limit (Seconds):</label>
                         <input type="number" class="form-control" id="time_limit">
@@ -369,6 +370,7 @@
         
         section_id = params.get('section_id');
         class_id = params.get('class_id');
+        console.log('class,id is ',class_id);
         quiz_id = params.get('quiz_id');
         console.log(quiz_id);
         var counter = 0;
@@ -499,9 +501,8 @@
                                         var question ='';
                                         
                                         mcq_question_1 =  questions[temp].question;
-                                       
-                                      
-                                        mcq_question = data.data
+                                        mcq_question = data.data;
+                                        console.log(data.data);
                                         console.log(theRequest.responseText);
                                         answer =0;
                                         for (j=0;j<4;j++){
@@ -631,7 +632,7 @@
             mcq_question_id = 'question_'+row_id;
             //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`;
             //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
-            card = `<div class="row" id = "${row_id}" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="mcq_answer"target  =${answer_arr[ans_val]} id = ${mcq_answer_id}>${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question} id = ${mcq_question_id}>${question}</p></div><label style = 'display:inline'>A) </label><div  style = 'display:inline' class ="mcqoption1" target =  ${opt_text1} id = ${mcq_options1_id}>${opt_text1}</div><p></p><label  style = 'display:inline'>B) </label><div style = 'display:inline' class ="mcqoption2" id = ${mcq_options2_id} target =  ${opt_text2}>${opt_text2}</div><p></p><label  style = 'display:inline'>C) </label><div  style = 'display:inline' id = ${mcq_options3_id} class ="mcqoption3"target =  ${opt_text3}>${opt_text3}</div><p></p><label style = 'display:inline'> D) </label><div  style = 'display:inline' class ="mcqoption4"id = ${mcq_options4_id} target =  ${opt_text4}>${opt_text4}</div>${button_html_mcq}</div></div>`;
+            card = `<div class="row" id = "${row_id}" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="mcq_answer"target  =${answer_arr[ans_val]} id = ${mcq_answer_id}>${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question} id = ${mcq_question_id}>${question}</p></div><label style = 'display:inline'>A) </label><div  style = 'display:inline' class ="mcqoption1" target =  ${opt_text1} id = ${mcq_options1_id}>${opt_text1}</div><p></p><label  style = 'display:inline'>B) </label><div style = 'display:inline' class ="mcqoption2" id = ${mcq_options2_id} target =  ${opt_text2}>${opt_text2}</div><p></p><label  style = 'display:inline'>C) </label><div  style = 'display:inline' id = ${mcq_options3_id} class ="mcqoption3" target =  ${opt_text3}>${opt_text3}</div><p></p><label> D) </label><div  style = 'display:inline' class ="mcqoption4"id = ${mcq_options4_id} target =  ${opt_text4}> ${opt_text4}</div><p></p>${button_html_mcq}</div></div>`;
             //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
             //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
             //card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer"target = ${answer}> Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><div class ="mcqoption1" target =  ${opt_text1}> A) ${opt_text1}</div><div class ="mcqoption2"target =  ${opt_text2}> B) ${opt_text2}</div><div class ="mcqoption3"target =  ${opt_text3}> C) ${opt_text3}</div><div class ="mcqoption4" target =  ${opt_text4}> D)${opt_text4}</div></div></div>`
@@ -935,6 +936,10 @@
                         method: 'GET',
                     }).done(function(data){
                             console.log(data);
+                            if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                             
                     });
                 }
@@ -967,7 +972,7 @@
                                 var actual_ans = answer[is_mcq_counter].innerHTML;
                                 qn_id = data.id;
                                 console.log(qn_id);
-                                
+                                base_mcq_counter =0;
                                 if (actual_ans == qopt1)
                                 {
                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
@@ -982,9 +987,9 @@
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                       
+                                        base_mcq_counter +=1;
                                         console.log(data);
-                                        
+                                            
                             });
                                 if (actual_ans == qopt2)
                                 {
@@ -1000,12 +1005,13 @@
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                       
+                                       base_mcq_counter +=1;
                                         console.log(data);
                                     
                             });
                                 if (actual_ans == qopt3)
                                 {
+                                    
                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
 
                                 }
@@ -1018,7 +1024,7 @@
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log('added MCQ');
+                                        base_mcq_counter +=1;
                                         console.log(data);
                                         
                             });
@@ -1036,10 +1042,13 @@
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log('added MCQ');
+                                        base_mcq_counter +=1;
                                         console.log(data);
-                                        
                             }); 
+                            if(x==len & base_mcq_counter ==4)
+                                            {
+                                                window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                            }
                             is_mcq_counter+=1;                       
                         });                    
                     
@@ -1050,7 +1059,10 @@
             //window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
             });
             }
-
+        function go_back()
+        {
+            window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+        }
 
     </script>
   <div id="preloader"></div>

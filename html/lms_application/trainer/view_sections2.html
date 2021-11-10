@@ -467,7 +467,7 @@
                     //Adding on more rows
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                 console.log('printing quiz row');
-                let redirectURL = "./edit_quiz.html?section_id="+section_id+"&quiz_id="+section.quiz_id;
+                let redirectURL = "./edit_quiz.html?section_id="+section_id+"&quiz_id="+section.quiz_id+"&class_id="+class_id;
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
                 rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
                 
