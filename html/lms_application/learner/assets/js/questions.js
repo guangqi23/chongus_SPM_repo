@@ -1,6 +1,6 @@
 //Create an array and passing the number, questions, options and answers
 //Retrieve info from db
-
+console.log("Quiz Id is: ", sessionStorage.getItem("quiz_id"));
 microServiceURL = "http://localhost:5000/get_Quiz_Questions_Options?quiz_id=" + String(sessionStorage.getItem("quiz_id"));
 let request = new XMLHttpRequest();
 request.open('GET',microServiceURL);

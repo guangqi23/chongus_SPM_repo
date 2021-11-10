@@ -24,7 +24,7 @@ timerURL = 'http://localhost:5000/get_Section_Title?quiz_id=' + String(sessionSt
 axios.get(timerURL)
     .then(response => {
         console.log("Quiz title is: " , response.data);
-        quiz_title.innerHTML = ("Quiz: " + String(response.data));
+        quiz_title.innerHTML = ("Section Quiz: " + String(response.data));
     });
 
 
