@@ -995,9 +995,10 @@ class SectionMaterials(db.Model):
         materials = self.query.filter_by(section_id=section_id).all()
         return materials
 
-    def create_material(self):
+    def create_material(self,section_id, material_title, material_content, material_type):
+        material = SectionMaterials(section_id=section_id, material_title=material_title, material_content=material_content, material_type=material_type)
         try: 
-            db.session.add(self)
+            db.session.add(material)
             db.session.commit()
             db.session.close()
         except Exception as error:
@@ -2050,8 +2051,8 @@ def create_section_materials():
     material_title = str(request.args.get('material_title', None))
     material_content = str(request.args.get('material_content', None))
     material_type = str(request.args.get('material_type', None))
-    da = SectionMaterials(section_id, material_title, material_content, material_type)
-    status = da.create_material()
+    da = SectionMaterials()
+    status = da.create_material(section_id, material_title, material_content, material_type)
     return status
 
 '''

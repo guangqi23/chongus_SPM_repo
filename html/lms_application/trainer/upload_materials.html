@@ -315,7 +315,7 @@
             console.log('Result: ', result)
             if (result.status == 200){
               material_content = result.url
-              material_title =  document. getElementById("material_title").value;
+              material_title =  document.getElementById("material_title").value;
               material_type = 'mp4'
                $(async() => {           
               var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
