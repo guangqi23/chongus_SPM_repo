@@ -256,10 +256,12 @@
                         let course_id = course.course_id
                         let coursename = course.course_name
                         let coursedescription = course.course_description
-                        c_id_arr.push(course_id)
-                        let button_id = 'buttonToView_' + course_id;
                         
-                        value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                        let button_id = 'buttonToView_' + course_id;
+
+                        if(!(c_id_arr.includes(course_id))){
+                          c_id_arr.push(course_id)
+                          value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                     <div class="course-item">
                                       <div class="course-content">
                                         
@@ -269,6 +271,9 @@
                                       </div>
                                     </div>
                                   </div> `;
+                        }
+                        
+                        
                                 
                         let body = document.getElementById('coursesWithoutTrainers');
                         body.innerHTML = value; 

@@ -1,6 +1,6 @@
-FROM python:3-slim
+FROM python:3-slim 
 WORKDIR /usr/src/app
 COPY http.reqs.txt ./
 RUN pip install --no-cache-dir -r http.reqs.txt
-COPY ./app.py ./
-CMD [ "python", "./app.py" ]
+COPY ./html/ .
+CMD [ "python", "lms/app.py" ]
