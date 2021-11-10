@@ -6,11 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy.sql.elements import Null
-<<<<<<< Updated upstream
 import json
-=======
 import ast
->>>>>>> Stashed changes
 
 # from classes import Classes
 # from course_enrollment import Course_Enrollment
@@ -2656,7 +2653,6 @@ def get_all_enrolled_classes_of_user():
             }
         ), 404
 
-<<<<<<< Updated upstream
 @app.route("/get_classes_of_trainer", methods = ['POST','GET'])
 def get_classes_of_learner():
     #temp get method for testing
@@ -2720,7 +2716,6 @@ def get_classes_of_lear():
 
 
 
-=======
 @app.route("/mark_material_completion", methods = ['GET'])
 def mark_Material_complete():
     material_id = int(request.args.get('material_id', None))
@@ -2791,7 +2786,6 @@ def verify_section_completed():
     da = Section()
     data = da.get_all_section_materials(section_id)
     materials = json.loads(data.data)
->>>>>>> Stashed changes
 
     #Get section quiz
     da = Section()

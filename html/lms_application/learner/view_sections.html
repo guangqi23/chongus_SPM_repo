@@ -46,18 +46,9 @@
   <link href="assets/css/style.css" rel="stylesheet">
   <link href="assets/css/sidebar.css" rel="stylesheet">
 
-<<<<<<< Updated upstream
-  <!-- =======================================================
-  * Template Name: Mentor - v4.6.0
-  * Template URL: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-=======
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
->>>>>>> Stashed changes
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500&display=swap">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -325,7 +316,7 @@
         var section_title_this= "";
 
         //Check if section is completed 
-        function checkIfSectionIsCompleted(section_id)
+        function checkIfSectionIsCompleted(section_id) //Verify if section is completed and marks it as completed if it is
         {
           $(async() => {
           var completionURL = "http://localhost:5000/verify_section_completed?section_id="+section_id+"&user_id="+ sessionStorage["learner_id"];
@@ -337,7 +328,24 @@
           });
         }
         
-        checkIfSectionIsCompleted(section_id)
+        function onloadCheckSectionCompleted(section_id) //Check if section is marked as completed in db
+        {
+          
+          $(async() => {
+          var completionURL = "http://localhost:5000/check_section_completion?section_id="+section_id+"&user_id="+ sessionStorage["learner_id"];
+          await axios.get(completionURL)
+                .then(response => {
+                    console.log("Result is:", response.data);
+                    if(response.data == "No")
+                    {
+                      checkIfSectionIsCompleted(section_id)
+                    }
+                });
+          });
+        }
+
+        onloadCheckSectionCompleted(section_id)
+        
 
 
         //Populate sidebar menu
@@ -371,12 +379,13 @@
                 var count =0;
                 let prevUnlocked = 0
                 
+
                  for (var section of sectionList) {
                     
                     //Check if section is completed
                     //If not disable option
                     sectionCheckURL = "http://localhost:5000/check_section_completion?user_id=" + sessionStorage["learner_id"] + "&section_id=" + section.section_id.toString();
-                    redirectURL = "./view_sections.html?class_id=" + class_id+"&section_id="+index;
+                    redirectURL = "./view_sections.html?class_id=" + class_id+"&section_id="+section.section_id.toString();
                     await axios.get(sectionCheckURL)
                       .then(response => {
                         console.log("Section title is: ", section.section_title);
@@ -386,13 +395,13 @@
                         {
                           //Set to clickable
                           console.log("Setting completed section!");
-                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                           prevUnlocked = 1
                         }
                         else if(count == 0) //If its the first section, set to clickable
                         {
                           console.log("Setting first section!");
-                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                           prevUnlocked = 0
                         }
                         else
@@ -400,13 +409,13 @@
                           if(prevUnlocked == 1) //If previous section is completed allow next section to be accessible
                           {
                             console.log("Setting previously completed section!");
-                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                             prevUnlocked = 0
                           }
                           else{
                             //Set to unclickable 
                             console.log("Setting incompleted section!");
-                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+' style="pointer-events: none; opacity: 0.5;"><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+' style="pointer-events: none; opacity: 0.5;"><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                             prevUnlocked = 0
                           }
                           
@@ -484,19 +493,6 @@
                     //Adding on more rows
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                   type = section.material_type.toString();
-<<<<<<< Updated upstream
-                  console.log(section)
-                  material_type ='';
-                  if(type == 'pdf')
-                    material_type = '<span class="badge badge-info badge-pill" style = "float:left">'+type+'</span>';
-                  else if (type == 'mp4')
-                    material_type = '<span class="badge badge-primary badge-pill" style = "float:left">'+type+'</span>';
-                  else if (type == 'doc')
-                    material_type = '<span class="badge badge-danger badge-pill" style =  "float:left">'+type+'</span>';
-                  else if (type == 'ppt')
-                  material_type = '<span class="badge badge-success badge-pill" style =  "float:left">'+type+'</span>';
-                  rows +='<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
-=======
                   console.log("Section content ",section)
 
                   material_id = section.material_id.toString();
@@ -520,18 +516,17 @@
                     // rows +='<div><a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a></div>'   
                     if(responseData == "yes")
                     {
-                      rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" style="background-color:#99ff99;"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="margin-top: 10px; margin-bottom: 20px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Mark Incomplete</button>';
+                      rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" style="display: inline; background-color:#99ff99;"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="display: inline; margin-top: 10px; margin-bottom: 50px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Mark Incomplete</button>';
                     }
                     else
                     {
-                      rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" ><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="margin-top: 10px; margin-bottom: 20px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Mark Complete</button>';
+                      rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" style="display: inline;" ><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="display: inline; margin-top: 10px; margin-bottom: 50px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Mark Complete</button>';
                     }
                     //rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" ><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="margin-top: 10px; margin-bottom: 10px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Button</button>';
 
                   
                   });
 
->>>>>>> Stashed changes
                   index = index+1;
 
                   
@@ -592,11 +587,6 @@
                     //Adding on more rows
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                  
-<<<<<<< Updated upstream
-                quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
-                rows +='<a href="take_quiz.html" id = "quiz_list_id"  target = '+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">attempt</p></a>'
-                  
-=======
                     quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
                     if(responseQuiz == "Yes")
                     {
@@ -608,7 +598,6 @@
                       rows +='<a href="take_quiz.html" id = "quiz_list_id"  target ='+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">Click to attempt</p></a>'
                     }
                   });
->>>>>>> Stashed changes
                 
                 //Set counter back to 0 
                 // add all the rows to the table
@@ -632,13 +621,8 @@
             
             function takeQuiz()
             {
-              alert("Hello! I am an alert box!!");
+   
               qid =document.getElementById('quiz_list_id').getAttribute('target')
-<<<<<<< Updated upstream
-              console.log('quiz id ,',qid)
-=======
-              console.log("Quiz id: " , qid);
->>>>>>> Stashed changes
               sessionStorage.setItem('quiz_id', qid);
             }
 
