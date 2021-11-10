@@ -312,6 +312,7 @@
         section_id = params.get("section_id");
         console.log('section_id',section_id);
         console.log('initializing sections')
+        var last_section = false;
         var section_title_this= "";
         $(async() => {           
             // Change serviceURL to your own
@@ -331,23 +332,33 @@
                 
                 console.log('retrieving title');
                 console.log('section title = ',sectionList[0].section_title);
-                section_title_this = sectionList[section_id-1].section_title.toString();
-                document.getElementById("section_name").textContent=sectionList[section_id-1].section_title.toString();
+                section_title_this ='';
+                for (var section of sectionList) {
+                    if(section.section_id == section_id)
+                    {
+                      section_title_this = section.section_title.toString();
+                      document.getElementById("section_name").textContent=section.section_title.toString();
+                    }
+                }
+               
                 //document.getElementById("quiz_ttle").textContent = 'Quiz - '+sectionList[section_id-1].section_title.toString();
                 // console.log(menuList);
                 index =1;
                 var rows = "";
                 console.log('appending rows1');                
                 var count =0;
-                 for (var section of sectionList) {
-                    redirectURL = "./view_sections2.html?class_id=" + class_id+"&section_id="+index;
+                last_section_id = 0;
+                for (var section of sectionList) {
+                    redirectURL = "./view_sections2.html?class_id=" + class_id+"&section_id="+section.section_id.toString();
                     rows += '<li id = '+index+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
                     index = index+1;
+                    last_section_id = section.section_id;
                 }
-                console.log('appending rows');
+                
                 // add all the rows to the sidebar
                 $('#section-menu').append(rows);
-
+                
+                
                 } else if (response.status == 404) {
                     // No reservation
                     showError(result.message);
@@ -364,7 +375,9 @@
                     } // error
             });
 
-
+        /*======================================================================================================================================*/
+        
+        /*======================================================================================================================================*/
         function view_materials(row_id) {
                     /*var $row = $(row_id).closest("tr");
                     console.log('before')    // Find the row
@@ -454,25 +467,14 @@
                 // Data is present,see it on console
                 section = result.data;
                 console.log(section,', section');
-                
-                // console.log(menuList);
-                //var rows = "<thead class='thead-dark'><tr><th colspan='8'>Menu</th></tr><tr><th>Section</th><th>Section ID</th><th>Section Title</th><th>Action</th></tr></thead>";
                 var rows_quiz = "";
                 var count =0;
-                
-               
-                    //eachRow ="<td>"+section.material_id.toString()+ "</td>" +"<td class = 'section_id'>"+ section.material_title.toString()+ "</td>" +"<td>" +"<a href ="+section.material_content.toString()+ ">download materials</a>"+"</td>"+"<td>" +section.material_type.toString()+ "</td>";
-
-                    //eachRow ="<td>" + index.toString() + "</td>" +"<td>" + section.section_id.toString() + "</td>" +"<td>" + section.section_title.toString() + "</td>" 
-                    //Adding on more rows
-                    //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                 console.log('printing quiz row');
-                let redirectURL = "./edit_quiz.html?section_id="+section_id+"&quiz_id="+section.quiz_id+"&class_id="+class_id;
+
+                let redirectURL = "./edit_quiz.html?section_id="+section_id+"&quiz_id="+section.quiz_id+"&class_id="+class_id+"&is_graded="+last_section;
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
                 rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
-                
                 console.log('printing quiz row');
-                
                 //Set counter back to 0 
                 // add all the rows to the table
                 $('#quiz-list').append(rows_quiz);
@@ -506,7 +508,7 @@
             section_id = params.get('section_id');
             console.log(section_id);
             console.log('initializing sections')    
-            window.location.href = "./create_quiz2.html?class_id="+class_id+"&section_id=" + section_id;  
+            window.location.href = "./create_quiz2.html?class_id="+class_id+"&section_id=" + section_id+"&is_graded="+last_section;  
         }
         
     
