@@ -496,6 +496,25 @@ class Learner_Assignment(db.Model):
                 "message": "The learner assignment record has been successfully deleted"
             }
         ), 200
+        
+    def get_learner_assignment_by_trainer_id(self,userid):
+        classes = Learner_Assignment.query.filter_by(userid=userid)
+        count =0
+        db.session.close()
+        for x in classes:
+            count+=1
+        if count!=0:
+            return jsonify(
+                {
+                    
+                    "data": [c.json() for c in classes]
+                })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no class under this trainer."
+            }
+        )
 
 class Learner_Badges(db.Model):
     __tablename__ = 'LEARNER_BADGES'
@@ -1775,10 +1794,8 @@ def assign_course_learner():
     course_id = application['course_id']
     class_id = application['class_id']
     userid = application['learner_id']
-    
     print("HR is assigning and enrolling learner to a class of a course")
     course_enrollment_entry = Learner_Assignment(course_id = course_id, userid = userid, class_id = class_id)
-
     return course_enrollment_entry.assign_class()
 
 @app.route('/delete_assigned_classes', methods = ['POST'])
@@ -2552,7 +2569,7 @@ def get_all_enrolled_classes_of_user():
         ), 404
 
 @app.route("/get_classes_of_trainer", methods = ['POST','GET'])
-def get_classes_of_trainer():
+def get_classes_of_learner():
     #temp get method for testing
     t_id = request.args.get('trainer_id', None)
     application = request.get_json()
@@ -2583,7 +2600,34 @@ def get_classes_of_trainer():
                     
                 }
             )
-
+    
+@app.route("/get_classes_of_learner", methods = ['POST','GET'])
+def get_classes_of_lear():
+    t_id = request.args.get('learner_id', None)
+    application = request.get_json()
+    learner_assignment = Learner_Assignment()
+    result_arr = [];
+    courses_arr =[];0
+    record = learner_assignment.get_learner_assignment_by_trainer_id(t_id);
+    result = json.loads(record.data)#Now its just a normal dictionary
+    for x in result['data']:
+        class_id = x['class_id'];
+        course_id=x['course_id'];
+        classes_class = Classes()
+        record = classes_class.get_classes_by_cid(class_id,course_id)
+        values = json.loads(record.data)
+        result_arr.append(values['data'])
+        courses = Course()
+        course_record = courses.get_course_by_id(course_id)
+        courses_arr.append(course_record.json())
+    print(courses_arr)
+    return jsonify(
+                {
+                    "code": 200,
+                    "data": [records for records in  result_arr],#convert back to a response object
+                    "courses": [records for records in courses_arr]
+                }
+            )
 
 
 
