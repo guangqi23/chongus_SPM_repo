@@ -3,14 +3,10 @@ from flask import json
 from flask.json import jsonify
 import flask_testing
 from flask_sqlalchemy import SQLAlchemy
-from trainer import Trainer
-from trainer_assignment import Trainer_Assignment
-from assign_controller import app
-from models import db
+from app import *
+from app import app,db
 
-
-
-
+#Chu Wei Quan
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
@@ -26,6 +22,7 @@ class TestApp(flask_testing.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
 
 class test_Trainer_Assignment(unittest.TestCase):
     def test_get_course_id(self):

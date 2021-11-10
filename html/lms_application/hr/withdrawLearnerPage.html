@@ -254,6 +254,7 @@
           records = res.data.data.record;
           console.log(records);
           let cc_arr = []
+          let c_id_arr = []
           let value = `<table class = 'table' id = 'myTable'>
                             <thead class = 'thead-dark'>
                             <tr>
@@ -267,22 +268,21 @@
             let course_name = eachEnrolledCourse['course_name'];
             let course_id = eachEnrolledCourse['course_id'];
             let class_id = eachEnrolledCourse['class_id'];
-          
-            console.log("Course " + course_id);
-            console.log("Class " + class_id);
+            if(!(c_id_arr.includes(course_id))){
+              let needed_arr = [course_id,class_id];
+              c_id_arr.push(course_id)
+              cc_arr.push(needed_arr);
 
-            let needed_arr = [course_id,class_id];
+              let buttonToAssign = "buttonToWithdrawFromEnrolledCourse" + course_id + "Class" + class_id
+              value += `<tr>
+                              <td>${course_id}</td>
+                              <td>${course_name}</td>
+                              <td>${class_id}</td>
+                              <td><button id = ${buttonToAssign}> Withdraw</button><td>
+                          </tr>`;
 
-            cc_arr.push(needed_arr);
-
-            let buttonToAssign = "buttonToWithdrawFromEnrolledCourse" + course_id + "Class" + class_id
-            value += `<tr>
-                            <td>${course_id}</td>
-                            <td>${course_name}</td>
-                            <td>${class_id}</td>
-                            <td><button id = ${buttonToAssign}> Withdraw</button><td>
-                        </tr>`;
-
+            }
+            
           }      
           value+= `</tbody></table>`;
 

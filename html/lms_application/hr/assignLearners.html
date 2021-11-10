@@ -200,7 +200,7 @@
           .then(res  => 
             {
                 records = res.data.data.record;
-                console.log(records);
+                // console.log(records);
                 lrnr_id_arr = [];
                 let value = `<table class = 'table' id = 'myTable'>
                             <thead class = 'thead-dark'>
@@ -238,7 +238,7 @@
                 body.innerHTML = value; 
                 // console.log(lrnr_id_arr);
                 for(let lrnr_id of lrnr_id_arr){
-                  console.log(lrnr_id);
+                  // console.log(lrnr_id);
                   buttonToAssign = 'buttonToAssignUser_' + lrnr_id;
                   el = document.getElementById(buttonToAssign);
                   // console.log(el)
@@ -257,12 +257,14 @@
         document.getElementById("displayEligibleCourses").innerHTML = '';
         console.log(userid);
         axios
-        .post('http://localhost:5000/eligible_courses',{user_id:userid})
+        .post('http://localhost:5000/eligible_classes',{user_id:userid})
         .then(res =>{
         
                   records = res.data.data.record;
                   console.log(res);
                   buttonIdArr = []
+                  let crs_id = []
+                  
                   value = `<table class = 'table'>
                             <thead class = 'thead-dark'>
                               <tr>
@@ -275,6 +277,8 @@
                                   <th>Assign</th>
                               </tr></thead><tbody>`;
                   for(record of records){
+                    
+                    
                     console.log(record);
                     let course_description = record.course_description;
                     let course_id = record.course_id;
@@ -284,14 +288,30 @@
                     let startdate = record.startdate;
                     let startenrollmentdate = record.startenrollmentdate;
                     
-                    let buttonId = 'buttonAssignCourse_' + course_id;
-                    buttonIdArr.push(course_id);
+
+                    if(!buttonIdArr.includes(course_id)){
+                      let buttonId = 'buttonAssignCourse_' + course_id;
+                      console.log(buttonIdArr);
+                      buttonIdArr.push(course_id);
                     value += `<tr>
                               <td>${course_id}</td>
                               <td>${course_name}</td>
-                              <td>${course_description}</td>
+                              <td>${course_description}</td>  
                               <td><button id = ${buttonId}>Assign</button><td>
                               </tr>`;
+                    }
+                    // let buttonId = 'buttonAssignCourse_' + course_id;
+                    // console.log(buttonIdArr);
+                    // buttonIdArr.push(course_id);
+                    // value += `<tr>
+                    //           <td>${course_id}</td>
+                    //           <td>${course_name}</td>
+                    //           <td>${course_description}</td>  
+                    //           <td><button id = ${buttonId}>Assign</button><td>
+                    //           </tr>`;
+                    
+                    
+                  
 
 
                   }
@@ -324,6 +344,9 @@
         axios
         .post("http://localhost:5000/get_classes/" + courseid)
         .then(res=>{
+                  let body = document.getElementById('displayClassOfEligibleCourses');
+                  body.innerHTML = ''; 
+
                   records = res.data.data.record;
                   console.log(records);
                   classId_arr = [];
@@ -345,7 +368,9 @@
                     let course_id = record.course_id;
                     let class_id = record.class_id;
                     let slots = record.slots;
-                    classId_arr.push(class_id);
+
+                    if(slots != 0 ){
+                      classId_arr.push(class_id);
                     buttonId = 'buttonAssignClass_' + class_id;
                     value += `<tr>
                               <td>${course_id}</td>
@@ -353,10 +378,12 @@
                               <td>${slots}</td>
                               <td><button id = ${buttonId} >Assign</button><td>
                               </tr>`;
+                    }
+           
                   }
 
                   value+= `</tbody></table>`;
-                  let body = document.getElementById('displayClassOfEligibleCourses');
+                  body = document.getElementById('displayClassOfEligibleCourses');
                   body.innerHTML = value; 
                   
                   for(let c_id of classId_arr){
