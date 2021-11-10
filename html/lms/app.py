@@ -416,6 +416,28 @@ class FinalQuiz(db.Model):
         else:
             db.session.close()
             return exists
+        
+    def create_final_quiz(self,quiz_id):
+        final_quiz_ctrl = FinalQuiz(quiz_id = quiz_id, passing_score = 85 )
+        try:
+            db.session.add(final_quiz_ctrl)
+            db.session.commit()
+            db.session.close()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while creating final quiz " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The final quiz is created successfully"
+            }
+        ), 200
+        
 
 class Learner_Assignment(db.Model):
     __tablename__ = 'LEARNERASSIGNMENT'
@@ -861,6 +883,9 @@ class Quiz(db.Model):
         final_quiz_ctrl = FinalQuiz()
         section = final_quiz_ctrl.get_quiz_section(quiz_id)
         return section
+        
+    
+        
         
 class Section(db.Model):
     __tablename__ = 'SECTIONS'
@@ -2064,7 +2089,12 @@ Routes of section_quiz_controler - ADD THIS LATER THERE ARE SOME MAJOR ISSUES
 #     da = SectionQuizController()
 #     status = da.get_quiz_questions(quiz_id)
 #     return status
-
+@app.route("/create_final_quiz",methods = ['GET'])
+def make_final_quiz():
+    quiz_id = int(request.args.get('quiz_id', None))
+    da = FinalQuiz()
+    status = da.create_final_quiz(quiz_id)
+    return status
 @app.route("/view_quiz_questions", methods=['GET'])
 def get_qn():
     qn_id = int(request.args.get('qn_id', None))

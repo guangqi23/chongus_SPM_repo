@@ -61,7 +61,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Create a quiz</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -87,7 +87,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Create a true false question</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -122,7 +122,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Create a MCQ</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -279,6 +279,7 @@
         console.log('getting section_id...');
         section_id = params.get('section_id');
         class_id = params.get('class_id');
+        is_graded = params.get('is_graded');
         var counter = 0;
         //$('#TrueFalse').on('hidden.bs.modal', '.modal', function () {
             //console.log("modal closed");
@@ -346,6 +347,8 @@
                 ('There is an error creating the quiz, please try again later.<br />' + error);
                     } // error
             });
+
+
         }
 
 
@@ -443,6 +446,17 @@
             let len = qn_type.length;
             is_mcq_counter =0;
             is_tf_counter=0
+            if(is_graded == 'true')
+            {
+                 var serviceURL="http://localhost:5000/create_final_quiz?quiz_id="+quiz_id;
+                    var theRequest = $.ajax({
+                        url: serviceURL,
+                        method: 'GET',
+                    }).done(function(data){
+                            console.log(data);
+                            
+            })
+            }
             for (var x = 0; x < len; x++) 
                 {
                 order = x+1;

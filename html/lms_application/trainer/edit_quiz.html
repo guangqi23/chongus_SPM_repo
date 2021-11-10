@@ -367,12 +367,11 @@
   </footer><!-- End Footer -->
   <script>
         let params = new URLSearchParams(location.search);
-        
         section_id = params.get('section_id');
         class_id = params.get('class_id');
         console.log('class,id is ',class_id);
         quiz_id = params.get('quiz_id');
-        console.log(quiz_id);
+        is_graded = params.get('is_graded');
         var counter = 0;
         var indexer = 0;
         var update_id ='';
@@ -909,160 +908,171 @@
                         method: 'GET',
                     }).done(function(data){
                         new_quiz_id = data.quiz_id;
-            var quiz_id =new_quiz_id;
-            var qn_id;
-            var qn_type = document.getElementsByClassName('question_type');
-            let len = qn_type.length;
-            is_mcq_counter =0;
-            is_tf_counter=0;
-            for (var x = 0; x < len; x++) 
-                {
-                order = x+1;
-                qqn_type = qn_type[x].getAttribute('target');
-                if(qqn_type =='TF'){
-                    var answer = document.getElementsByClassName('answer');
-                    var question = document.getElementsByClassName('question');
-                    qanswer = answer[is_tf_counter].innerHTML;
-                    is_tf_counter +=1;
-                    final_answer = 1;
-                    qquestion = question[x].textContent;
-                    tf_order = order;
-                    if (qanswer == false){
-                       final_answer = 0;
-                    }
-                    var serviceURL="http://localhost:5000/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
-                    var theRequest = $.ajax({
-                        url: serviceURL,
-                        method: 'GET',
-                    }).done(function(data){
-                            console.log(data);
-                            if(x==len)
-                                {
-                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
-                                }
-                            
-                    });
-                }
-                else
-                {
-                    
-                    var question = document.getElementsByClassName('question');
-                    qqn = 'MCQ';
-                    qn_id =0;
-                    mcq_qquestion = question[x].textContent;
-                    var question = document.getElementsByClassName('question');
-                    mcq_order =order;
-                    var serviceURL="http://localhost:5000/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
-                    var theRequest = $.ajax({
-                        url: serviceURL,
-                        method: 'GET',
-                    }).done(function(data){
-                                
-                                var opt1 = document.getElementsByClassName('mcqoption1');
-                                var opt2 = document.getElementsByClassName('mcqoption2');
-                                var opt3 = document.getElementsByClassName('mcqoption3');
-                                var opt4 = document.getElementsByClassName('mcqoption4');
-                                console.log('mcq_iter_counter',is_mcq_counter);
-                                qopt1= opt1[is_mcq_counter].innerHTML;
-                                qopt2= opt2[is_mcq_counter].innerHTML;
-                                qopt3= opt3[is_mcq_counter].innerHTML;
-                                qopt4= opt4[is_mcq_counter].innerHTML;
-                                
-                                var answer = document.getElementsByClassName('mcq_answer');
-                                var actual_ans = answer[is_mcq_counter].innerHTML;
-                                qn_id = data.id;
-                                console.log(qn_id);
-                                base_mcq_counter =0;
-                                if (actual_ans == qopt1)
-                                {
-                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
-
-                                }
-                                else
-                                {
-                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
-                                }
-                                
-                                var theRequest = $.ajax({
-                                    url: serviceURL,
-                                    method: 'GET',
-                                }).done(function(data){
-                                        base_mcq_counter +=1;
-                                        console.log(data);
+                        var quiz_id =new_quiz_id;
+                        var qn_id;
+                        var qn_type = document.getElementsByClassName('question_type');
+                        let len = qn_type.length;
+                        is_mcq_counter =0;
+                        is_tf_counter=0;
+                        if(is_graded == 'true')
+                            {
+                                var serviceURL="http://localhost:5000/create_final_quiz?quiz_id="+quiz_id;
+                                    var theRequest = $.ajax({
+                                        url: serviceURL,
+                                        method: 'GET',
+                                    }).done(function(data){
+                                            console.log(data);
                                             
-                            });
-                                if (actual_ans == qopt2)
-                                {
-                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
-
+                                })
+                            }
+                        for (var x = 0; x < len; x++) 
+                            {
+                            order = x+1;
+                            qqn_type = qn_type[x].getAttribute('target');
+                            if(qqn_type =='TF'){
+                                var answer = document.getElementsByClassName('answer');
+                                var question = document.getElementsByClassName('question');
+                                qanswer = answer[is_tf_counter].innerHTML;
+                                is_tf_counter +=1;
+                                final_answer = 1;
+                                qquestion = question[x].textContent;
+                                tf_order = order;
+                                if (qanswer == false){
+                                final_answer = 0;
                                 }
-                                else
-                                {
-                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
-                                }
-                                console.log(serviceURL);
+                                var serviceURL="http://localhost:5000/create_TrueFalse?answer="+final_answer+"&quiz_id="+quiz_id+"&question="+qquestion+"&question_type=TF&qorder="+tf_order;
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                       base_mcq_counter +=1;
                                         console.log(data);
-                                    
-                            });
-                                if (actual_ans == qopt3)
-                                {
-                                    
-                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
-
-                                }
-                                else
-                                {
-                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
-                                }
-                                console.log(serviceURL);
-                                var theRequest = $.ajax({
-                                    url: serviceURL,
-                                    method: 'GET',
-                                }).done(function(data){
-                                        base_mcq_counter +=1;
-                                        console.log(data);
-                                        
-                            });
-                                if (actual_ans == qopt4)
-                                {
-                                    serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
-
-                                }
-                                else
-                                {
-                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
-                                }
-                                console.log(serviceURL);
-                                var theRequest = $.ajax({
-                                    url: serviceURL,
-                                    method: 'GET',
-                                }).done(function(data){
-                                        base_mcq_counter +=1;
-                                        console.log(data);
-                            }); 
-                            if(x==len & base_mcq_counter ==4)
+                                        if(x==len)
                                             {
                                                 window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
                                             }
-                            is_mcq_counter+=1;                       
-                        });                    
-                    
-                }
+                                        
+                                });
+                            }
+                            else
+                            {
+                                
+                                var question = document.getElementsByClassName('question');
+                                qqn = 'MCQ';
+                                qn_id =0;
+                                mcq_qquestion = question[x].textContent;
+                                var question = document.getElementsByClassName('question');
+                                mcq_order =order;
+                                var serviceURL="http://localhost:5000/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+mcq_order+"&question_type="+qqn+"&question="+mcq_qquestion;
+                                var theRequest = $.ajax({
+                                    url: serviceURL,
+                                    method: 'GET',
+                                }).done(function(data){
+                                            
+                                            var opt1 = document.getElementsByClassName('mcqoption1');
+                                            var opt2 = document.getElementsByClassName('mcqoption2');
+                                            var opt3 = document.getElementsByClassName('mcqoption3');
+                                            var opt4 = document.getElementsByClassName('mcqoption4');
+                                            console.log('mcq_iter_counter',is_mcq_counter);
+                                            qopt1= opt1[is_mcq_counter].innerHTML;
+                                            qopt2= opt2[is_mcq_counter].innerHTML;
+                                            qopt3= opt3[is_mcq_counter].innerHTML;
+                                            qopt4= opt4[is_mcq_counter].innerHTML;
+                                            
+                                            var answer = document.getElementsByClassName('mcq_answer');
+                                            var actual_ans = answer[is_mcq_counter].innerHTML;
+                                            qn_id = data.id;
+                                            console.log(qn_id);
+                                            base_mcq_counter =0;
+                                            if (actual_ans == qopt1)
+                                            {
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+1;
 
-                }
+                                            }
+                                            else
+                                            {
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
+                                            }
+                                            
+                                            var theRequest = $.ajax({
+                                                url: serviceURL,
+                                                method: 'GET',
+                                            }).done(function(data){
+                                                    base_mcq_counter +=1;
+                                                    console.log(data);
+                                                        
+                                        });
+                                            if (actual_ans == qopt2)
+                                            {
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+1;
 
-            //window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
-            });
-            }
-        function go_back()
-        {
-            window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
-        }
+                                            }
+                                            else
+                                            {
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
+                                            }
+                                            console.log(serviceURL);
+                                            var theRequest = $.ajax({
+                                                url: serviceURL,
+                                                method: 'GET',
+                                            }).done(function(data){
+                                                base_mcq_counter +=1;
+                                                    console.log(data);
+                                                
+                                        });
+                                            if (actual_ans == qopt3)
+                                            {
+                                                
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+1;
+
+                                            }
+                                            else
+                                            {
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
+                                            }
+                                            console.log(serviceURL);
+                                            var theRequest = $.ajax({
+                                                url: serviceURL,
+                                                method: 'GET',
+                                            }).done(function(data){
+                                                    base_mcq_counter +=1;
+                                                    console.log(data);
+                                                    
+                                        });
+                                            if (actual_ans == qopt4)
+                                            {
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+1;
+
+                                            }
+                                            else
+                                            {
+                                                serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
+                                            }
+                                            console.log(serviceURL);
+                                            var theRequest = $.ajax({
+                                                url: serviceURL,
+                                                method: 'GET',
+                                            }).done(function(data){
+                                                    base_mcq_counter +=1;
+                                                    console.log(data);
+                                        }); 
+                                        if(x==len & base_mcq_counter ==4)
+                                                        {
+                                                            window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                                        }
+                                        is_mcq_counter+=1;                       
+                                    });                    
+                                
+                            }
+
+                            }
+
+                        //window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                        });
+                        }
+                    function go_back()
+                    {
+                        window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                    }
 
     </script>
   <div id="preloader"></div>
