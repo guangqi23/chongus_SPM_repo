@@ -24,6 +24,7 @@
   <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
@@ -31,6 +32,7 @@
   <!-- AXIOS File -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
 
+  <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 </head>
 
@@ -49,7 +51,6 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="courses.html">Courses</a></li>
           <li><a id="myClasses">My Classes</a></li>
-      
           <li><a href="contact.html">Contact</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -97,7 +98,8 @@
                           let end_date = course.enddate
                           let trainer_name = course.trainer_name
                           let class_id = course.class_id
-                        
+                          
+
                           value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                     <div class="course-item">
                                       <div class="course-content">
@@ -121,10 +123,19 @@
           viewAssignedCourses(user_Id);
 
           function onclickViewSectionMaterial(class_id)
-            {
+          {
               //sessionStorage.setItem('class_id', class_id);
-              window.location='http://view_sections.html/'
-            }
+              $(async() => { 
+                  retrieveSectionId_URL = "http://localhost:5000/get_first_sectId?class_id=" + class_id;
+                  await axios.get(retrieveSectionId_URL)
+                    .then(response => {
+
+                    first_section_id = response.data;
+                    window.location='./view_sections?class_id=' + class_id + "&section_id=" + first_section_id;
+                  });
+              });
+              
+          }
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Enrolled Classes</h1>

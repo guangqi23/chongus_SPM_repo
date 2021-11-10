@@ -975,6 +975,11 @@ class Section(db.Model):
         db.session.close()
         return section_title
 
+    def get_first_section_of_class(self, class_id):
+        section_id = Section.query.filter_by(class_id = class_id).first()
+        db.session.close()
+        return str(section_id.section_id)
+
     def get_sections(self, section_id):
         section = Section.query.filter_by(section_id=section_id).first()
         db.session.close()
@@ -2808,14 +2813,14 @@ def verify_section_completed():
     quiz = json.loads(quizData.data)
     quiz_id = quiz['data']['quiz_id']
     
-    
-    for x in materials["data"]:  #Check if each material is completed by the user
-        #print('This is standard output',x ,file=sys.stdout)
-        mc = sections_material_completion()
-        obj = {"material_id" : x['material_id'], "user_id" : user_id}
-        result = mc.check_material_completion(obj)
-        if result == "Not completed":
-            return "Not completed"
+    if len(materials["data"]) != 0:
+        for x in materials["data"]:  #Check if each material is completed by the user
+            #print('This is standard output',x ,file=sys.stdout)
+            mc = sections_material_completion()
+            obj = {"material_id" : x['material_id'], "user_id" : user_id}
+            result = mc.check_material_completion(obj)
+            if result == "Not completed":
+                return "Not completed"
     
     #Check if quiz attempted and passed if its a final quiz
     fq = FinalQuiz()
@@ -2839,7 +2844,13 @@ def verify_section_completed():
     sc = SectionCompletion()
     result = sc.set_section_completed(inputObj)
     return result
-    
+
+@app.route("/get_first_sectId", methods=["GET"])
+def get_first_sectionId():
+    class_id = int(request.args.get('class_id', None))
+    s = Section()
+    section_id = s.get_first_section_of_class(class_id)
+    return section_id
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
     

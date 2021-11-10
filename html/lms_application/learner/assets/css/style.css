@@ -351,13 +351,23 @@ h1, h2, h3, h4, h5, h6 {
 /*--------------------------------------------------------------
 # Hero Section
 --------------------------------------------------------------*/
-#hero {
+/* #hero {
   width: 100%;
   height: 80vh;
   background: url("../img/hero-bg.jpg") top center;
   background-size: cover;
   position: relative;
+} */
+
+#hero {
+  width: 100%;
+  height: 80vh;
+  background: url("../img/Twice-Mina-Pc-Background.jpg") top center;
+  background-size: cover;
+  position: relative;
 }
+
+
 #hero:before {
   content: "";
   background: rgba(0, 0, 0, 0.4);
