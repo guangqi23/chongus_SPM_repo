@@ -80,7 +80,8 @@
           <script>
           
           user_Id = sessionStorage["learner_id"]
-          
+          var a = document.getElementById('myClasses');
+          a.href = "./assigned_classes?learner_id=" + sessionStorage["learner_id"];
 
 
           function viewAssignedCourses(userId) {
@@ -379,8 +380,8 @@
                 .catch(error => console.error(error.response.data));
             }
             viewUneligibleCourses(user_Id);
-            var a = document.getElementById('myClasses');
-            a.href = "./assigned_classes?learner_id=" + sessionStorage["learner_id"];
+
+            
       </script>
     </section><!-- End Courses Section -->
 
