@@ -29,8 +29,8 @@ from sqlalchemy.sql.elements import Null
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/lmsdb'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app, session_options={
@@ -521,7 +521,9 @@ class Learner(User):
     def get_assigned_courses(self, user_id): 
         assigned_courses = Learner_Assignment()
         assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
+
         output = [assigned_course for assigned_course in assigned_courses_list]
+
         return output
     
     def get_assigned_course_class(self, user_id): 
@@ -543,7 +545,8 @@ class Learner(User):
         course_list = [course.course_id for course in course_class.get_all_courses()]
         completed_courses = [course.course_id for course in learner_badges.get_learner_badges(user_id)]
         enrolled_courses = [course for course in self.get_enrolled_courses(user_id)]
-        assigned_courses = [course for course in self.get_assigned_courses(user_id)]
+        assigned_courses = [course.course_id for course in self.get_assigned_courses(user_id)]
+        # print(assigned_courses)
         completed_enrolled_assigned_courses = completed_courses + enrolled_courses + assigned_courses
         remaining_course = [course for course in course_list if course not in completed_enrolled_assigned_courses]
         output = [course_class.get_course_by_id(course_query) for course_query in remaining_course if course_class.get_vacancies_by_courses(course_query) > 0]
@@ -839,6 +842,7 @@ class Quiz(db.Model):
         
 class Section(db.Model):
     __tablename__ = 'SECTIONS'
+
     section_id = db.Column(db.Integer, primary_key=True)
     class_id = db.Column(db.Integer)
     section_title = db.Column(db.String(500))
@@ -884,9 +888,10 @@ class Section(db.Model):
             }
         )
     
-    def create_section(self):
+    def create_section(self,class_id,section_title):
+        section_entry = Section(class_id = class_id,section_title=section_title)
         try: 
-            db.session.add(self)
+            db.session.add(section_entry)
             db.session.commit()
             db.session.close()
         except Exception as error:
@@ -970,9 +975,10 @@ class SectionMaterials(db.Model):
         materials = self.query.filter_by(section_id=section_id).all()
         return materials
 
-    def create_material(self):
+    def create_material(self,section_id, material_title, material_content, material_type):
+        material_entry = SectionMaterials(section_id=section_id,material_title=material_title,material_content=material_content,material_type=material_type)
         try: 
-            db.session.add(self)
+            db.session.add(material_entry)
             db.session.commit()
             db.session.close()
         except Exception as error:
@@ -1750,7 +1756,7 @@ def getClassStartDate():
     class_ctrl = Classes()
     
 
-    print(searchIds['ids'], file=sys.stderr)
+    # print(searchIds['ids'], file=sys.stderr)
     searchIds = searchIds['ids']
     approvedEnrollments = []
 
@@ -1762,7 +1768,7 @@ def getClassStartDate():
         if datetime.now() < dateToCompare:
             approvedEnrollments.append(counter)
         counter += 1
-    print(approvedEnrollments, file=sys.stderr)
+    # print(approvedEnrollments, file=sys.stderr)
     return json.dumps(approvedEnrollments)
 
 
@@ -1853,7 +1859,7 @@ def getAllPendingEnrollment():
     else:
         astuff = json.loads(enrollments.data.decode('utf-8'))
         enrollment_list = astuff["data"]["enrollment_records"]
-        print(enrollment_list, file=sys.stderr)
+        # print(enrollment_list, file=sys.stderr)
         #For logging purposes
         class_ids = []
         final_enrollmentList = []
@@ -1959,8 +1965,8 @@ def view_Quiz():
 def create_section():
     class_id = int(request.args.get('class_id', None))
     section_title = str(request.args.get('section_title', None))
-    da = Section(class_id,section_title)
-    status = da.create_section()
+    da = Section()
+    status = da.create_section(class_id,section_title)
     return status
 
 @app.route("/create_quiz", methods=['GET'])
@@ -2001,8 +2007,8 @@ def create_section_materials():
     material_title = str(request.args.get('material_title', None))
     material_content = str(request.args.get('material_content', None))
     material_type = str(request.args.get('material_type', None))
-    da = SectionMaterials(section_id, material_title, material_content, material_type)
-    status = da.create_material()
+    da = SectionMaterials()
+    status = da.create_material(section_id, material_title, material_content, material_type)
     return status
 
 '''
@@ -2088,9 +2094,9 @@ def submitScore():
     quiz_id = int(request.args.get('quiz_id', None))
     user_id = int(request.args.get('user_id', None))
     quiz_score = float(request.args.get('score', None))
-    print(quiz_id, file=sys.stderr)
-    print(user_id, file=sys.stderr)
-    print(quiz_score, file=sys.stderr)
+    # print(quiz_id, file=sys.stderr)
+    # print(user_id, file=sys.stderr)
+    # print(quiz_score, file=sys.stderr)
     scoreObj = {"quiz_id" : quiz_id, "user_id" : user_id, "quiz_score" : quiz_score}
     
 
@@ -2132,27 +2138,28 @@ def get_section_title():
 '''
 Routes of view_controller
 '''
-# @app.route("/eligible_courses", methods=['POST'])
-# def get_eligible_courses():
-#     application = request.get_json()
-#     user_id = application['user_id']
-#     learner = Learner()
-#     record = learner.get_eligible_courses(user_id)
-#     if len(record):
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": {
-#                     "course_id": [a_record for a_record in record]
-#                 }
-#             }
-#         )
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "message": "There are no eligible courses."
-#             }
-#         ), 404
+@app.route("/eligible_courses", methods=['POST'])
+def get_eligible_courses():
+    application = request.get_json()
+    user_id = application['user_id']
+    learner = Learner()
+    record = learner.get_remaining_courses(user_id)
+    print(record)
+    if len(record):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "course_id": [a_record.json() for a_record in record]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no eligible courses."
+            }
+        ), 404
 
 @app.route("/eligible_classes", methods=['POST'])
 def get_eligible_classes():

@@ -9,7 +9,7 @@ from app import app,db
 from json import JSONEncoder
 from datetime import datetime, date
 
-
+#Ong Guang Qi
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
@@ -26,7 +26,7 @@ class TestApp(flask_testing.TestCase):
         db.session.remove()
         db.drop_all()
 
-class test_Assign_Controller(TestApp):
+class test_app(TestApp):
     def test_assign_course_trainer(self):
         trnr = Trainer(name = "Paul",
                         email = 'paultest@gmail.com',
@@ -144,52 +144,6 @@ class test_Assign_Controller(TestApp):
 
         self.assertEqual(response.status_code, 200)
         db.session.close()
-
-    # need ask how to get this function to work
-        # def test_getClassStartDate(self):
-        #     crse = Course(course_id = 5, 
-        #                 course_name = 'testCourse',
-        #                 course_description = 'testing our function',
-        #                 startenrollmentdate = datetime(2021,10,8,0,0,0),
-        #                 endenrollmentdate = datetime(2021,10,9,0,0,0))
-        #     db.session.add(crse)
-        #     db.session.commit()
-        #     # crse_class = Classes(class_id = 1 , course_id = crse.course_id, slots = 40 , startdate = '2021-06-21 00:00:00', enddate = '2021-06-25 00:00:00', trainer_name = '')
-        #     crse_class = Classes(class_id = 1 , course_id = crse.course_id, slots = 40 , startdate = datetime(2021,10,6,0,0,0), enddate = datetime(2021,10,9,0,0,0), trainer_name = '')
-        #     db.session.add(crse_class)
-        #     db.session.commit()
-
-            # request_body = {
-            #     'ids' : [1]
-            # }
-
-            # response = self.client.post("/get_startDate/" ,
-            #                 data=json.dumps(request_body),
-            #                 content_type='application/json')
-            # print('this is the required' + str(response.data))
-            # self.assertEqual(response.status_code, 200)
-
-    # #pass skips
-        # def test_create_course(self):
-
-        
-        #     request_body = {
-        #         'user_id' : 1,
-        #         'course_name' : 'testCourse',
-        #         'course_description' : 'testingCourse',
-        #         'start_enrollment_date' : datetime(2021,10,6,0,0,0), 
-        #         'end_enrollment_date' : datetime(2021,10,9,0,0,0)
-        #     }
-
-        #     data=json.dumps(request_body)
-        #     print(data)
-    
-            
-        #     response = self.client.post("/create_course",
-        #                     data=json.dumps(request_body),
-        #                     content_type='application/json')
-        #     print(response.data)
-        #     self.assertEqual(response.status_code,200)
 
     def test_delete_course(self):
 
@@ -316,10 +270,8 @@ class test_Assign_Controller(TestApp):
     def test_create_section(self):
 
         with app.test_client() as c:
-            r = c.get('/create_section', query_string={'class_id': '1', 'section_title': "section1"})
-        print("***********")
-        print(r.data)
-        print("***********")
+            r = c.get('/create_section', query_string={'class_id': 1, 'section_title': "section1"})
+
         self.assertEqual(r.status_code,200)
 
     def test_create_quiz(self):
@@ -374,26 +326,6 @@ class test_Assign_Controller(TestApp):
         print(r.data)
         self.assertEqual(r.status_code,200)
 
-    ## cant send dk why : unmapped instance error
-        # def test_delete_quiz(self):
-        #     quiz_entry = Quiz(
-        #         quiz_id = 99,
-        #         section_id = 1,
-        #         time_limit = 60
-
-        #     )
-        #     db.session.add(quiz_entry)
-        #     db.session.commit()
-
-        #     response = self.client.get("/delete_quiz?quiz_id=" + str(quiz_entry.quiz_id),
-                            
-        #                     content_type='application/json')
-
-        #     print(response)
-            
-            # self.assertEqual(r.status_code,200)
-            # pass
-        
     def test_submitScore(self):
         with app.test_client() as c:
             r = c.post('/submitScore', query_string={
