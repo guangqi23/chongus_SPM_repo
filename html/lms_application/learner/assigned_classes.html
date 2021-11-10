@@ -1,14 +1,4 @@
-<script>
-        var trainerID = String(sessionStorage.getItem("learner_id"));
-        learner_id = 4;
-        classURL = "";
-        /*axios.get(classURL)
-            .then(response => {
-                console.log("Timer is:", response.data);
-                timeValue = parseInt(response.data);
-                //timeValue = 15; Use if want to test timeout function
-            });*/
-</script>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -191,8 +181,8 @@
 <script>
         
         let params = new URLSearchParams(location.search);
-        trainer_id = params.get('learner_id');
-        classesURL = 'http://localhost:5000/get_classes_of_learner?learner_id='+learner_id;
+        learner_id = params.get('learner_id');
+        classesURL = 'http://localhost:5000/get_classes_of_learner?learner_id='+ sessionStorage["learner_id"];
         axios.get(classesURL)
             .then(response => {
                 classes = response.data;
