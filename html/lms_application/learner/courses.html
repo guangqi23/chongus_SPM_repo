@@ -102,6 +102,11 @@
         </div>
       </div> <!-- End Course Item-->
           <script>
+          
+          user_Id = sessionStorage["learner_id"]
+          
+
+
           function viewAssignedCourses(userId) {
             axios
               .post('http://localhost:5000/assigned_courses', {user_id: userId
@@ -120,9 +125,17 @@
                           value += `<div class="col-lg-4 col-md-6 d-flex align-items-stretch">
                                     <div class="course-item">
                                       <div class="course-content">
+<<<<<<< Updated upstream
                                         <h3>${coursename}</h3>
                                         <p>${coursedescription}</p>
                                         <p><strong>Course Period:</strong> ${start_date}-${end_date}</p>
+=======
+                                        <h3>${course_name} - Class #${class_id}</h3>
+                                        <p>${course_description}</p>
+                                        <p><strong>Class Period:</strong> ${start_date}-${end_date}</p>
+                                        <p><strong>Trainer Name:</strong> ${trainer_name}</p>
+                                        <button type="submit" id="${class_id}_section_materials" onclick="onclickViewSectionMaterial(${class_id})">View Section Materials</button>
+>>>>>>> Stashed changes
                                       </div>
                                     </div>
                                   </div>`;
@@ -134,7 +147,14 @@
               )
               .catch(error => console.error(error.response.data));
           }
-          viewAssignedCourses(4);
+          
+          viewAssignedCourses(user_Id);
+
+          function onclickViewSectionMaterial(class_id)
+            {
+              //sessionStorage.setItem('class_id', class_id);
+              window.location='http://view_sections.html/'
+            }
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Enrolled Classes</h1>
@@ -174,7 +194,31 @@
               )
               .catch(error => console.error(error.response.data));
           }
+<<<<<<< Updated upstream
           viewEnrolledCourses(4);
+=======
+          viewEnrolledCourses(user_Id);
+          function drop_class(course_id, userId, class_id){
+            axios
+            .post('http://localhost:5000/drop_class', 
+                {
+                    user_id: userId,
+                    course_id: course_id,
+                    class_id: class_id
+                }
+            )
+            .then(res =>
+                {
+                    status = res.data
+                    console.log(res)
+                    output = `<div class="alert alert-success" role="alert">
+                      "You have successfully dropped the class"
+                    </div>`
+                    document.getElementById(class_id + "_" + course_id + "_drop_status").innerHTML = output
+                }
+            )
+          }
+>>>>>>> Stashed changes
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Classes Eligible for Enrollment</h1>
@@ -215,7 +259,28 @@
                 )
                 .catch(error => console.error(error.response.data));
             }
+<<<<<<< Updated upstream
             viewEligibleCourses(1);
+=======
+            viewEligibleCourses(user_Id);
+            function enroll_into_class(course_id, class_id, userId){
+              axios
+                .post(
+                  'http://localhost:5000/enroll', {user_id: userId, course_id: course_id, class_id: class_id
+                }
+                )
+                .then(res =>
+                  {
+                    enroll_status = res;
+                    output = `<div class="alert alert-success" role="alert">
+                      "You have been successfully enrolled. The HR will proceed to approve your enrollment"
+                    </div>`
+                    document.getElementById(class_id + "_" + course_id + "_enroll_status").innerHTML = output
+                  }
+                )
+                .catch(error => console.error(error.response.data))
+            }
+>>>>>>> Stashed changes
       </script>
       <div class="container" data-aos="fade-up">
         <h1>View Completed Courses</h1>
@@ -250,7 +315,7 @@
                 )
                 .catch(error => console.error(error.response.data));
             }
-            viewCompletedCourses(2);
+            viewCompletedCourses(user_Id);
           </script>
       <div class="container" data-aos="fade-up">
         <h1>View Courses Ineligible for Enrollment</h1>
@@ -285,7 +350,11 @@
                 )
                 .catch(error => console.error(error.response.data));
             }
+<<<<<<< Updated upstream
             viewUneligibleCourses(1);
+=======
+            viewUneligibleClasses(user_Id);
+>>>>>>> Stashed changes
       </script>
     </section><!-- End Courses Section -->
 

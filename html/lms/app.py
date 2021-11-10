@@ -6,7 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy.sql.elements import Null
+<<<<<<< Updated upstream
 import json
+=======
+import ast
+>>>>>>> Stashed changes
 
 # from classes import Classes
 # from course_enrollment import Course_Enrollment
@@ -711,9 +715,62 @@ class multiplechoiceoptions(db.Model):
             }
         ), 200
 
+class sections_material_completion(db.Model):
+    __tablename__ = 'SECTIONS_MATERIALS_COMPLETION'
+    section_id = db.Column(db.Integer)
+    material_id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, primary_key=True)
+    completed = db.Column(db.Boolean)
+
+
+    def setMaterialAsCompleted(self, inputObj):
+        sectionId = inputObj['section_id']
+        materialId = inputObj['material_id']
+        userId = inputObj['user_id']
+
+        record = sections_material_completion.query.filter_by(userid = userId, material_id = materialId).first() is not None
+        if record:
+            record = sections_material_completion.query.filter_by(userid = userId, material_id = materialId).first()
+            db.session.delete(record)
+            db.session.commit()
+            return "Changed to incomplete!"
+        else:
+            newRecord = sections_material_completion(section_id = sectionId, material_id = materialId, userid = userId, completed = True )
+            db.session.add(newRecord)
+            db.session.commit()
+            return "Changed to complete"
     
+    def check_material_completion(self, inputObj):
+        materialId = inputObj['material_id']
+        userId = inputObj['user_id']
+
+        record = sections_material_completion.query.filter_by(userid = userId, material_id = materialId).first() is not None
+        if record:
+            return "Completed"
+        else:
+            return "Not completed"
+class SectionCompletion(db.Model):
+    __tablename__ = 'SECTION_COMPLETION'
+    section_id= db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer)
+    completed = db.Column(db.Boolean)
+
+    def check_section_completion(self, inputObj):
+        user_id = inputObj['user_id']
+        section_id = inputObj['section_id']
+        record = SectionCompletion.query.filter_by(userid = user_id, section_id = section_id).first() is not None
+        if record:
+            return "Yes"
+        else:
+            return "No"
     
-    
+    def set_section_completed(self, inputObj):
+        userid = inputObj['user_id']
+        section_id = inputObj['section_id']
+        newRecord = SectionCompletion(section_id = section_id, userid = userid, completed = True )
+        db.session.add(newRecord)
+        db.session.commit()
+        return "Setted section as completed!"
 
 class QuizQuestions(db.Model):
     __tablename__ = 'QUIZ_QUESTION'
@@ -1261,6 +1318,17 @@ class Ungraded_quiz_score(db.Model):
         db.session.commit()
         db.session.close()
         return "Success"
+    
+    def checkAttempt(self, scoreObj):
+        user_id = scoreObj['user_id']
+        quiz_id = scoreObj['quiz_id']
+
+        exists = db.session.query(Ungraded_quiz_score.quiz_id).filter_by(quiz_id= quiz_id, userid = user_id).first() is not None 
+        if exists:
+            return "Yes"
+        else:
+            return "No"
+
 
 class Graded_quiz_score(db.Model):
     __tablename__ = 'GRADED_QUIZ_SCORE'
@@ -1282,6 +1350,18 @@ class Graded_quiz_score(db.Model):
         db.session.commit()
         db.session.close()
         return "Success"
+    
+    def checkAttempt(self, scoreObj):
+        user_id = scoreObj['user_id']
+        quiz_id = scoreObj['quiz_id']
+
+        exists = db.session.query(Graded_quiz_score.quiz_id).filter_by(quiz_id= quiz_id, userid = user_id).first() is not None 
+        if exists:
+
+
+            return "Yes"
+        else:
+            return "No"
 
 # list of controllers
 # 1. assign_controller (REMOVED)
@@ -2029,9 +2109,17 @@ def view_Materials():
     if section_id >0:
         da = Section()
         materials = da.get_all_section_materials(section_id)
+        # materialz = ast.literal_eval(materials.data.decode('utf-8'))
+       
+        # print('This is standard output:', materialz ,file=sys.stdout)
+        # for material in materials:
+        #     print('All materials: ',material , file=sys.stderr)
+
+        
+        
         return materials
     else:
-        raise Exception ("Section Id must be above 0");
+        raise Exception ("Section Id must be above 0")
 
 @app.route("/view_class_sections", methods=['GET'])
 def view_Sections():
@@ -2568,6 +2656,7 @@ def get_all_enrolled_classes_of_user():
             }
         ), 404
 
+<<<<<<< Updated upstream
 @app.route("/get_classes_of_trainer", methods = ['POST','GET'])
 def get_classes_of_learner():
     #temp get method for testing
@@ -2631,7 +2720,117 @@ def get_classes_of_lear():
 
 
 
+=======
+@app.route("/mark_material_completion", methods = ['GET'])
+def mark_Material_complete():
+    material_id = int(request.args.get('material_id', None))
+    user_id = int(request.args.get('user_id', None))
+    section_id = int(request.args.get('section_id', None))
+    mc = sections_material_completion()
+    obj = {"material_id" : material_id, "user_id" : user_id, "section_id" : section_id}
+    result = mc.setMaterialAsCompleted(obj)
 
+
+    return result
+
+@app.route("/check_material_completion", methods = ['GET'])
+def check_material_completion():
+    material_id = int(request.args.get('material_id', None))
+    user_id = int(request.args.get('user_id', None))
+    mc = sections_material_completion()
+    obj = {"material_id" : material_id, "user_id" : user_id}
+    result = mc.check_material_completion(obj)
+    if result == "Completed":
+        return "yes"
+    else:
+        return "no"
+
+@app.route("/check_quiz_completion", methods= ["GET"])
+def check_quiz_completion():
+    quiz_id = int(request.args.get('quiz_id', None))
+    user_id = int(request.args.get('user_id', None))
+    fq = FinalQuiz()
+    result = fq.is_graded(quiz_id) #Check if quiz is graded
+    inputObj = {'quiz_id' : quiz_id, 'user_id': user_id}
+    if result == False:
+        #Ungraded quiz
+        uq = Ungraded_quiz_score()
+        result = uq.checkAttempt(inputObj)
+        return result
+        
+    else:
+        #Graded quiz
+        gq = Graded_quiz_score()
+        result = gq.checkAttempt(inputObj)
+        return result
+
+@app.route("/check_section_completion", methods=["GET"])
+def check_section_completion():
+    section_id = int(request.args.get('section_id', None))
+    user_id = int(request.args.get('user_id', None))
+    sc = SectionCompletion()
+    inputObj = {'section_id' : section_id, 'user_id' : user_id}
+    result = sc.check_section_completion(inputObj)
+    return result
+
+@app.route("/set_section_completion", methods=["GET"])
+def set_section_completion():
+    section_id = int(request.args.get('section_id', None))
+    user_id = int(request.args.get('user_id', None))
+    inputObj = {'section_id' : section_id, 'user_id' : user_id}
+    sc = SectionCompletion()
+    result = sc.set_section_completed(inputObj)
+    return result
+
+@app.route("/verify_section_completed", methods=["GET"])
+def verify_section_completed():
+    section_id = int(request.args.get('section_id', None))
+    user_id = int(request.args.get('user_id', None))
+
+    #Get all section materials
+    da = Section()
+    data = da.get_all_section_materials(section_id)
+    materials = json.loads(data.data)
+>>>>>>> Stashed changes
+
+    #Get section quiz
+    da = Section()
+    quizData = da.get_latest_quiz(section_id)
+    quiz = json.loads(quizData.data)
+    quiz_id = quiz['data']['quiz_id']
+    
+    
+    for x in materials["data"]:  #Check if each material is completed by the user
+        #print('This is standard output',x ,file=sys.stdout)
+        mc = sections_material_completion()
+        obj = {"material_id" : x['material_id'], "user_id" : user_id}
+        result = mc.check_material_completion(obj)
+        if result == "Not completed":
+            return "Not completed"
+    
+    #Check if quiz attempted and passed if its a final quiz
+    fq = FinalQuiz()
+    result = fq.is_graded(quiz_id) #Check if quiz is graded
+    inputObj = {'quiz_id' : quiz_id, 'user_id': user_id}
+    if result == False:
+        #Ungraded quiz
+        uq = Ungraded_quiz_score()
+        result = uq.checkAttempt(inputObj)
+        if result == "No":
+            return "Quiz not attempted"
+        
+    else:
+        #Graded quiz
+        gq = Graded_quiz_score()
+        result = gq.checkAttempt(inputObj)
+        if result == "No":
+            return "Quiz not attempted"
+
+    inputObj = {'section_id' : section_id, 'user_id' : user_id}
+    sc = SectionCompletion()
+    result = sc.set_section_completed(inputObj)
+    return result
+    
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-
+    

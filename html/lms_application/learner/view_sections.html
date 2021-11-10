@@ -46,12 +46,18 @@
   <link href="assets/css/style.css" rel="stylesheet">
   <link href="assets/css/sidebar.css" rel="stylesheet">
 
+<<<<<<< Updated upstream
   <!-- =======================================================
   * Template Name: Mentor - v4.6.0
   * Template URL: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+=======
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+>>>>>>> Stashed changes
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500&display=swap">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -66,7 +72,7 @@
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="drpdown/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="drpdown/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="drpdown/ico/apple-touch-icon-57-precomposed.png">
-  
+
 </head>
 
 <body>
@@ -126,7 +132,7 @@
 		        <!-- Top content -->
 		        
 		 </div>
-      <h1 class="logo me-auto"><a href="index.html">Mentor</a></h1>
+      <h1 class="logo me-auto"><a href="index.html">LMS</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -181,11 +187,16 @@
         <div id="c1" class="container" style = 'margin-top: 50px;margin-bottom:50px;'>
           
           <h3 style = 'margin-top:20px; align:right'>Section Materials</h3>
-            <!--table id="menuTable" class='table table-striped' border='1'>
-            </table-->
-          <ul class="list-group" id = 'material-list'style = 'margin-top: 20px'>
+            <!-- <table id="menuTable" class='table table-striped' id="materials_table" border='1'>
+            </table> -->
+          <!-- <ul class="list-group" id = 'material-list' style = 'margin-top: 20px'>
             
-          </ul>
+          </ul> -->
+
+          <div class="list-group" id = 'material-list'style = 'margin-top: 20px'>
+            
+          </div>
+
           <h3 style = 'margin-top:20px; align:right'>Section Quiz</h3>
             <!--table id="menuTable" class='table table-striped' border='1'>
             </table-->
@@ -312,6 +323,25 @@
         console.log('section_id',section_id);
         console.log('initializing sections')
         var section_title_this= "";
+
+        //Check if section is completed 
+        function checkIfSectionIsCompleted(section_id)
+        {
+          $(async() => {
+          var completionURL = "http://localhost:5000/verify_section_completed?section_id="+section_id+"&user_id="+ sessionStorage["learner_id"];
+          await axios.get(completionURL)
+                .then(response => {
+                    console.log("Result is:", response.data);
+                });
+
+          });
+        }
+        
+        checkIfSectionIsCompleted(section_id)
+
+
+        //Populate sidebar menu
+
         $(async() => {           
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_class_sections?class_id="+class_id;
@@ -323,35 +353,77 @@
                 );
                 const result = await response.json();
                 // Data is present,see it on console
-                // console.log(result);
+                console.log("Data retrieve is:", result);
                
              if (response.status === 200) {
                 // Data is present,see it on console
                 sectionList = result.data;
                 
-                console.log('retrieving title');
-                console.log('section title = ',sectionList[0].section_title);
+                // console.log('retrieving title');
+                // console.log('section title = ',sectionList[0].section_title);
                 section_title_this = sectionList[section_id-1].section_title.toString();
 
                 document.getElementById("section_name").textContent=sectionList[section_id-1].section_title.toString();
-                //document.getElementById("quiz_title").textContent = 'Quiz - '+sectionList[section_id-1].section_title.toString();
-                // console.log(menuList);
+            
                 index =1;
                 var rows = "";
-                
+                var counter = 1;
                 var count =0;
+                let prevUnlocked = 0
+                
                  for (var section of sectionList) {
+                    
+                    //Check if section is completed
+                    //If not disable option
+                    sectionCheckURL = "http://localhost:5000/check_section_completion?user_id=" + sessionStorage["learner_id"] + "&section_id=" + section.section_id.toString();
                     redirectURL = "./view_sections.html?class_id=" + class_id+"&section_id="+index;
-                    rows += '<li id = '+index+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
-                    index = index+1;
+                    await axios.get(sectionCheckURL)
+                      .then(response => {
+                        console.log("Section title is: ", section.section_title);
+                        console.log("Result for checking is:", response.data);
+                        responseCheck = response.data;
+                        if(responseCheck == "Yes")
+                        {
+                          //Set to clickable
+                          console.log("Setting completed section!");
+                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                          prevUnlocked = 1
+                        }
+                        else if(count == 0) //If its the first section, set to clickable
+                        {
+                          console.log("Setting first section!");
+                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                          prevUnlocked = 0
+                        }
+                        else
+                        {
+                          if(prevUnlocked == 1) //If previous section is completed allow next section to be accessible
+                          {
+                            console.log("Setting previously completed section!");
+                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                            prevUnlocked = 0
+                          }
+                          else{
+                            //Set to unclickable 
+                            console.log("Setting incompleted section!");
+                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+' style="pointer-events: none; opacity: 0.5;"><i class="fas fa-pencil-alt"></i> Section '+index+': '+ section.section_title.toString()+'</a></li>'
+                            prevUnlocked = 0
+                          }
+                          
+                        }
+
+                      });
+                    
+                    //index += 1;
+                    count = count + 1;
+                    counter = counter + 1;
                 }
                 
-                //Set counter back to 0 
-               
-
-                
-                // add all the rows to the table
+        
+              
                 $('#section-menu').append(rows);
+                // Add to sideqbar
+                // $('#section-menu').append(rows);
 
                 } else if (response.status == 404) {
                     // No reservation
@@ -377,7 +449,9 @@
     
                     window.location.href = "./view_sections2.html?class_id=" + class_id+"&section_id="+section_id;
         }
-          
+        
+        //Retrieve section materials
+
         $(async() => {     
             console.log(section_id)      
             // Change serviceURL to your own
@@ -392,22 +466,25 @@
                 // Data is present,see it on console
                 // console.log(result);
                
-             if (response.status === 200) {
+             if (response.status === 200) 
+             {
                 // Data is present,see it on console
                 sectionList = result.data;
-                console.log(sectionList)
+                console.log("Section Data:" ,sectionList)
                 // console.log(menuList);
                 //var rows = "<thead class='thead-dark'><tr><th colspan='8'>Menu</th></tr><tr><th>Section</th><th>Section ID</th><th>Section Title</th><th>Action</th></tr></thead>";
                 var rows = "";
                 var count =0;
                 index =1;
-                for (var section of sectionList) {
+                for (var section of sectionList) 
+                {
                     //eachRow ="<td>"+section.material_id.toString()+ "</td>" +"<td class = 'section_id'>"+ section.material_title.toString()+ "</td>" +"<td>" +"<a href ="+section.material_content.toString()+ ">download materials</a>"+"</td>"+"<td>" +section.material_type.toString()+ "</td>";
 
                     //eachRow ="<td>" + index.toString() + "</td>" +"<td>" + section.section_id.toString() + "</td>" +"<td>" + section.section_title.toString() + "</td>" 
                     //Adding on more rows
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                   type = section.material_type.toString();
+<<<<<<< Updated upstream
                   console.log(section)
                   material_type ='';
                   if(type == 'pdf')
@@ -419,7 +496,45 @@
                   else if (type == 'ppt')
                   material_type = '<span class="badge badge-success badge-pill" style =  "float:left">'+type+'</span>';
                   rows +='<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
+=======
+                  console.log("Section content ",section)
+
+                  material_id = section.material_id.toString();
+                  //Check if material has been completed b4
+                  var materialCheckURL = "http://localhost:5000/check_material_completion?material_id="+material_id + "&user_id=" + sessionStorage["learner_id"];
+                  await axios.get(materialCheckURL)
+                    .then(response => {
+                    console.log("Result is:", response.data);
+                    let responseData = response.data;
+
+
+                    material_type ='';
+                    if(type == 'pdf')
+                      material_type = '<span class="badge badge-info badge-pill" style = "float:left">'+type+'</span>';
+                    else if (type == 'mp4')
+                      material_type = '<span class="badge badge-primary badge-pill" style = "float:left">'+type+'</span>';
+                    else if (type == 'doc')
+                      material_type = '<span class="badge badge-danger badge-pill" style =  "float:left">'+type+'</span>';
+                    else if (type == 'ppt')
+                      material_type = '<span class="badge badge-success badge-pill" style =  "float:left">'+type+'</span>';
+                    // rows +='<div><a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a></div>'   
+                    if(responseData == "yes")
+                    {
+                      rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" style="background-color:#99ff99;"><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="margin-top: 10px; margin-bottom: 20px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Mark Incomplete</button>';
+                    }
+                    else
+                    {
+                      rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" ><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="margin-top: 10px; margin-bottom: 20px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Mark Complete</button>';
+                    }
+                    //rows += '<a href="'+section.material_content.toString()+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" ><div class="flex-column">'+section.material_title.toString()+'<p></p>'+material_type+'</div><p style = "color:grey;font-weight:semi-bold">Click to view</p></a><button class="btn btn-outline-secondary" id="'+ section.material_id.toString() + '" style="margin-top: 10px; margin-bottom: 10px" type="button" target ='+section.material_id+' onclick="markAsCompleted(event)">Button</button>';
+
+                  
+                  });
+
+>>>>>>> Stashed changes
                   index = index+1;
+
+                  
                 }
                 //Set counter back to 0 
                 // add all the rows to the table
@@ -441,8 +556,9 @@
                     } // error
             });
 
-            $(async() => {     
-            console.log(section_id)      
+            
+            //Retrieve section quizzes
+            $(async() => {         
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
             try {
@@ -457,12 +573,18 @@
              if (response.status === 200) {
                 // Data is present,see it on console
                 section = result.data;
+                quiz_id = section['quiz_id']
                 
-                // console.log(menuList);
                 //var rows = "<thead class='thead-dark'><tr><th colspan='8'>Menu</th></tr><tr><th>Section</th><th>Section ID</th><th>Section Title</th><th>Action</th></tr></thead>";
                 var rows = "";
                 var count =0;
                 
+                var materialCheckURL = "http://localhost:5000/check_quiz_completion?quiz_id="+quiz_id + "&user_id=" + sessionStorage["learner_id"];
+                await axios.get(materialCheckURL)
+                  .then(response => {
+                    console.log("Result is:", response.data);
+                    responseQuiz = response.data;
+
                
                     //eachRow ="<td>"+section.material_id.toString()+ "</td>" +"<td class = 'section_id'>"+ section.material_title.toString()+ "</td>" +"<td>" +"<a href ="+section.material_content.toString()+ ">download materials</a>"+"</td>"+"<td>" +section.material_type.toString()+ "</td>";
 
@@ -470,13 +592,27 @@
                     //Adding on more rows
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                  
+<<<<<<< Updated upstream
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
                 rows +='<a href="take_quiz.html" id = "quiz_list_id"  target = '+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">attempt</p></a>'
                   
+=======
+                    quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
+                    if(responseQuiz == "Yes")
+                    {
+                      rows +='<a href="take_quiz.html" id = "quiz_list_id"  target ='+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center" style="background-color:#99ff99"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">Click to attempt</p></a>'
+
+                    }
+                    else
+                    {
+                      rows +='<a href="take_quiz.html" id = "quiz_list_id"  target ='+section.quiz_id+' class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center"  onclick="takeQuiz()";><div class="flex-column"><p id = "quiz_title">Quiz for </p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">Click to attempt</p></a>'
+                    }
+                  });
+>>>>>>> Stashed changes
                 
                 //Set counter back to 0 
                 // add all the rows to the table
-                $('#quiz-list').append(rows);
+                 $('#quiz-list').append(rows);
 
                 } else if (response.status == 404) {
                     // No reservation
@@ -498,10 +634,40 @@
             {
               alert("Hello! I am an alert box!!");
               qid =document.getElementById('quiz_list_id').getAttribute('target')
+<<<<<<< Updated upstream
               console.log('quiz id ,',qid)
+=======
+              console.log("Quiz id: " , qid);
+>>>>>>> Stashed changes
               sessionStorage.setItem('quiz_id', qid);
             }
-    
+
+            function markAsCompleted(event)
+            {
+              console.log("Material ID is:",event.target.id);
+              //Send request to mark material as completed
+              material_id = event.target.id;
+              var serviceURL = "http://localhost:5000/mark_material_completion?material_id="+material_id + "&user_id=" + sessionStorage["learner_id"] + "&section_id=" + section_id;
+              console.log(event);
+              console.log(serviceURL);
+
+              $(async() => {  
+              await axios.get(serviceURL)
+                .then(response => {
+                    console.log("Result is:", response.data);
+                    checkIfSectionIsCompleted(section_id)
+                });
+              location.reload();
+              return false;
+              });
+            }
+            
+            //Disable selection
+            const sidebarmenu = document.querySelector("#section-menu");
+
+
+            
+
         </script>
         <script src="drpdown/js/jquery-3.3.1.min.js"></script>
 		<script src="drpdown/js/jquery-migrate-3.0.0.min.js"></script>
