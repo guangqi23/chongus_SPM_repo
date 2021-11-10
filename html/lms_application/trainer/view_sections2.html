@@ -354,7 +354,10 @@
                     index = index+1;
                     last_section_id = section.section_id;
                 }
-                
+                if(section_id == last_section_id)
+                {
+                  last_section = true;
+                }
                 // add all the rows to the sidebar
                 $('#section-menu').append(rows);
                 
