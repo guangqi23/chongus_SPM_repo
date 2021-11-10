@@ -1,3 +1,14 @@
+<script>
+        var trainerID = String(sessionStorage.getItem("trainer_id"));
+        trainer_id = 1;
+        classURL = "";
+        axios.get(classURL)
+            .then(response => {
+                console.log("Timer is:", response.data);
+                timeValue = parseInt(response.data);
+                //timeValue = 15; Use if want to test timeout function
+            });
+</script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +16,6 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Trainers - Mentor Bootstrap Template</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -17,6 +27,7 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -24,9 +35,28 @@
   <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" 
+        crossorigin="anonymous">
+     
+        <!-- Latest compiled and minified JavaScript -->
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+        
+        <script 
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/sidebar.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Mentor - v4.6.0
@@ -34,14 +64,80 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500&display=swap">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link rel="stylesheet" href="drpdown/css/jquery.mCustomScrollbar.min.css">
+        <link rel="stylesheet" href="drpdown/css/animate.css">
+        <link rel="stylesheet" href="drpdown/css/style.css">
+        <link rel="stylesheet" href="drpdown/css/media-queries.css">
+
+        <!-- Favicon and touch icons -->
+        <link rel="shortcut icon" href="drpdown/ico/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="drpdown/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="drpdown/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="drpdown/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="drpdown/ico/apple-touch-icon-57-precomposed.png">
+  
 </head>
 
 <body>
+<!-- Wrapper -->
+
+    	<div class="wrapper">
+
+			<!-- Sidebar -->
+			<nav class="sidebar">
+				
+				<!-- close sidebar menu -->
+				<div class="dismiss">
+					<i class="fas fa-arrow-left"></i>
+				</div>
+				
+				<div class="logo">
+					<h3><a href="index.html">Bootstrap 4 Template with Sidebar Menu</a></h3>
+				</div>
+				
+				<ul class="list-unstyled menu-elements" id = 'section-menu'>
+					
+					
+				</ul>
+				
+				<div class="to-top">
+					<a class="btn btn-primary btn-customized-3" href="#" role="button">
+	                    <i class="fas fa-arrow-up"></i> Top
+	                </a>
+				</div>
+				
+				<div class="dark-light-buttons">
+					<a class="btn btn-primary btn-customized-4 btn-customized-dark" href="#" role="button">Dark</a>
+					<a class="btn btn-primary btn-customized-4 btn-customized-light" href="#" role="button">Light</a>
+				</div>
+			
+			</nav>
+        </div>
+
+
+        
+
+
+
+
+
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
-
+    <div class="content">
+			
+				<!-- open sidebar menu -->
+				<a class="btn btn-primary btn-customized open-menu" href="#" role="button">
+                    <i class="fas fa-align-left"></i> <span>Sections</span>
+                </a>
+			
+		        <!-- Top content -->
+		        
+		 </div>
       <h1 class="logo me-auto"><a href="index.html">Mentor</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
@@ -79,85 +175,35 @@
 
     </div>
   </header><!-- End Header -->
-
-  <main id="main" data-aos="fade-in">
+    
+  <main id="main">
 
     <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs">
+    <div class="breadcrumbs" data-aos="fade-in">
       <div class="container">
-        <h2>Trainers</h2>
-        <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
+        <h1 id = 'class_name'></h1>
+        <h2 id = 'section_name' style = 'color:white'></h2>
       </div>
     </div><!-- End Breadcrumbs -->
 
-    <!-- ======= Trainers Section ======= -->
-    <section id="trainers" class="trainers">
-      <div class="container" data-aos="fade-up">
-
-        <div class="row" data-aos="zoom-in" data-aos-delay="100">
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-            <div class="member">
-              <img src="assets/img/trainers/trainer-1.jpg" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>Walter White</h4>
-                <span>Web Development</span>
-                <p>
-                  Magni qui quod omnis unde et eos fuga et exercitationem. Odio veritatis perspiciatis quaerat qui aut aut aut
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-            <div class="member">
-              <img src="assets/img/trainers/trainer-2.jpg" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>Sarah Jhinson</h4>
-                <span>Marketing</span>
-                <p>
-                  Repellat fugiat adipisci nemo illum nesciunt voluptas repellendus. In architecto rerum rerum temporibus
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-            <div class="member">
-              <img src="assets/img/trainers/trainer-3.jpg" class="img-fluid" alt="">
-              <div class="member-content">
-                <h4>William Anderson</h4>
-                <span>Content</span>
-                <p>
-                  Voluptas necessitatibus occaecati quia. Earum totam consequuntur qui porro et laborum toro des clara
-                </p>
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section><!-- End Trainers Section -->
+    <!-- ======= Events Section ======= -->
 
   </main><!-- End #main -->
+    <body>
+        <div id="c1" class="container" style = 'margin-top: 50px;margin-bottom:50px;'>
+          <h3 style = 'margin-top:20px; align:right'>My Courses (Trainer)</h3>
+
+        </div>
+        <section id="events" class="events">
+      <div class="container" data-aos="fade-up">
+
+        <div class="row" id = 'trainer_class_list'>
+         
+        </div>
+      </div>
+    </section>
+
+    
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
@@ -199,6 +245,7 @@
             </ul>
           </div>
 
+
           <div class="col-lg-4 col-md-6 footer-newsletter">
             <h4>Join Our Newsletter</h4>
             <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
@@ -210,7 +257,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="container d-md-flex py-4">
 
       <div class="me-md-auto text-center text-md-start">
@@ -247,6 +294,47 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+<script>
+        
+        let params = new URLSearchParams(location.search);
+        trainer_id = params.get('trainer_id');
+        classesURL = 'http://localhost:5000/get_classes_of_trainer?trainer_id='+trainer_id;
+        axios.get(classesURL)
+            .then(response => {
+                classes = response.data;
+                for(k=0;k<classes.data.length;k++)
+                {
+                  url ='./view_sections2?class_id='+classes.data[k].class_id+'&course_id='+classes.courses[k].course_id+'&section_id=1';
+              
+                  row ='';
+                  row +=`<div class="col-md-6 d-flex align-items-stretch">`
+                  row +=`<div class="card">`
+                  row +=  `<div class="card-img">`
+                  row +=    `<img src="assets/img/events-2.jpg" alt="...">`
+                  row +=  `</div>`
+                  row +=  `<div class="card-body">`
+                  row +=    `<h5 class="card-title"><a href=${url} id ="class_title">${classes.courses[k].course_name} Class ${classes.data[k].class_id} </a></h5>`
+                  row +=    `<p class="fst-italic text-center" id = "datetimeclass">Start date: ${classes.data[k].startdate} End date:${classes.data[k].enddate}</p>`
+                  row +=    `<p class="card-text" id = "description">${classes.courses[k].course_description}</p>`
+                  row +=  `</div></div></div>`
+                  $("#trainer_class_list").append(row);
+                  console.log('appended')
+                }
+            });
+    
+        </script>
+        <script src="drpdown/js/jquery-3.3.1.min.js"></script>
+		<script src="drpdown/js/jquery-migrate-3.0.0.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="drpdown/js/jquery.backstretch.min.js"></script>
+        <script src="drpdown/js/wow.min.js"></script>
+        <script src="drpdown/js/jquery.waypoints.min.js"></script>
+        <script src="drpdown/js/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="drpdown/js/scripts.js"></script>
 
 </body>
 

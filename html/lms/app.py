@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy.sql.elements import Null
+import json
+import ast
 
 # from classes import Classes
 # from course_enrollment import Course_Enrollment
@@ -96,6 +98,16 @@ class Classes(db.Model):
     def get_classes_by_course(self, course_id):
         record = Classes.query.filter_by(course_id=course_id).all()
         return record
+    
+    def get_classes_by_cid(self,class_id,course_id):
+        record = Classes.query.filter_by(class_id=class_id,course_id=course_id).first()
+        return jsonify(
+            {
+                "code": 200,
+                "data": record.json()
+            })
+    
+
 
     #By Xing Jie 
     def get_class_startdate(self, class_id):
@@ -404,6 +416,28 @@ class FinalQuiz(db.Model):
         else:
             db.session.close()
             return exists
+        
+    def create_final_quiz(self,quiz_id):
+        final_quiz_ctrl = FinalQuiz(quiz_id = quiz_id, passing_score = 85 )
+        try:
+            db.session.add(final_quiz_ctrl)
+            db.session.commit()
+            db.session.close()
+        except Exception as error:
+            return jsonify (
+                {
+                    "code": 500,
+                    "message": "An error occured while creating final quiz " + str(error)
+                }
+            ), 500
+
+        return jsonify(
+            {
+                "code": 200,
+                "message": "The final quiz is created successfully"
+            }
+        ), 200
+        
 
 class Learner_Assignment(db.Model):
     __tablename__ = 'LEARNERASSIGNMENT'
@@ -462,6 +496,25 @@ class Learner_Assignment(db.Model):
                 "message": "The learner assignment record has been successfully deleted"
             }
         ), 200
+        
+    def get_learner_assignment_by_trainer_id(self,userid):
+        classes = Learner_Assignment.query.filter_by(userid=userid)
+        count =0
+        db.session.close()
+        for x in classes:
+            count+=1
+        if count!=0:
+            return jsonify(
+                {
+                    
+                    "data": [c.json() for c in classes]
+                })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no class under this trainer."
+            }
+        )
 
 class Learner_Badges(db.Model):
     __tablename__ = 'LEARNER_BADGES'
@@ -648,9 +701,62 @@ class multiplechoiceoptions(db.Model):
             }
         ), 200
 
+class sections_material_completion(db.Model):
+    __tablename__ = 'SECTIONS_MATERIALS_COMPLETION'
+    section_id = db.Column(db.Integer)
+    material_id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, primary_key=True)
+    completed = db.Column(db.Boolean)
+
+
+    def setMaterialAsCompleted(self, inputObj):
+        sectionId = inputObj['section_id']
+        materialId = inputObj['material_id']
+        userId = inputObj['user_id']
+
+        record = sections_material_completion.query.filter_by(userid = userId, material_id = materialId).first() is not None
+        if record:
+            record = sections_material_completion.query.filter_by(userid = userId, material_id = materialId).first()
+            db.session.delete(record)
+            db.session.commit()
+            return "Changed to incomplete!"
+        else:
+            newRecord = sections_material_completion(section_id = sectionId, material_id = materialId, userid = userId, completed = True )
+            db.session.add(newRecord)
+            db.session.commit()
+            return "Changed to complete"
     
+    def check_material_completion(self, inputObj):
+        materialId = inputObj['material_id']
+        userId = inputObj['user_id']
+
+        record = sections_material_completion.query.filter_by(userid = userId, material_id = materialId).first() is not None
+        if record:
+            return "Completed"
+        else:
+            return "Not completed"
+class SectionCompletion(db.Model):
+    __tablename__ = 'SECTION_COMPLETION'
+    section_id= db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer)
+    completed = db.Column(db.Boolean)
+
+    def check_section_completion(self, inputObj):
+        user_id = inputObj['user_id']
+        section_id = inputObj['section_id']
+        record = SectionCompletion.query.filter_by(userid = user_id, section_id = section_id).first() is not None
+        if record:
+            return "Yes"
+        else:
+            return "No"
     
-    
+    def set_section_completed(self, inputObj):
+        userid = inputObj['user_id']
+        section_id = inputObj['section_id']
+        newRecord = SectionCompletion(section_id = section_id, userid = userid, completed = True )
+        db.session.add(newRecord)
+        db.session.commit()
+        return "Setted section as completed!"
 
 class QuizQuestions(db.Model):
     __tablename__ = 'QUIZ_QUESTION'
@@ -840,6 +946,9 @@ class Quiz(db.Model):
         section = final_quiz_ctrl.get_quiz_section(quiz_id)
         return section
         
+    
+        
+        
 class Section(db.Model):
     __tablename__ = 'SECTIONS'
 
@@ -976,9 +1085,9 @@ class SectionMaterials(db.Model):
         return materials
 
     def create_material(self,section_id, material_title, material_content, material_type):
-        material_entry = SectionMaterials(section_id=section_id,material_title=material_title,material_content=material_content,material_type=material_type)
+        material = SectionMaterials(section_id=section_id, material_title=material_title, material_content=material_content, material_type=material_type)
         try: 
-            db.session.add(material_entry)
+            db.session.add(material)
             db.session.commit()
             db.session.close()
         except Exception as error:
@@ -1028,8 +1137,31 @@ class Trainer_Assignment(db.Model):
     def get_all_trainer_assignments(self):
         return Trainer_Assignment.query.all()
 
-    def assign_class(self):
+    def json(self):
+        return {"course_id": self.course_id, "class_id": self.class_id, "userid": self.userid}
 
+
+    def get_trainer_assignment_by_trainer_id(self,userid):
+        classes = Trainer_Assignment.query.filter_by(userid=userid)
+        count =0
+        db.session.close()
+        for x in classes:
+            count+=1
+        if count!=0:
+            return jsonify(
+                {
+                    
+                    "data": [c.json() for c in classes]
+                })
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no class under this trainer."
+            }
+        )
+
+
+    def assign_class(self):
         try:
             db.session.add(self)
             db.session.commit()
@@ -1174,6 +1306,17 @@ class Ungraded_quiz_score(db.Model):
         db.session.commit()
         db.session.close()
         return "Success"
+    
+    def checkAttempt(self, scoreObj):
+        user_id = scoreObj['user_id']
+        quiz_id = scoreObj['quiz_id']
+
+        exists = db.session.query(Ungraded_quiz_score.quiz_id).filter_by(quiz_id= quiz_id, userid = user_id).first() is not None 
+        if exists:
+            return "Yes"
+        else:
+            return "No"
+
 
 class Graded_quiz_score(db.Model):
     __tablename__ = 'GRADED_QUIZ_SCORE'
@@ -1195,6 +1338,18 @@ class Graded_quiz_score(db.Model):
         db.session.commit()
         db.session.close()
         return "Success"
+    
+    def checkAttempt(self, scoreObj):
+        user_id = scoreObj['user_id']
+        quiz_id = scoreObj['quiz_id']
+
+        exists = db.session.query(Graded_quiz_score.quiz_id).filter_by(quiz_id= quiz_id, userid = user_id).first() is not None 
+        if exists:
+
+
+            return "Yes"
+        else:
+            return "No"
 
 # list of controllers
 # 1. assign_controller (REMOVED)
@@ -1707,10 +1862,8 @@ def assign_course_learner():
     course_id = application['course_id']
     class_id = application['class_id']
     userid = application['learner_id']
-    
     print("HR is assigning and enrolling learner to a class of a course")
     course_enrollment_entry = Learner_Assignment(course_id = course_id, userid = userid, class_id = class_id)
-
     return course_enrollment_entry.assign_class()
 
 @app.route('/delete_assigned_classes', methods = ['POST'])
@@ -1943,9 +2096,17 @@ def view_Materials():
     if section_id >0:
         da = Section()
         materials = da.get_all_section_materials(section_id)
+        # materialz = ast.literal_eval(materials.data.decode('utf-8'))
+       
+        # print('This is standard output:', materialz ,file=sys.stdout)
+        # for material in materials:
+        #     print('All materials: ',material , file=sys.stderr)
+
+        
+        
         return materials
     else:
-        raise Exception ("Section Id must be above 0");
+        raise Exception ("Section Id must be above 0")
 
 @app.route("/view_class_sections", methods=['GET'])
 def view_Sections():
@@ -2020,7 +2181,12 @@ Routes of section_quiz_controler - ADD THIS LATER THERE ARE SOME MAJOR ISSUES
 #     da = SectionQuizController()
 #     status = da.get_quiz_questions(quiz_id)
 #     return status
-
+@app.route("/create_final_quiz",methods = ['GET'])
+def make_final_quiz():
+    quiz_id = int(request.args.get('quiz_id', None))
+    da = FinalQuiz()
+    status = da.create_final_quiz(quiz_id)
+    return status
 @app.route("/view_quiz_questions", methods=['GET'])
 def get_qn():
     qn_id = int(request.args.get('qn_id', None))
@@ -2502,6 +2668,178 @@ def get_all_enrolled_classes_of_user():
             }
         ), 404
 
+@app.route("/get_classes_of_trainer", methods = ['POST','GET'])
+def get_classes_of_learner():
+    #temp get method for testing
+    t_id = request.args.get('trainer_id', None)
+    application = request.get_json()
+    # print(application)
+    #user_id = application['trainer_id']
+    trainer_assignment = Trainer_Assignment()
+    result_arr = [];
+    courses_arr =[];
+    record = trainer_assignment.get_trainer_assignment_by_trainer_id(t_id);
+    #Object Response; need to convert it into data
+    result = json.loads(record.data)#Now its just a normal dictionary
+    for x in result['data']:
+        class_id = x['class_id'];
+        course_id=x['course_id'];
+        classes_class = Classes()
+        record = classes_class.get_classes_by_cid(class_id,course_id)
+        values = json.loads(record.data)
+        result_arr.append(values['data'])
+        courses = Course()
+        course_record = courses.get_course_by_id(course_id)
+        courses_arr.append(course_record.json())
+    print(courses_arr)
+    return jsonify(
+                {
+                    "code": 200,
+                    "data": [records for records in  result_arr],#convert back to a response object
+                    "courses": [records for records in courses_arr]
+                    
+                }
+            )
+    
+@app.route("/get_classes_of_learner", methods = ['POST','GET'])
+def get_classes_of_lear():
+    t_id = request.args.get('learner_id', None)
+    application = request.get_json()
+    learner_assignment = Learner_Assignment()
+    result_arr = [];
+    courses_arr =[];0
+    record = learner_assignment.get_learner_assignment_by_trainer_id(t_id);
+    result = json.loads(record.data)#Now its just a normal dictionary
+    for x in result['data']:
+        class_id = x['class_id'];
+        course_id=x['course_id'];
+        classes_class = Classes()
+        record = classes_class.get_classes_by_cid(class_id,course_id)
+        values = json.loads(record.data)
+        result_arr.append(values['data'])
+        courses = Course()
+        course_record = courses.get_course_by_id(course_id)
+        courses_arr.append(course_record.json())
+    print(courses_arr)
+    return jsonify(
+                {
+                    "code": 200,
+                    "data": [records for records in  result_arr],#convert back to a response object
+                    "courses": [records for records in courses_arr]
+                }
+            )
 
+
+
+@app.route("/mark_material_completion", methods = ['GET'])
+def mark_Material_complete():
+    material_id = int(request.args.get('material_id', None))
+    user_id = int(request.args.get('user_id', None))
+    section_id = int(request.args.get('section_id', None))
+    mc = sections_material_completion()
+    obj = {"material_id" : material_id, "user_id" : user_id, "section_id" : section_id}
+    result = mc.setMaterialAsCompleted(obj)
+
+
+    return result
+
+@app.route("/check_material_completion", methods = ['GET'])
+def check_material_completion():
+    material_id = int(request.args.get('material_id', None))
+    user_id = int(request.args.get('user_id', None))
+    mc = sections_material_completion()
+    obj = {"material_id" : material_id, "user_id" : user_id}
+    result = mc.check_material_completion(obj)
+    if result == "Completed":
+        return "yes"
+    else:
+        return "no"
+
+@app.route("/check_quiz_completion", methods= ["GET"])
+def check_quiz_completion():
+    quiz_id = int(request.args.get('quiz_id', None))
+    user_id = int(request.args.get('user_id', None))
+    fq = FinalQuiz()
+    result = fq.is_graded(quiz_id) #Check if quiz is graded
+    inputObj = {'quiz_id' : quiz_id, 'user_id': user_id}
+    if result == False:
+        #Ungraded quiz
+        uq = Ungraded_quiz_score()
+        result = uq.checkAttempt(inputObj)
+        return result
+        
+    else:
+        #Graded quiz
+        gq = Graded_quiz_score()
+        result = gq.checkAttempt(inputObj)
+        return result
+
+@app.route("/check_section_completion", methods=["GET"])
+def check_section_completion():
+    section_id = int(request.args.get('section_id', None))
+    user_id = int(request.args.get('user_id', None))
+    sc = SectionCompletion()
+    inputObj = {'section_id' : section_id, 'user_id' : user_id}
+    result = sc.check_section_completion(inputObj)
+    return result
+
+@app.route("/set_section_completion", methods=["GET"])
+def set_section_completion():
+    section_id = int(request.args.get('section_id', None))
+    user_id = int(request.args.get('user_id', None))
+    inputObj = {'section_id' : section_id, 'user_id' : user_id}
+    sc = SectionCompletion()
+    result = sc.set_section_completed(inputObj)
+    return result
+
+@app.route("/verify_section_completed", methods=["GET"])
+def verify_section_completed():
+    section_id = int(request.args.get('section_id', None))
+    user_id = int(request.args.get('user_id', None))
+
+    #Get all section materials
+    da = Section()
+    data = da.get_all_section_materials(section_id)
+    materials = json.loads(data.data)
+
+    #Get section quiz
+    da = Section()
+    quizData = da.get_latest_quiz(section_id)
+    quiz = json.loads(quizData.data)
+    quiz_id = quiz['data']['quiz_id']
+    
+    
+    for x in materials["data"]:  #Check if each material is completed by the user
+        #print('This is standard output',x ,file=sys.stdout)
+        mc = sections_material_completion()
+        obj = {"material_id" : x['material_id'], "user_id" : user_id}
+        result = mc.check_material_completion(obj)
+        if result == "Not completed":
+            return "Not completed"
+    
+    #Check if quiz attempted and passed if its a final quiz
+    fq = FinalQuiz()
+    result = fq.is_graded(quiz_id) #Check if quiz is graded
+    inputObj = {'quiz_id' : quiz_id, 'user_id': user_id}
+    if result == False:
+        #Ungraded quiz
+        uq = Ungraded_quiz_score()
+        result = uq.checkAttempt(inputObj)
+        if result == "No":
+            return "Quiz not attempted"
+        
+    else:
+        #Graded quiz
+        gq = Graded_quiz_score()
+        result = gq.checkAttempt(inputObj)
+        if result == "No":
+            return "Quiz not attempted"
+
+    inputObj = {'section_id' : section_id, 'user_id' : user_id}
+    sc = SectionCompletion()
+    result = sc.set_section_completed(inputObj)
+    return result
+    
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=5000, debug=True)
+    app.run(port=5000, debug=True)
+    

@@ -61,7 +61,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Create a quiz</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -87,7 +87,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Create a true false question</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -122,7 +122,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Create a MCQ</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -279,6 +279,7 @@
         console.log('getting section_id...');
         section_id = params.get('section_id');
         class_id = params.get('class_id');
+        is_graded = params.get('is_graded');
         var counter = 0;
         //$('#TrueFalse').on('hidden.bs.modal', '.modal', function () {
             //console.log("modal closed");
@@ -296,7 +297,7 @@
         var button = $(event.relatedTarget) 
         var modal = $(this)
         var recipient = button.data('whatever')
-        modal.find('.modal-title').text('Create a quiz for section_id '+section_id )
+        modal.find('.modal-title').text('Create a quiz' )
         modal.find('.modal-body input').val(recipient)
         })
         //reset everytime user try to create
@@ -346,6 +347,8 @@
                 ('There is an error creating the quiz, please try again later.<br />' + error);
                     } // error
             });
+
+
         }
 
 
@@ -443,6 +446,17 @@
             let len = qn_type.length;
             is_mcq_counter =0;
             is_tf_counter=0
+            if(is_graded == 'true')
+            {
+                 var serviceURL="http://localhost:5000/create_final_quiz?quiz_id="+quiz_id;
+                    var theRequest = $.ajax({
+                        url: serviceURL,
+                        method: 'GET',
+                    }).done(function(data){
+                            console.log(data);
+                            
+            })
+            }
             for (var x = 0; x < len; x++) 
                 {
                 order = x+1;
@@ -466,6 +480,10 @@
                     }).done(function(data){
                             console.log(data);
                             console.log(theRequest.responseText);
+                    if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                     });
                 }
                 else
@@ -534,6 +552,10 @@
                                         console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                             });
                                 if (actual_ans == qopt2)
                                 {
@@ -551,6 +573,10 @@
                                 }).done(function(data){
                                         console.log('added MCQ');
                                         console.log(data);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                                     
                             });
                                 if (actual_ans == qopt3)
@@ -570,6 +596,11 @@
                                         console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
+                                        
                             });
                                 if (actual_ans == qopt4)
                                 {
@@ -588,6 +619,10 @@
                                         console.log('added MCQ');
                                         console.log(data);
                                         console.log(theRequest.responseText);
+                                if(x==len)
+                                {
+                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                                }
                             }); 
                             is_mcq_counter+=1;                       
                         });                    
@@ -596,7 +631,7 @@
 
                 }
 
-            //window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+            
             }
 
 
