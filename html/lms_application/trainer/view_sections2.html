@@ -503,9 +503,11 @@
             
         function upload_materials() {
             section_id = params.get('section_id');
+            class_id = params.get('class_id');
+            course_id = params.get('course_id');
             console.log(section_id);
             console.log('initializing sections')    
-            window.location.href = "./upload_materials2.html?response=" + section_id;  
+            window.location.href = "./upload_materials2.html?class_id="+class_id+"&section_id=" + section_id;  
         }
         function create_quiz() {
             section_id = params.get('section_id');
