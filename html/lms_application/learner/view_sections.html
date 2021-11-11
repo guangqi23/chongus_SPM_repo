@@ -283,8 +283,9 @@
                     
                     //Check if section is completed
                     //If not disable option
+                    console.log("The section Id: ", section.section_id);
                     sectionCheckURL = "http://localhost:5000/check_section_completion?user_id=" + sessionStorage["learner_id"] + "&section_id=" + section.section_id.toString();
-                    redirectURL = "./view_sections.html?class_id=" + class_id+"&section_id="+section.section_id.toString();
+                    redirectURL1 = "./view_sections.html?class_id=" + class_id+"&section_id="+section.section_id.toString();
                     await axios.get(sectionCheckURL)
                       .then(response => {
                         console.log("Section title is: ", section.section_title);
@@ -294,13 +295,13 @@
                         {
                           //Set to clickable
                           console.log("Setting completed section!");
-                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
+                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL1+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                           prevUnlocked = 1
                         }
                         else if(count == 0) //If its the first section, set to clickable
                         {
                           console.log("Setting first section!");
-                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
+                          rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL1+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                           prevUnlocked = 0
                         }
                         else
@@ -308,13 +309,13 @@
                           if(prevUnlocked == 1) //If previous section is completed allow next section to be accessible
                           {
                             console.log("Setting previously completed section!");
-                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
+                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL1+'><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                             prevUnlocked = 0
                           }
                           else{
                             //Set to unclickable 
                             console.log("Setting incompleted section!");
-                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL+' style="pointer-events: none; opacity: 0.5;"><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
+                            rows += '<li id = '+counter+'><a class="scroll-link" href = '+redirectURL1+' style="pointer-events: none; opacity: 0.5;"><i class="fas fa-pencil-alt"></i> Section '+counter+': '+ section.section_title.toString()+'</a></li>'
                             prevUnlocked = 0
                           }
                           
