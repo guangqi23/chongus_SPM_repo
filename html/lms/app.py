@@ -2812,8 +2812,8 @@ def verify_section_completed():
     quizData = da.get_latest_quiz(section_id)
     quiz = json.loads(quizData.data)
     quiz_id = quiz['data']['quiz_id']
-    
-    if len(materials["data"]) != 0:
+
+    if materials["code"] != 404:
         for x in materials["data"]:  #Check if each material is completed by the user
             #print('This is standard output',x ,file=sys.stdout)
             mc = sections_material_completion()
@@ -2821,6 +2821,7 @@ def verify_section_completed():
             result = mc.check_material_completion(obj)
             if result == "Not completed":
                 return "Not completed"
+    
     
     #Check if quiz attempted and passed if its a final quiz
     fq = FinalQuiz()

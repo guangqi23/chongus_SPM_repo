@@ -84,6 +84,9 @@ class test_Sections_Materials(unittest.TestCase):
 
         self.assertEqual(material.get_section_material_type(), 'pdf')
 
+
+class test_sections_material_controller(TestApp):
+
     def test_get_materials_individual(self):
         material = SectionMaterials(
             material_id = '7',
@@ -103,17 +106,7 @@ class test_Sections_Materials(unittest.TestCase):
         self.assertIsNotNone(result)
 
     
-    # def test_create_material(self):
-       
-    #     material_id = '7',
-    #     section_id = '3',
-    #     material_title = "Test material title",
-    #     material_content = "https://happybucket7.s3.amazonaws.com/6715758.pdf?AWSAccessKeyId=ASIATQE7K7S4UEVS6Y5E",
-    #     material_type = "pdf"
-        
-    #     testSectionMaterial = SectionMaterials()
-    #     result = testSectionMaterial.create_material(section_id, material_title, material_content, material_type)
-    #     self.assertEqual(result.code == 200)
+    
 
 
 
