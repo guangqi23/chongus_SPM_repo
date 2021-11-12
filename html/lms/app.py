@@ -2425,5 +2425,5 @@ def get_first_sectionId():
     section_id = s.get_first_section_of_class(class_id)
     return section_id
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
     
