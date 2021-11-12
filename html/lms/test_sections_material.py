@@ -108,15 +108,14 @@ class test_sections_material_controller(TestApp):
     
     def test_create_material(self):
        
-        section_id = '3',
+        section_id = 3,
         material_title = "Test material title",
         material_content = "https://happybucket7.s3.amazonaws.com/6715758.pdf?AWSAccessKeyId=ASIATQE7K7S4UEVS6Y5E",
         material_type = "pdf"
         
         testSectionMaterial = SectionMaterials()
         result = testSectionMaterial.create_material(section_id, material_title, material_content, material_type)
-        print(result[1])
-        self.assertEqual(json.loads(result[0].data), 200)
+        self.assertEqual(result[1], 200)
 
 
 
