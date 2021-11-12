@@ -64,7 +64,7 @@ jQuery(document).ready(function() {
 		if (direction === 'down') {
 			$('.menu-elements li').removeClass('active');
 			$('.menu-elements a[href="#' + this.element.id + '"]').parents('li').addClass('active');
-	},
+	}
 	{
 		offset: '0'
 	});
