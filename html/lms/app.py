@@ -2812,7 +2812,7 @@ def verify_section_completed():
     quizData = da.get_latest_quiz(section_id)
     quiz = json.loads(quizData.data)
     quiz_id = quiz['data']['quiz_id']
-    print("The return is:",materials["code"])
+
     if materials["code"] != 404:
         for x in materials["data"]:  #Check if each material is completed by the user
             #print('This is standard output',x ,file=sys.stdout)
