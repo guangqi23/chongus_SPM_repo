@@ -15,7 +15,6 @@ let timeValue;
 timerURL = 'http://localhost:5000/get_Quiz_Timer?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
 axios.get(timerURL)
     .then(response => {
-        console.log("Timer is:", response.data);
         timeValue = parseInt(response.data);
         //timeValue = 15; Use if want to test timeout function
     });
@@ -23,7 +22,6 @@ axios.get(timerURL)
 timerURL = 'http://localhost:5000/get_Section_Title?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
 axios.get(timerURL)
     .then(response => {
-        console.log("Quiz title is: " , response.data);
         quiz_title.innerHTML = ("Section Quiz: " + String(response.data));
     });
 
@@ -101,7 +99,6 @@ nxt_btn.onclick = ()=>{
     }
     else
     {
-        console.log("All questions completed!");
         showResultBox();
     }
 
@@ -143,22 +140,17 @@ let crossIcon = '<div class="icon cross"><i class="fas fa-times"></i></div>';
 function optionSelected(answer)
 {
     let userAns = String(answer.textContent);
-    console.log("Selected option:" , userAns);
     let correctAns = String(questions[question_count].answer);
     let allOptions = option_list.children.length; //Can reuse 
-    console.log("Comparing: " , userAns, " vs " , correctAns);
     if(userAns == correctAns)
     {
         userScore += 1;
-        console.log(userScore);
         answer.classList.add("correct");
-        console.log("Correct!");
         answer.insertAdjacentHTML("beforeend", tickIcon);
     }
     else
     {
         answer.classList.add("wrong");
-        console.log("Wrong!");
 
         //If answers is incorrect then automatically show the correct answer
         for (let i = 0; i < allOptions; i++)
@@ -220,7 +212,6 @@ function showResultBox()
 function startTimer(time)
 {
     counter = setInterval(timer, 1000);
-    console.log(counter);
     function timer(){
         timeCount.textContent = time;
         time--;
@@ -241,7 +232,6 @@ function startTimer(time)
 function startTimerLine(time)
 {
     counterLine = setInterval(timer, 50);
-    console.log(counter);
     function timer(){
         time += 1;
         timeLine.style.width = time + "px";

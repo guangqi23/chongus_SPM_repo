@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app import *
 from app import app,db
 
-#Chu Wei Quan
+#Ong Guang Qi
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}

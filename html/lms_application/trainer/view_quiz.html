@@ -184,12 +184,8 @@
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="courses.html">Courses</a></li>
-          <li><a href="trainers.html">Create Quiz</a></li>
-
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
+          <li><a id="myCourses">Assigned Courses</a></li>
+          
       </nav><!-- .navbar -->
 
     </div>
@@ -232,54 +228,27 @@
 
   </main><!-- End #main -->
 
-
   <script>
         let params = new URLSearchParams(location.search);
-        console.log('getting section_id...');
         section_id = params.get('section_id');
         class_id = params.get('class_id');
         quiz_id = params.get('quiz_id');
-        console.log(quiz_id);
         var counter = 0;
-        //$('#TrueFalse').on('hidden.bs.modal', '.modal', function () {
-            //console.log("modal closed");
-            //$(this).remove();
-        //});
-                //make modal appear onload
         
-        
-        
-        
-        //modal onload settings
-        
-        //reset everytime user try to create
-        
-        
-        
-            // var time_limit = $('#time_limit').val()
-            //console.log(time_limit);
-            
-            ///create_quiz 
 
             $(async() => {              
             // Change serviceURL to your own
             var serviceURL = "http://127.0.0.1:5001/view_section_quiz?section_id="+section_id;
-            console.log('getting time...');
             try {
-                console.log('trying');
                 const response = await fetch(
                 serviceURL, { method: 'GET' }
                 );
                 const result = await response.json();
                 // Data is present,see it on console
-                console.log(result);
-                console.log(response.status);
                 if (response.status === 200) {
                     //display time
-                    console.log('getting time...2');
                     
                     time = result.data.time_limit;
-                    console.log(time);
                     document.getElementById("time_limit").value=time.toString();
                         throw response.status;
                     } else if (response.status == 404) {
@@ -303,7 +272,7 @@
         $(async() => {              
             // Change serviceURL to your own
             var serviceURL2 = "http://127.0.0.1:5002/get_Quiz_Questions?quiz_id="+quiz_id;
-            console.log('svcurl',quiz_id)
+            
             try {
                 const response =
                 await fetch(
@@ -311,25 +280,20 @@
                 );
                 const result1 = await response.json();
                 // Data is present,see it on console
-                // console.log(result);
                 if (response.status === 200) {
                 //display time
                     questions = result1.data;
                     arr_length = questions.length;
-                    console.log('ready...');
                     for (i=0;i<arr_length;i++){
                         
-                        console.log('printing questions');
                         
                         if (questions[i].question_type == 'TF')
                         {  
-                                console.log('entered loop');
                                 q_id_tf = questions[i].question_id;
                                 $(async() => {              
                                 // Change serviceURL to your own
                                 var serviceURL3 = "http://127.0.0.1:5002/get_TrueFalse?question_id="+q_id_tf;
 
-                                console.log(serviceURL3)
                                 try {
                                     const response =
                                     await fetch(
@@ -337,13 +301,9 @@
                                     );
                                     const result3 = await response.json();
                                     // Data is present,see it on console
-                                    // console.log(result);
                                     if (response.status === 200) {
                                     //display time
-                                        console.log(result3)
                                         tfquestion = result3.data;
-                                        console.log(tfquestion[0].question);
-                                        console.log(tfquestion[0].answer);
                                         question = tfquestion[0].question;
                                         card_type = 'TF';
                                         
@@ -356,10 +316,8 @@
                                         {
                                             answer = 'False';
                                         }
-                                        console.log('appending...')
                                         card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = "width:100%!;margin-top;margin-left:30px;margin-right:30px" ><div class = ' p-2' style = 'max-width:100%'><div class="course-item" id =#><div class="course-content" style = 'width:100%'><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer" target = ${answer}>Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div></div></div>`;
                                         $("#quiz_card").append(card);
-                                        console.log('appended');
                                         
                                         throw response.status;
                                     } 
@@ -384,8 +342,6 @@
                         {
                             //Insert MCQ
                             var question ='';
-                            console.log('passhere');
-                            console.log('getting mcq',questions[i]);
                             q_id_mcq = questions[i].question_id;
                             mcq_question =  questions[i].question;
                             $(async() => {              
@@ -399,25 +355,17 @@
                                     );
                                     const result3 = await response.json();
                                     // Data is present,see it on console
-                                    // console.log(result);
                                     if (response.status === 200) {
                                     //display time
-                                        console.log('result3',result3)
                                         mcqquestion = result3.data;
                                         answer =0;
-                                        console.log("successful mcq response ",mcqquestion[0].correct_option);
                                         for (j=0;j<4;j++){
                                             if(mcqquestion[j].correct_option == true){
                                             answer = j
                                             }
                                         }
-                                        console.log("successful mcq response2");
                                         answer_arr = ['A','B','C','D'];
                                      
-                                        console.log('option contents:');
-                                        console.log(mcqquestion[0].option_content);
-                                        console.log('option contents end');
-                                        console.log('printing mcq');
                                         card_type = 'MCQ';
                                         //card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
                                         //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
@@ -466,9 +414,6 @@
     function get_truefalse(quiz)
         {
             arr_size = quiz.data.size;
-            console.log(quiz)
-            console.log('size = ',arr_size)
-
         }
 
 
@@ -480,46 +425,33 @@
         {
             counter +=1;
             var question =$('#tf_question1').val();
-            console.log(question);
-            //alert($('input[name=tf-options]:checked').val());
-            //var selected =document.querySelector('input[name="tf-options"]:checked').value
-            //console.log(selected);
             var answer ;
             var choice;
             var  selected = $("#tf_options1");
 
             if (selected[0].checked == 0){
-                console.log('answer is: False')
                 choice = 0;
                 answer = 'False'
             }
             else
             {
-                console.log('answer is: True')
                 choice = 1;
                 answer = 'True'
             }
             card_type = 'TF';
             //card = `<tr><td><div class="card"> <h5 class="card-header">Question (True/False) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`+question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
-            console.log('appending...')
             card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = "width:100%!;margin-top;margin-left:30px;margin-right:30px" ><div class = ' p-2' style = 'max-width:100%'><div class="course-item" id = ${quiz_card}><div class="course-content" style = 'width:100%'><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer" target = ${choice}>Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div></div></div>`
             $("#quiz_card").append(card);
-            console.log('appended');
         }
 
 
         function create_mcq(){
             counter +=1;
             var question =$('#mcq_question1').val();
-            console.log(question);
-            //alert($('input[name=tf-options]:checked').val());
-            //var selected =document.querySelector('input[name="tf-options"]:checked').value
-            //console.log(selected);
             var opt_text1 =$('#mcq_text1').val();
             var opt_text2 =$('#mcq_text2').val();
             var opt_text3 =$('#mcq_text3').val();
             var opt_text4 =$('#mcq_text4').val();
-            console.log(opt_text4);
             var answer ;
             var choice;
             var  opt1 = $("#mcq_options1");
@@ -552,7 +484,6 @@
             //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
             card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer"target = ${answer}> Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><div class ="mcqoption1" target =  ${opt_text1}> A) ${opt_text1}</div><div class ="mcqoption2"target =  ${opt_text2}> B) ${opt_text2}</div><div class ="mcqoption3"target =  ${opt_text3}> C) ${opt_text3}</div><div class ="mcqoption4" target =  ${opt_text4}> D)${opt_text4}</div></div></div>`
             $("#quiz_card").append(card);
-            console.log('appended');
 
         }
 
@@ -580,8 +511,8 @@
                         url: serviceURL,
                         method: 'GET',
                     }).done(function(data){
-                            console.log(data);
-                            console.log(theRequest.responseText);
+                            // console.log(data);
+                            // console.log(theRequest.responseText);
                     });
                 }
                 else
@@ -593,26 +524,15 @@
                     var opt2 = document.getElementsByClassName('mcqoption2');
                     var opt3 = document.getElementsByClassName('mcqoption3');
                     var opt4 = document.getElementsByClassName('mcqoption4');
-                    console.log('opt1',opt1[0]);
                     qanswer = answer[x].getAttribute('target');
                     qquestion = question[x].getAttribute('target');
                     qopt1= opt1[is_mcq_counter].getAttribute('target');
                     qopt2= opt2[is_mcq_counter].getAttribute('target');
                     qopt3= opt3[is_mcq_counter].getAttribute('target');
                     qopt4= opt4[is_mcq_counter].getAttribute('target');
-                    /*var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
-                    var theRequest = $.ajax({
-                        url: serviceURL,
-                        method: 'GET',
-                    }).done(function(data){
-                            console.log(data);
-                            qn_id = data.mcq_id;
-                            console.log(qn_id);
-                            console.log(theRequest.responseText);
-                    });*/
+                    
                     $(async() => {           
                     var serviceURL ="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
-                    console.log('hehe');
                     try {
                         const response =
                         await fetch(
@@ -621,7 +541,6 @@
                         const result = await response.json();
 
                         if (response.status === 200) {
-                            console.log('successfully added into db');
                             qn_id = result.id;
                             option_list =[]
                             option_list.push(qopt1);
@@ -649,24 +568,19 @@
 
                             for (var y = 0; y < 4; y++) 
                             {
-                                console.log(actual_ans);
                                 var correct_option=0;
                                 if (y== actual_ans){
                                     correct_option=1;
-                                    console.log('option',qanswer)
-                                    console.log('values',qopt3)
                                 }
                                 
                                 opt_order = y+1;
-                                console.log('co',correct_option);
                                 var serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
-                                console.log(serviceURL);
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log(data);
-                                        console.log(theRequest.responseText);
+                                        // console.log(data);
+                                        // console.log(theRequest.responseText);
                             });
                             }
                         }

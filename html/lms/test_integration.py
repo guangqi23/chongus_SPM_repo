@@ -267,13 +267,6 @@ class test_app(TestApp):
         self.assertEqual(response.status_code,200)
         db.session.close()
 
-    def test_create_section(self):
-
-        with app.test_client() as c:
-            r = c.get('/create_section', query_string={'class_id': 1, 'section_title': "section1"})
-
-        self.assertEqual(r.status_code,200)
-
     def test_create_quiz(self):
         
         with app.test_client() as c:

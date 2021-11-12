@@ -72,33 +72,23 @@
 
     //Seeing the Menu for the reservation
 
-            // let params = new URLSearchParams(location.search);
-            //var restaurantID = params.get('query');
-            // console.log("restaurantID", restaurantID);
         let params = new URLSearchParams(location.search);
         section_id = params.get('response');
-        console.log(section_id);
-        console.log('initializing sections')
 
         
         $(async() => {           
             // Change serviceURL to your own
             var serviceURL = "http://127.0.0.1:5001/view_section_materials?section_id="+section_id;
-            console.log('hehe');
             try {
                 const response =
                 await fetch(
                 serviceURL, { method: 'GET' }
                 );
                 const result = await response.json();
-                // Data is present,see it on console
-                // console.log(result);
                
              if (response.status === 200) {
                 // Data is present,see it on console
                 sectionList = result.data;
-                console.log(sectionList)
-                // console.log(menuList);
                 var rows = "";
                 var count =0;
                 index =1;
@@ -136,14 +126,10 @@
         <script>
         function upload_materials() {
             section_id = params.get('response');
-            console.log(section_id);
-            console.log('initializing sections')    
             window.location.href = "./upload_materials?response=" + section_id;  
         }
         function create_quiz() {
             section_id = params.get('response');
-            console.log(section_id);
-            console.log('initializing sections')    
             window.location.href = "./create_quiz?response=" + section_id;  
         }
         </script>

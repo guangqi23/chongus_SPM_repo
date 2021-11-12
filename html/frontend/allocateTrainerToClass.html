@@ -22,9 +22,7 @@
 <script>
 
     const course_id = new URLSearchParams(window.location.search).get('course_id');
-    console.log(course_id);
     const class_id = new URLSearchParams(window.location.search).get('class_id');
-    console.log(class_id);
 
 
     function get_all_trainers(){
@@ -32,7 +30,6 @@
         .get('http://127.0.0.1:5002/get_all_trainers',{})
         .then(res =>{
             records = res.data.data.record;
-                console.log(records);
                 trnr_id_arr = [];
                 let value = `<table class = 'table' id = 'myTable'>
                             <thead class = 'thead-dark'>
@@ -74,7 +71,6 @@
 
                   buttonToAssign = 'buttonToAssignUser_' + trnr_id;
                   el = document.getElementById(buttonToAssign);
-                  // console.log(el)
                   el.addEventListener('click',function(event){
                     assignTrainer(course_id,class_id,trnr_id);
                   }) 
@@ -99,7 +95,6 @@
             )
         .then(res =>{
                     data = res.data;
-                    console.log(data);
                     alert("This Trainer has successfully been assigned a Class " + class_id +" of Course " + course_id);
                     window.location = ('./assignTrainer.html')
         })

@@ -103,7 +103,6 @@
           .then(res => 
             {
                 records = res.data.data.record;
-                // console.log(res.data)
                 let value = '';
                     for(course of records) {
                       let courseid = course.course_id
@@ -183,8 +182,7 @@
           )
           .then(res =>
             {
-              class_records = res.data.data.record;
-              // console.log(res.data)
+              class_records = res.data.data.record:
               string = ""
               for(record of class_records){
                 let class_id = record.class_id;
@@ -202,9 +200,6 @@
       }
 
       function enroll_into_class(courseid, class_id, userId){
-        // console.log(courseid)
-        // console.log(class_id)
-        // console.log(userId)
         axios
           .post(
             'http://127.0.0.1:5010/enroll', {user_id: userId, course_id: courseid, class_id: class_id
@@ -213,7 +208,6 @@
           .then(res =>
             {
               enroll_status = res;
-              console.log("Success")
             }
           )
           .catch(error => console.error(error.response.data))
@@ -223,20 +217,6 @@
       viewEnrolledCourses(4);
       viewEligibleCourses(6);
       viewUneligibleCourses(6);
-
-      // function test() {
-      //   const request = new XMLHttpRequest();
-          
-      //       request.onreadystatechange = function(){
-      //           if (this.readyState ==   4 && this.status==200){
-      //               console.log(this.responseText);
-      //               let data = JSON.parse(this.responseText).classes;
-      //               console.log(typeof(data));
-                  
-      //       }
-      //       request.open("GET", "", true);
-      //       request.send();
-      // }
 
     </script>
 

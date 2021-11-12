@@ -32,7 +32,7 @@ import ast
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://admin:wangxingjie@spmdatabase.ca0m2kswbka0.us-east-2.rds.amazonaws.com:3306/LMSDB2'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/lmsdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app, session_options={
@@ -63,11 +63,11 @@ class User(db.Model):
     def json(self):
         return {"user_id": self.userid, "name": self.name, "email": self.email, "department": self.department, "designation": self.designation}
 
-    def get_name(self):
-        return self.name
+    # def get_name(self):
+    #     return self.name
 
-    def get_user_id(self):
-        return self.userid
+    # def get_user_id(self):
+    #     return self.userid
 
 class Classes(db.Model):
     __tablename__ = 'CLASSES'
@@ -107,8 +107,6 @@ class Classes(db.Model):
                 "data": record.json()
             })
     
-
-
     #By Xing Jie 
     def get_class_startdate(self, class_id):
         class_A = Classes.query.filter_by(class_id = class_id).first()
@@ -217,7 +215,7 @@ class Course_Enrollment(db.Model):
                 })
 
             return jsonify({
-                    "code": 500,
+                    "code": 200,
                     "message": "Changed enrollment status to True!"
                 })
 
@@ -233,7 +231,7 @@ class Course_Enrollment(db.Model):
                 })
 
             return jsonify({
-                    "code": 500,
+                    "code": 200,
                     "message": "Changed enrollment status to False!"
                 })
     
@@ -352,15 +350,15 @@ class Course(db.Model):
             }
         ), 200
     
-    def get_vacancies_by_courses(self, course_id):
-        vacant_classes = Classes()
-        class_by_course = vacant_classes.get_classes_by_course(course_id)
-        course_vacancies = 0
+    # def get_vacancies_by_courses(self, course_id):
+    #     vacant_classes = Classes()
+    #     class_by_course = vacant_classes.get_classes_by_course(course_id)
+    #     course_vacancies = 0
 
-        for a_class in class_by_course:
-            course_vacancies += a_class.slots
+    #     for a_class in class_by_course:
+    #         course_vacancies += a_class.slots
         
-        return course_vacancies
+    #     return course_vacancies
 
     def change_start_end_date(self, course_id, start_date, end_date):
         record = Course.query.filter_by(course_id = course_id).first()
@@ -403,10 +401,6 @@ class FinalQuiz(db.Model):
     def get_passing_score(self):
         return self.passing_score
 
-    def get_quiz_section(self,quiz_id):
-        section = FinalQuiz.query.filter_by(quiz_id = quiz_id).first()
-        return section
-
     def is_graded(self, quiz_id): #Check if quiz_id is in table (If so then quiz is graded)
         exists = db.session.query(FinalQuiz.quiz_id).filter_by(quiz_id= quiz_id).first() is not None 
         if exists:
@@ -438,7 +432,6 @@ class FinalQuiz(db.Model):
             }
         ), 200
         
-
 class Learner_Assignment(db.Model):
     __tablename__ = 'LEARNERASSIGNMENT'
     course_id = db.Column(db.Integer, primary_key=True)
@@ -518,8 +511,8 @@ class Learner_Assignment(db.Model):
 
 class Learner_Badges(db.Model):
     __tablename__ = 'LEARNER_BADGES'
-
-    userid = db.Column(db.Integer, primary_key=True)
+    
+    userid = db.Column(db.Integer, db.ForeignKey('USERS.userid'), primary_key=True)
     course_id = db.Column(db.Integer, primary_key=True)
 
     def json(self):
@@ -530,9 +523,10 @@ class Learner_Badges(db.Model):
         return record
 
 class Learner(User):
-    __tablename__ = 'learners'
+    __tablename__ = 'LEARNERS'
 
     __mapper_args__ = {'polymorphic_identity': 'learner'}
+    userid = db.Column(db.Integer, db.ForeignKey('USERS.userid'), primary_key=True)
 
     def get_all_learners(self):
         records = Learner.query.filter_by(designation='Junior Engineer').all()
@@ -552,57 +546,50 @@ class Learner(User):
         course_class = Course()
         classes_class = Classes()
         courses = [course_class.get_course_by_id(a_course.course_id) for a_course in course_list]
-        classes = []
-        for a_course in course_list:
-            classinfo = classes_class.get_classes_by_course(a_course.course_id)
-            for a_class in classinfo:
-                classes.append(a_class)
+        classes = [classes_class.get_classes_by_class_id(a_course.course_id, a_course.class_id) for a_course in course_list]
         return [courses, classes]
     
-    def get_enrolled_courses(self, user_id):
+    def get_enrolled_courses(self, userid):
         enrolled_courses = Course_Enrollment()
-        enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(user_id)        
+        enrolled_courses_list = enrolled_courses.get_user_enrolled_courses(userid)        
         output = [enrolled_course for enrolled_course in enrolled_courses_list if enrolled_course.is_enrolled == 1]
         return output
     
-    def get_enrolled_course_class(self, user_id): 
-        enrolled_courses = self.get_enrolled_courses(user_id)  
+    def get_enrolled_course_class(self, userid): 
+        enrolled_courses = self.get_enrolled_courses(userid)  
         enrolled_courses_list = [enrolled_course for enrolled_course in enrolled_courses]
         output = self.get_course_class(enrolled_courses_list)
         return output
 
-    def get_assigned_courses(self, user_id): 
+    def get_assigned_courses(self, userid): 
         assigned_courses = Learner_Assignment()
-        assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
-
+        assigned_courses_list = assigned_courses.get_user_assigned_courses(userid)
         output = [assigned_course for assigned_course in assigned_courses_list]
-
         return output
     
-    def get_assigned_course_class(self, user_id): 
+    def get_assigned_course_class(self, userid): 
         assigned_courses = Learner_Assignment()
-        assigned_courses_list = assigned_courses.get_user_assigned_courses(user_id)
+        assigned_courses_list = assigned_courses.get_user_assigned_courses(userid)
         output = self.get_course_class(assigned_courses_list)
         return output
 
-    def get_completed_courses(self, user_id):
+    def get_completed_courses(self, userid):
         completed_courses = Learner_Badges()
         course_class = Course()
-        completed_courses_list = completed_courses.get_learner_badges(user_id)
+        completed_courses_list = completed_courses.get_learner_badges(userid)
         courses = [course_class.get_course_by_id(a_course.course_id) for a_course in completed_courses_list ]
         return courses
 
-    def get_remaining_courses(self, user_id):
+    def get_remaining_courses(self, userid):
         learner_badges = Learner_Badges()
         course_class = Course()
         course_list = [course.course_id for course in course_class.get_all_courses()]
-        completed_courses = [course.course_id for course in learner_badges.get_learner_badges(user_id)]
-        enrolled_courses = [course for course in self.get_enrolled_courses(user_id)]
-        assigned_courses = [course.course_id for course in self.get_assigned_courses(user_id)]
-        # print(assigned_courses)
+        completed_courses = [course.course_id for course in learner_badges.get_learner_badges(userid)]
+        enrolled_courses = [course.course_id for course in self.get_enrolled_courses(userid)]
+        assigned_courses = [course.course_id for course in self.get_assigned_courses(userid)]
         completed_enrolled_assigned_courses = completed_courses + enrolled_courses + assigned_courses
         remaining_course = [course for course in course_list if course not in completed_enrolled_assigned_courses]
-        output = [course_class.get_course_by_id(course_query) for course_query in remaining_course if course_class.get_vacancies_by_courses(course_query) > 0]
+        output = [course_class.get_course_by_id(course_query) for course_query in remaining_course]
         return output
 
     def get_eligible_courses(self, userid):
@@ -611,12 +598,12 @@ class Learner(User):
         learner_badges = Learner_Badges()
         completed_courses = learner_badges.get_learner_badges(userid)
 
-        course_list = [course.course_id for course in self.get_remaining_courses(userid)]
+        course_list = [course for course in self.get_remaining_courses(userid)]
         course_query_list = []
 
         for course_query in course_list: 
-            prereqlist = course_pre_req.prereq_by_course(course_query)
-            course_info = course_class.get_course_by_id(course_query)
+            prereqlist = course_pre_req.prereq_by_course(course_query.course_id)
+            course_info = course_class.get_course_by_id(course_query.course_id)
             if len(prereqlist) == 0 and course_info.startenrollmentdate and course_info.endenrollmentdate != '': 
                 course_query_list.append(course_query)
             else: 
@@ -626,30 +613,39 @@ class Learner(User):
             
         return course_query_list
 
-    def get_eligible_classes(self, user_id):
+    def get_eligible_classes(self, userid):
         course_class = Course()
         classes_class = Classes()
-        course_query_list= self.get_eligible_courses(user_id)
+        course_query_list= self.get_eligible_courses(userid)
         courses = []
         classes = []
         for course in course_query_list:
-            course_classes = classes_class.get_classes_by_course(course)
+            course_classes = classes_class.get_classes_by_course(course.course_id)
             for a_class in course_classes:
                 if a_class.slots > 0: 
-                    course_info = course_class.get_course_by_id(course)
+                    course_info = course_class.get_course_by_id(course.course_id)
                     courses.append(course_info)
                     classes.append(a_class)
         
         return [courses, classes]
     
-    def get_uneligible_course_class(self, user_id):
-        course_class = Course()
-        course_list = [course.course_id for course in self.get_remaining_courses(user_id)]
-        eligible_courses = [course for course in self.get_eligible_courses(user_id)]
+    def get_uneligible_course_class(self, userid):
+        course_list = [course.course_id for course in self.get_remaining_courses(userid)]
+        eligible_courses = [course.course_id for course in self.get_eligible_courses(userid)]
         other_courses = [course for course in course_list if course not in eligible_courses]
-        uneligible_courses = [course_class.get_course_by_id(course_query) for course_query in other_courses]
-        output = self.get_course_class(uneligible_courses)
-        return output
+        course_class = Course()
+        classes_class = Classes()
+        courses = []
+        classes = []
+        for a_course in other_courses:
+            course_classes = classes_class.get_classes_by_course(a_course)
+            for a_class in course_classes:
+                course_info = course_class.get_course_by_id(a_course)
+                courses.append(course_info)
+                classes.append(a_class)
+                print(courses)
+                print(classes)
+        return [courses, classes]
 
 class multiplechoiceoptions(db.Model):
     __tablename__ = 'MCQ_OPTIONS'
@@ -735,6 +731,7 @@ class sections_material_completion(db.Model):
             return "Completed"
         else:
             return "Not completed"
+
 class SectionCompletion(db.Model):
     __tablename__ = 'SECTION_COMPLETION'
     section_id= db.Column(db.Integer, primary_key=True)
@@ -945,10 +942,7 @@ class Quiz(db.Model):
         final_quiz_ctrl = FinalQuiz()
         section = final_quiz_ctrl.get_quiz_section(quiz_id)
         return section
-        
-    
-        
-        
+             
 class Section(db.Model):
     __tablename__ = 'SECTIONS'
 
@@ -1002,26 +996,26 @@ class Section(db.Model):
             }
         )
     
-    def create_section(self,class_id,section_title):
-        section_entry = Section(class_id = class_id,section_title=section_title)
-        try: 
-            db.session.add(section_entry)
-            db.session.commit()
-            db.session.close()
-        except Exception as error:
-            return jsonify (
-                {
-                    "code": 500,
-                    "message": "An error occured while creating the section. " + str(error)
-                }
-            ), 500
+    # def create_section(self,class_id,section_title):
+    #     section_entry = Section(class_id = class_id,section_title=section_title)
+    #     try: 
+    #         db.session.add(section_entry)
+    #         db.session.commit()
+    #         db.session.close()
+    #     except Exception as error:
+    #         return jsonify (
+    #             {
+    #                 "code": 500,
+    #                 "message": "An error occured while creating the section. " + str(error)
+    #             }
+    #         ), 500
 
-        return jsonify(
-            {
-                "code": 200,
-                "message": "The section has been successfully created"
-            }
-        ), 200
+    #     return jsonify(
+    #         {
+    #             "code": 200,
+    #             "message": "The section has been successfully created"
+    #         }
+    #     ), 200
 
     def get_all_section_materials(self, section_id):
         section_materials_ctrl = SectionMaterials()
@@ -1322,7 +1316,6 @@ class Ungraded_quiz_score(db.Model):
         else:
             return "No"
 
-
 class Graded_quiz_score(db.Model):
     __tablename__ = 'GRADED_QUIZ_SCORE'
 
@@ -1363,145 +1356,6 @@ class Graded_quiz_score(db.Model):
 # 4. sectionmaterialcontroller 
 # 5. sectionquizcontroller
 # 6. view_controller 
-
-'''
-Functionalities of assign_controller
-'''
-# class AssignController(): # all functionalities of this controller have been moved into the routes
-    # def assign_trainer(self,course_id,class_id,hr_id,trainer_id):
-
-    #     usr = User()
-    #     trnr = Trainer()
-
-    #     valid_hr = usr.is_hr(hr_id)
-
-    #     valid_trnr = trnr.is_trainer(trainer_id)
-
-    #     course_to_assign = request.get_json()
-    #     print("Request to assign course to user is received")
-
-    #     if valid_hr and valid_trnr:
-    #         #return assignment of course
-
-    #         print("HR is assigning a class of a course to a trainer")
-
-    #         userid = course_to_assign['trainer_id']
-    #         course_id = course_to_assign['course_id']
-    #         class_id = course_to_assign['class_id']
-
-    #         trainer_assignement_entry = Trainer_Assignment(course_id = course_id, class_id = class_id,userid = userid)
-
-    #         return trainer_assignement_entry.assign_class()
-        
-    #     else:
-    #         #reject user from assigning courses
-    #         return jsonify(
-    #             {
-    #                 "code": 404,
-    #                 "message": "You either have no permission as a HR or the assigned user is not a trainer"
-    #             }
-    #         ), 404
-
-    # def get_assignment_trainer(self,userid):
-
-    #     trnr = Trainer()
-        
-    #     if trnr:
-
-    #         print("Retrieving Trainer ", userid , "'s assigned classes")
-    #         return trnr.get_assigned_classes(userid)
-            
-    #     else:
-    #         #reject user from retrieving
-    #         return jsonify(
-    #             {
-    #                 "code": 404,
-    #                 "message": "user id does not belong to a valid Trainer"
-    #             }
-    #         ), 404
-
-    # def assign_learner(self,course_id,class_id,hr_id,learner_id):
-
-    #     usr = User()
-
-    #     lrnr = Learner()
-
-    #     valid_hr = usr.is_hr(hr_id)
-    #     valid_lrnr = lrnr.is_learner(learner_id)
-
-    #     class_to_assign = request.get_json()
-
-    #     if valid_hr and valid_lrnr:
-
-    #         print("HR is assigning and enrolling learner to a class of a course")
-
-
-    #         userid = class_to_assign['learner_id']
-    #         course_id = class_to_assign['course_id']
-    #         class_id = class_to_assign['class_id']
-
-    #         course_enrollment_entry = Learner_Assignment(course_id = course_id, userid = userid, class_id = class_id)
-
-    #         return course_enrollment_entry.assign_class()
-
-'''
-Functionalities of class_controller.... THERE ARE NONE
-'''
-
-
-'''
-Functionalities of course_controller
-'''
-# class CourseController(): # all functionalities of this controller have been moved into the routes
-    # def create_course(self, user_id, application):
-    #     # employee_da = EmployeeDataAccess()
-    #     print("Request to create a course received")
-
-    #     # call validate_hr in employee data access class
-    #     # valid_hr = employee_da.validate_hr(user_id)
-
-    #     # if valid_hr: # boolean return
-    #     print("HR is requesting to create a new course")
-    #     course_name = application["course_name"]
-    #     course_description = application["course_description"]
-    #     start_enrollment_date = application["start_enrollment_date"]
-    #     end_enrollment_date = application["end_enrollment_date"]
-
-    #     # check that all fields are not empty
-    #     if all(field is not None for field in [course_name, course_description, start_enrollment_date, end_enrollment_date]):
-    #         course_entry = Course(course_name=course_name, course_description=course_description, startenrollmentdate=start_enrollment_date, endenrollmentdate=end_enrollment_date)
-            
-    #         status = course_entry.add_course()
-    #         # print(status["code"])
-    #         return status
-
-    # def delete_course(self, user_id, application):
-    #     print("HR is requesting to delete an existing course")
-    #     course_id = application["course_id"]
-    #     course_entry = Course()
-    #     return course_entry.del_course(course_id)
-
-    #Xing Jie parts
-    # def retrieveAllEnrollment(self):
-    #     enrollmentDA = CourseEnrollmentDataAccess()
-    #     enrollments = enrollmentDA.retrieveAllEnrollments()
-    #     return enrollments
-
-    # def changeEnrollmentStatus(self, enrollment_id):
-    #     enrollmentDA = Course_Enrollment()
-    #     output = enrollmentDA.set_enrollment_status(enrollment_id)
-    #     return output
-
-    # def retrieveEnrollmentsBeforeStart(self):
-    #     enrollmentDA = Course_Enrollment()
-    #     output = enrollmentDA.retrieveEnrollmentsBeforeStart()
-    #     return output
-     
-    # def rejectEnrollment(self, enrollment_id):
-    #     enrollmentDA = Course_Enrollment()
-    #     output = enrollmentDA.rejectEnrollment(enrollment_id)
-    #     return output
-
 
 '''
 Functionalities of enrollment_controller
@@ -1545,225 +1399,6 @@ class EnrollmentController():
 
         course_enrollment_ctrl = Course_Enrollment(course_id = course_id, userid = userid, class_id = class_id, is_enrolled = is_enrolled)
         return course_enrollment_ctrl.add_enrollment_record()
-    
-    # def drop_class(self, application):
-    #     user_id = application['user_id']
-    #     class_id = application['class_id']
-    #     course_id = application['course_id']
-
-    #     course_enrollment_ctrl = Course_Enrollment()
-    #     return course_enrollment_ctrl.delete_enrollment_record(user_id, class_id, course_id)
-
-
-'''
-Functionalities of section_material_quiz_controller
-'''
-# class SectionMaterialQuizController(): # all functionalities of this controller have been moved into the routes
-    # def view_qn(self,quiz_id):
-    #     da = TrueFalse()
-    #     questions = da.get_quiz_questions(quiz_id)
-    #     return questions
-        
-
-    # def get_material_record_by_section(self, section_id):
-    #     if section_id >0:
-    #         da = SectionMaterials()
-    #         materials = da.get_materials_all(section_id)
-    #         return materials
-    #     else:
-    #         raise Exception ("Section Id must be above 0");
-    
-    # def get_sections_by_class(self,class_id):
-    #     da = Section()
-    #     section = da.get_section_all(class_id)
-    #     return section
-
-    # def get_section_quiz(self,section_id):
-    #     da = Quiz()
-    #     section = da.get_quiz(section_id)
-    #     return section
-
-    # def get_quiz_questions(self,quiz_id):
-    #     da = QuizQuestions()
-    #     questions = da.get_quiz_questions(quiz_id)
-    #     return questions
-
-    
-
-    # def create_section(self,class_id,section_title):
-        
-    #     section_entry = Section(class_id = class_id,section_title=section_title)
-    #     try: 
-    #         db.session.add(section_entry)
-    #         db.session.commit()
-    #         db.session.close()
-    #     except Exception as error:
-    #         return jsonify (
-    #             {
-    #                 "code": 500,
-    #                 "message": "An error occured while creating the section. " + str(error)
-    #             }
-    #         ), 500
-
-    #     return jsonify(
-    #         {
-    #             "code": 200,
-    #             "message": "The section has been successfully created"
-    #         }
-    #     ), 200
-    
-    # def create_quiz(self,section_id,time_limit):
-    #     quiz_entry = Quiz(section_id = section_id,time_limit=time_limit)
-    #     try: 
-    #         db.session.add(quiz_entry)
-    #         db.session.commit()
-    #         # db.session.close()
-    #     except Exception as error:
-    #         return jsonify (
-    #             {
-    #                 "code": 500,
-    #                 "message": "An error occured while creating the section. " + str(error)
-    #             }
-    #         ), 500
-
-    #     print("quiz_entry.get_quiz_id(): " + str(quiz_entry.get_quiz_id()))
-
-    #     return jsonify(
-    #         {
-    #             "code": 200,
-    #             "message": "The section has been successfully created",
-    #             "quiz_id": quiz_entry.get_quiz_id()
-    #         }
-    #     ), 200
-
-    # def create_material(self,section_id,material_title,material_content,material_type):
-    #     material_entry = SectionMaterials(section_id=section_id,material_title=material_title,material_content=material_content,material_type=material_type)
-
-    #     try: 
-    #         db.session.add(material_entry)
-    #         db.session.commit()
-    #         db.session.close()
-    #     except Exception as error:
-    #         return jsonify (
-    #             {
-    #                 "code": 500,
-    #                 "message": "An error occured while creating the material. " + str(error)
-    #             }
-    #         ), 500
-
-    #     return jsonify(
-    #         {
-    #             "code": 200,
-    #             "message": "The material has been successfully created"
-    #         }
-    #     ), 200
-
-    # def create_TrueFalse(self,answer,quiz_id,qorder,question_type,question):
-    #     question_entry = TrueFalse(quiz_id = quiz_id, answer = answer, qorder = qorder, question_type = question_type, question=question)
-        
-    #     try: 
-    #         db.session.add(question_entry)
-    #         db.session.commit()
-    #         db.session.close()
-    #     except Exception as error:
-    #         return jsonify (
-    #             {
-    #                 "code": 500,
-    #                 "message": "An error occured while creating the question. " + str(error)
-    #             }
-    #         ), 500
-
-    #     return jsonify(
-    #         {
-    #             "code": 200,
-    #             "message": "The question has been successfully created"
-    #         }
-    #     ), 200
-
-    # def create_MCQ(self,quiz_id,qorder,question_type,question):
-    #     question_entry = QuizQuestions(quiz_id=quiz_id,question_type=question_type,qorder=qorder,question=question)
-    #     try: 
-    #         db.session.add(question_entry)
-    #         db.session.commit()
-    #         # db.session.close()
-    #     except Exception as error:
-    #         return jsonify (
-    #             {
-    #                 "code": 500,
-    #                 "message": "An error occured while creating the question. " + str(error)
-    #             }
-    #         ), 500
-
-    #     return jsonify(
-    #         {
-    #             "code": 200,
-    #             "message": "The question has been successfully created",
-    #             "id": question_entry.get_question_id()
-    #         }
-    #     ), 200
-
-    # def create_MCQ_options(self,question_id,option_order,option_content,correct_option):
-        
-    #     option_entry = multiplechoiceoptions(question_id = question_id,option_order =option_order,option_content = option_content,correct_option = correct_option)
-    #     print('entry c-option is ',option_entry.get_correct_option())
-    #     try: 
-    #         db.session.add(option_entry)
-    #         db.session.commit()
-    #         # db.session.close()
-    #     except Exception as error:
-    #         return jsonify (
-    #             {
-    #                 "code": 500,
-    #                 "message": "An error occured while creating the option. " + str(error)
-    #             }
-    #         ), 500
-
-    #     return jsonify(
-    #         {
-    #             "code": 200,
-    #             "message": "The option has been successfully created",
-    #             "data":option_entry.json()
-    #         }
-    #     ), 200
-
-    # def get_TrueFalse(self,question_id):
-    #     da = TrueFalse()
-    #     questions = da.get_quiz_questions(question_id)
-    #     return questions
-    
-    # def get_MCQ(self,question_id):
-    #     da = multiplechoiceoptions()
-    #     questions = da.get_options_by_question_id(question_id)
-    #     return questions
-
-    # def delete_Quiz(self,quiz_id):
-    #     '''delete_quiz =QuizQuestions.query.filter_by(quiz_id = quiz_id).delete()
-    #     delete_tf = TrueFalse.query.filter_by(quiz_id = quiz_id).delete()'''
-    #     record_obj = db.session.query(TrueFalse).filter(TrueFalse.quiz_id== quiz_id)
-    #     db.session.delete(record_obj)
-    #     db.session.commit()
-    #     db.session.close()
-        # '''
-        # try: 
-        #     db.session.delete(delete_tf)
-        #     db.session.delete(delete_quiz)
-        #     db.session.commit()
-        # except Exception as error:
-        #     return jsonify (
-        #         {
-        #             "code": 500,
-        #             "message": "An error occured while deleting the quiz. " + str(error)
-        #         }
-        #     ), 500
-
-        # return jsonify(
-        #     {
-        #         "code": 200,
-        #         "message": "The questions has been successfully quiz",
-                
-        #     }
-        # ), 200'''
-
 
 '''
 Functionalities of view_controller
@@ -1815,28 +1450,6 @@ class ViewController():
         print(output)
 
         return output
-
-    # def get_learner_assigned_classes(user_id):
-    #     lrnr_class = Learner_Assignment()
-    #     all_assigned_courses = lrnr_class.get_user_assigned_courses(user_id)
-
-    #     return all_assigned_courses
-
-    # def get_learner_enrolled_classes(user_id):
-    #     crse_enrol_class = Course_Enrollment()
-        
-    #     return crse_enrol_class.get_user_enrolled_courses(user_id)
-
-
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-
-SACRED MOSES SPLIT
-
-
-
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
 
 '''
 Routes of assign_controller
@@ -2012,6 +1625,7 @@ def changeEnrollStatus():
 def getAllPendingEnrollment():
     da = Course_Enrollment()
     enrollments = da.get_all_enrollments()
+    print("enrollments: " + str(enrollments))
     if enrollments == Null:
         return enrollments
     else:
@@ -2052,6 +1666,8 @@ def getAllPendingEnrollment():
                 final_enrollmentList.append(x)
             counter += 1
         
+        print("final_enrollmentList: " + str(final_enrollmentList))
+
         return jsonify(final_enrollmentList)
 
 @app.route("/rejectEnrollment", methods=['POST'])
@@ -2150,23 +1766,6 @@ def get_quiz_questions():
     questions = da.get_quiz_questions(quiz_id)
     return questions
 
-# @app.route("/create_quiz_questions", methods=['GET'])
-# def create_quiz_questions():
-#     quiz_id = int(request.args.get('quiz_id', None))
-#     question_type = str(request.args.get('quiz_id', None))
-#     qorder = str(request.args.get('qorder', None))
-#     question =str(request.args.get('question', None))
-#     da = SectionMaterialQuizController()
-#     status = da.create_quiz_questions(quiz_id,question_type,qorder,question)
-#     return status
-
-# @app.route("/view_quiz_questions", methods=['GET'])
-# def get_qn():
-#     qn_id = int(request.args.get('qn_id', None))
-#     da =  SectionMaterialController()
-#     quiz = da.view_qn(qn_id)
-#     return quiz
-
 @app.route("/create_section_materials", methods=['GET'])
 def create_section_materials():
     section_id = int(request.args.get('section_id', None))
@@ -2180,18 +1779,13 @@ def create_section_materials():
 '''
 Routes of section_quiz_controler - ADD THIS LATER THERE ARE SOME MAJOR ISSUES
 '''    
-# @app.route("/get_quiz_questions", methods=['GET'])
-# def get_quiz_questions():
-#     quiz_id = int(request.args.get('quiz_id', None))
-#     da = SectionQuizController()
-#     status = da.get_quiz_questions(quiz_id)
-#     return status
 @app.route("/create_final_quiz",methods = ['GET'])
 def make_final_quiz():
     quiz_id = int(request.args.get('quiz_id', None))
     da = FinalQuiz()
     status = da.create_final_quiz(quiz_id)
     return status
+
 @app.route("/view_quiz_questions", methods=['GET'])
 def get_qn():
     qn_id = int(request.args.get('qn_id', None))
@@ -2312,9 +1906,9 @@ Routes of view_controller
 @app.route("/eligible_courses", methods=['POST'])
 def get_eligible_courses():
     application = request.get_json()
-    user_id = application['user_id']
+    userid = application['user_id']
     learner = Learner()
-    record = learner.get_remaining_courses(user_id)
+    record = learner.get_remaining_courses(userid)
     print(record)
     if len(record):
         return jsonify(
@@ -2335,9 +1929,9 @@ def get_eligible_courses():
 @app.route("/eligible_classes", methods=['POST'])
 def get_eligible_classes():
     application = request.get_json()
-    user_id = application['user_id']
+    userid = application['user_id']
     learner = Learner()
-    record = learner.get_eligible_classes(user_id)
+    record = learner.get_eligible_classes(userid)
     courses = record[0]
     classes = record[1]
     final_list = []
@@ -2363,34 +1957,12 @@ def get_eligible_classes():
             }
         ), 404
 
-# @app.route("/uneligible_courses", methods=['POST'])
-# def get_uneligible_courses():
-#     application = request.get_json()
-#     user_id = application['user_id']
-#     learner = Learner()
-#     record = learner.get_uneligible_courses(user_id)
-#     if len(record):
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": {
-#                     "record": [a_record.json() for a_record in record]
-#                 }
-#             }
-#         )
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "message": "There are no uneligible courses."
-#             }
-#         ), 404
-
 @app.route("/uneligible_classes", methods=["POST"])
 def get_uneligible_course_class():
     application = request.get_json()
-    user_id = application['user_id']
+    userid = application['user_id']
     learner = Learner()
-    record = learner.get_uneligible_course_class(user_id)
+    record = learner.get_uneligible_course_class(userid)
     courses = record[0]
     classes = record[1]
     final_list = []
@@ -2421,9 +1993,9 @@ def get_uneligible_course_class():
 @app.route("/enrolled_classes", methods=["POST"])
 def get_enrolled_course_class():
     application = request.get_json()
-    user_id = application['user_id']
+    userid = application['user_id']
     learner = Learner()
-    record = learner.get_enrolled_course_class(user_id)
+    record = learner.get_enrolled_course_class(userid)
     courses = record[0]
     classes = record[1]
     final_list = []
@@ -2452,9 +2024,9 @@ def get_enrolled_course_class():
 @app.route("/assigned_courses", methods=['POST'])
 def get_assigned_course_class():
     application = request.get_json()
-    user_id = application['user_id']
+    userid = application['user_id']
     learner = Learner()
-    record = learner.get_assigned_course_class(user_id)
+    record = learner.get_assigned_course_class(userid)
     courses = record[0]
     classes = record[1]
     final_list = []
@@ -2483,9 +2055,9 @@ def get_assigned_course_class():
 @app.route("/completed_courses", methods=['POST'])
 def get_completed_courses():
     application = request.get_json()
-    user_id = application['user_id']
+    userid = application['user_id']
     learner = Learner()
-    record = learner.get_completed_courses(user_id)
+    record = learner.get_completed_courses(userid)
     if len(record):
             return jsonify(
                 {

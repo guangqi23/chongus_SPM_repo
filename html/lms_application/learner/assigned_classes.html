@@ -157,7 +157,7 @@
                 classes = response.data;
                 for(k=0;k<classes.data.length;k++)
                 {
-                  url ='./view_sections?class_id='+classes.data[k].class_id+'&course_id='+classes.courses[k].course_id+'&section_id=1';
+                  url ='./view_sections.html?class_id='+classes.data[k].class_id+'&course_id='+classes.courses[k].course_id+'&section_id=1';
               
                   row ='';
                   row +=`<div class="col-md-6 d-flex align-items-stretch">`
@@ -171,7 +171,6 @@
                   row +=    `<p class="card-text" id = "description">${classes.courses[k].course_description}</p>`
                   row +=  `</div></div></div>`
                   $("#learner_class_list").append(row);
-                  console.log('appended')
                 }
             });
           

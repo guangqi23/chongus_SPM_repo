@@ -180,15 +180,8 @@
         
         //get values from previous params.get
         let params = new URLSearchParams(location.search);
-        console.log('getting section_id...')
         section_id = params.get('response');
-        console.log(section_id);
         var counter = 0;
-        //$('#TrueFalse').on('hidden.bs.modal', '.modal', function () {
-            //console.log("modal closed");
-            //$(this).remove();
-        //});
-                //make modal appear onload
 
         $(window).on('load', function() {
         $('#CreateQuiz').modal('show');
@@ -227,29 +220,22 @@
         {
             counter +=1;
             var question =$('#tf_question1').val();
-            console.log(question);
-            //alert($('input[name=tf-options]:checked').val());
-            //var selected =document.querySelector('input[name="tf-options"]:checked').value
-            //console.log(selected);
             var answer ;
             var choice;
             var  selected = $("#tf_options1");
 
             if (selected[0].checked == 0){
-                console.log('answer is: False')
                 choice = 0;
                 answer = 'False'
             }
             else
             {
-                console.log('answer is: True')
                 choice = 1;
                 answer = 'True'
             }
             card_type = 'TF';
             card = `<tr><td><div class="card"> <h5 class="card-header">Question (True/False) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`+question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
             $("#question_table").append(card);
-            console.log('appended');
         }
 
       
@@ -257,18 +243,8 @@
         function create_qns(){
             //get first table (only)
             var table = document.getElementById('question_table')[0];
-            console.log(table);
             var row = document.getElementsByTagName('tr');
                 var serviceURL="http://localhost:5002/create_TrueFalse?answer=False&quiz_id=12&question=faketest&question_type=TF&qorder=69";
-                //console.log(serviceURL);
-                /*var newHTTP = new XMLHttpRequest();
-                newHTTP.open("GET",serviceURL,true);
-                newHTTP.send(null);
-                console.log(newHTTP.responseText);
-                response=JSON.parse(newHTTP.responseText);
-                document.getElementById("response").textContent=response["message"];
-                responseMsg=response["message"];
-                */
                 var theRequest = $.ajax({
                     url: serviceURL,
                     method: 'GET',
@@ -281,15 +257,10 @@
         function create_mcq(){
             counter +=1;
             var question =$('#mcq_question1').val();
-            console.log(question);
-            //alert($('input[name=tf-options]:checked').val());
-            //var selected =document.querySelector('input[name="tf-options"]:checked').value
-            //console.log(selected);
             var opt_text1 =$('#mcq_text1').val();
             var opt_text2 =$('#mcq_text2').val();
             var opt_text3 =$('#mcq_text3').val();
             var opt_text4 =$('#mcq_text4').val();
-            console.log(opt_text4);
             var answer ;
             var choice;
             var  opt1 = $("#mcq_options1");
@@ -321,7 +292,6 @@
             card = `<tr><td><div class="card"> <h5 class="card-header">Question (MCQ) </h5><div class="card-body"><h5 class="card-title" id = "tf_question" value = ${question}> Question:<br>`
             card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
             $("#question_table").append(card);
-            console.log('appended');
 
         }
 
@@ -358,7 +328,6 @@
         function create_quiz()
         {
             var time_limit = $('#time_limit').val()
-            console.log(time_limit);
             ///create_quiz 
             $(async() => {          
             // Change serviceURL to your own
@@ -369,11 +338,8 @@
                 serviceURL, { method: 'GET' }
                 );
                 const result = await response.json();
-                // Data is present,see it on console
-                // console.log(result);
                
              if (response.status === 200) {
-                console.log("quiz module created");
                 $('#CreateQuiz').modal('hide');
                     throw response.status;
                 } else if (response.status == 404) {

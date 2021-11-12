@@ -22,7 +22,6 @@
         .get("http://127.0.0.1:5002/get_courses_with_classes_without_trainer",{})
         .then(res =>{
                 records = res.data.data.record;
-                console.log(records);
                 let value = '';
                 let c_id_arr = []
                     for(course of records) {
@@ -54,7 +53,6 @@
                     for(let c_id of c_id_arr){
                         let b_id =  'buttonToView_' + c_id;
                         el = document.getElementById(b_id);
-                        // console.log(el)
                         el.addEventListener('click',function(event){
                             getClassesWithoutTrainer(c_id);
                         })

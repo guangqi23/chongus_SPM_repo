@@ -1,12 +1,10 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
         let trainer_id = String(sessionStorage.getItem("trainer_id"));
-        console.log(trainer_id);
         //trainer_id = 11;
         classURL = "";
         axios.get(classURL)
             .then(response => {
-                //console.log("Timer is:", response.data);
                 timeValue = parseInt(response.data);
                 //timeValue = 15; Use if want to test timeout function
             });
@@ -118,9 +116,7 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="./.html">Courses</a></li>
-          <li><a id="myCourses">My Courses</a></li>
-
-          <li><a href="contact.html">Contact</a></li>
+          <li><a id="myCourses">Assigned Courses</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -182,7 +178,7 @@
                 classes = response.data;
                 for(k=0;k<classes.data.length;k++)
                 {
-                  url ='./view_sections2?class_id='+classes.data[k].class_id+'&course_id='+classes.courses[k].course_id+'&section_id=1';
+                  url ='./view_sections2.html?class_id='+classes.data[k].class_id+'&course_id='+classes.courses[k].course_id+'&section_id=1';
               
                   row ='';
                   row +=`<div class="col-md-6 d-flex align-items-stretch">`
@@ -196,7 +192,6 @@
                   row +=    `<p class="card-text" id = "description">${classes.courses[k].course_description}</p>`
                   row +=  `</div></div></div>`
                   $("#trainer_class_list").append(row);
-                  console.log('appended')
                 }
             });
           var a = document.getElementById('myCourses');

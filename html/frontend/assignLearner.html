@@ -39,7 +39,6 @@
           .then(res  => 
             {
                 records = res.data.data.record;
-                console.log(records);
                 lrnr_id_arr = [];
                 let value = `<table class = 'table' id = 'myTable'>
                             <thead class = 'thead-dark'>
@@ -75,12 +74,9 @@
                 value+= `</tbody></table>`;
                 let body = document.getElementById('all_learners');
                 body.innerHTML = value; 
-                // console.log(lrnr_id_arr);
                 for(let lrnr_id of lrnr_id_arr){
-                  console.log(lrnr_id);
                   buttonToAssign = 'buttonToAssignUser_' + lrnr_id;
                   el = document.getElementById(buttonToAssign);
-                  // console.log(el)
                   el.addEventListener('click',function(event){
                     getEligibleCoursesForLearner(lrnr_id);
                   }) 
@@ -94,13 +90,11 @@
       
       function getEligibleCoursesForLearner(userid){
         document.getElementById("displayEligibleCourses").innerHTML = '';
-        console.log(userid);
         axios
         .post('http://127.0.0.1:5002/eligible_courses',{user_id:userid})
         .then(res =>{
         
                   records = res.data.data.record;
-                  console.log(res);
                   buttonIdArr = []
                   value = `<table class = 'table'>
                             <thead class = 'thead-dark'>
@@ -114,7 +108,6 @@
                                   <th>Assign</th>
                               </tr></thead><tbody>`;
                   for(record of records){
-                    console.log(record);
                     let course_description = record.course_description;
                     let course_id = record.course_id;
                     let course_name = record.course_name;
@@ -140,7 +133,6 @@
                   for(let c_id of buttonIdArr){
                     b_id =  'buttonAssignCourse_' + c_id;
                     el = document.getElementById(b_id);
-                    // console.log(el)
                     el.addEventListener('click',function(event){
                       getClassesForEligibleCourses(c_id,userid);
                     })
@@ -164,7 +156,6 @@
         .post("http://127.0.0.1:5011/get_classes/" + courseid)
         .then(res=>{
                   records = res.data.data.record;
-                  console.log(records);
                   classId_arr = [];
 
                   value = `<table class = 'table'>
@@ -180,7 +171,6 @@
                               </tr></thead><tbody>`;
 
                   for(record of records){
-                    console.log(record);
                     let course_id = record.course_id;
                     let class_id = record.class_id;
                     let slots = record.slots;
@@ -215,7 +205,6 @@
 
       function send_application(course_id,class_id,lrnr_id){
             // add additional test cases later to check for missing values (or just do it in python)
-            console.log(course_id, class_id, lrnr_id);
             axios
             .post('http://localhost:5001/assign_course_learner',
                 {
@@ -228,7 +217,6 @@
             .then(res =>
                 {
                     data = res.data;
-                    console.log(data);
                     alert("This learner has successfully been assigned a class");
                     window.location.reload();
                 }

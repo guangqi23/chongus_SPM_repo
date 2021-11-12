@@ -68,11 +68,6 @@
         }
 
     //Seeing the Menu for the reservation
-
-            // let params = new URLSearchParams(location.search);
-            //var restaurantID = params.get('query');
-            // console.log("restaurantID", restaurantID);
-        console.log('initializing sections')
         $(async() => {           
             // Change serviceURL to your own
             var serviceURL = "http://127.0.0.1:5001/view_class_sections?class_id=1";
@@ -83,14 +78,10 @@
                 serviceURL, { method: 'GET' }
                 );
                 const result = await response.json();
-                // Data is present,see it on console
-                // console.log(result);
                
              if (response.status === 200) {
                 // Data is present,see it on console
                 sectionList = result.data;
-                console.log(sectionList)
-                // console.log(menuList);
                 var rows = "";
                 var count =0;
                 index =1;
@@ -127,9 +118,7 @@
             });
                 function view_materials(row_id) {
                     var $row = $(row_id).closest("tr");
-                    console.log('before')    // Find the row
                     var section_id = $row.find(".section_id").text();
-                    console.log(section_id);
                     window.location.href = "./section_add_materials?response=" + section_id;
             }
           

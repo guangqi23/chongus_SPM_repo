@@ -62,8 +62,6 @@
                     const result = await response.json();
                     if (response.status === 200)
                     {
-                        console.log(result)
-                        console.log("Hi")
                         var enrollmentRecords = result;
                         var rows = "";
                         for (const record of enrollmentRecords)
@@ -88,7 +86,6 @@
         {
             var row = $(row_id).closest("tr");
             enrollment_id = row[0].childNodes[0].childNodes[0].data
-            console.log("Enrollment ID: " + enrollment_id)
 
             const Http = new XMLHttpRequest();
             const url = 'http://localhost:5000/changeEnrollmentStatus/input?enrol_id=' + enrollment_id;
@@ -102,7 +99,6 @@
             window.setTimeout(() => {
                 location.reload();
             }, 3000);
-            console.log("Waited for 3 seconds!")
             
 
         }

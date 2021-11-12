@@ -128,13 +128,8 @@
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="courses.html">Courses</a></li>
-          <li><a href="trainers.html">Trainers</a></li>
-
-
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
+          <li><a id="myCourses">Assigned Courses</a></li>
+          
       </nav><!-- .navbar -->
 
     </div>
@@ -173,85 +168,6 @@
 
         </div>
 
-    
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6 footer-contact">
-            <h3>Mentor</h3>
-            <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
-            </p>
-          </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
-
-
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-
-        </div>
-      </div>
-    </div>
-    
-    <div class="container d-md-flex py-4">
-
-      <div class="me-md-auto text-center text-md-start">
-        <div class="copyright">
-          &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-      </div>
-      <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
-
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -282,17 +198,15 @@
 
             // let params = new URLSearchParams(location.search);
             //var restaurantID = params.get('query');
-            // console.log("restaurantID", restaurantID);
         let params = new URLSearchParams(location.search);
         class_id = params.get('class_id');
         section_id = params.get("section_id");
-        console.log('section_id',section_id);
-        console.log('initializing sections')
         var last_section = false;
         var section_title_this= "";
         $(async() => {           
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_class_sections?class_id="+class_id;
+    
             try {
                 const response =
                 await fetch(
@@ -300,14 +214,10 @@
                 );
                 const result = await response.json();
                 // Data is present,see it on console
-                // console.log(result);
                
              if (response.status === 200) {
                 // Data is present,see it on console
                 sectionList = result.data;
-                
-                console.log('retrieving title');
-                console.log('section title = ',sectionList[0].section_title);
                 section_title_this ='';
                 for (var section of sectionList) {
                     if(section.section_id == section_id)
@@ -318,10 +228,8 @@
                 }
                
                 //document.getElementById("quiz_ttle").textContent = 'Quiz - '+sectionList[section_id-1].section_title.toString();
-                // console.log(menuList);
                 index =1;
-                var rows = "";
-                console.log('appending rows1');                
+                var rows = "";             
                 var count =0;
                 last_section_id = 0;
                 for (var section of sectionList) {
@@ -358,18 +266,13 @@
         
         /*======================================================================================================================================*/
         function view_materials(row_id) {
-                    /*var $row = $(row_id).closest("tr");
-                    console.log('before')    // Find the row
-                    var section_id = $row.find(".section_id").text();*/
     
                     window.location.href = "./view_sections2.html?class_id=" + class_id+"&section_id="+section_id;
         }
           
         $(async() => {     
-            console.log(section_id)      
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_section_materials?section_id="+section_id;
-            console.log('hehe');
             try {
                 const response =
                 await fetch(
@@ -377,13 +280,10 @@
                 );
                 const result = await response.json();
                 // Data is present,see it on console
-                // console.log(result);
                
              if (response.status === 200) {
                 // Data is present,see it on console
                 sectionList = result.data;
-                console.log(sectionList)
-                // console.log(menuList);
                 //var rows = "<thead class='thead-dark'><tr><th colspan='8'>Menu</th></tr><tr><th>Section</th><th>Section ID</th><th>Section Title</th><th>Action</th></tr></thead>";
                 var rows = "";
                 var count =0;
@@ -395,7 +295,6 @@
                     //Adding on more rows
                     //rows += "<tbody><tr>" + eachRow + "</tr></tbody>";
                   type = section.material_type.toString();
-                  console.log(section)
                   material_type ='';
                   if(type == 'pdf')
                     material_type = '<span class="badge badge-info badge-pill" style = "float:left">'+type+'</span>';
@@ -428,11 +327,9 @@
                     } // error
             });
 
-            $(async() => {     
-            console.log(section_id)      
+            $(async() => {        
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
-            console.log('retrieving quiz');
             try {
                 const response =
                 await fetch(
@@ -440,26 +337,21 @@
                 );
                 const result = await response.json();
                 // Data is present,see it on console
-                // console.log(result);
                
              if (response.status === 200) {
                 // Data is present,see it on console
                 section = result.data;
-                console.log(section,', section');
                 var rows_quiz = "";
                 var count =0;
-                console.log('printing quiz row');
 
                 let redirectURL = "./edit_quiz.html?section_id="+section_id+"&quiz_id="+section.quiz_id+"&class_id="+class_id+"&is_graded="+last_section;
                 quiz_pill = '<span class="badge badge-success badge-pill" style =  "float:left">quiz</span>';
                 rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
-                console.log('printing quiz row');
                 //Set counter back to 0 
                 // add all the rows to the table
                 $('#quiz-list').append(rows_quiz);
                 //rows_quiz += '<a href="'+redirectURL+'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><div class="flex-column">Quiz<p></p>'+quiz_pill+'</div><p style = "color:grey;font-weight:semi-bold">view</p></a>'
             
-                console.log('after');
 
                 } else if (response.status == 404) {
                     // No reservation
@@ -481,14 +373,10 @@
             section_id = params.get('section_id');
             class_id = params.get('class_id');
             course_id = params.get('course_id');
-            console.log(section_id);
-            console.log('initializing sections')    
             window.location.href = "./upload_materials2.html?class_id="+class_id+"&section_id=" + section_id;  
         }
         function create_quiz() {
             section_id = params.get('section_id');
-            console.log(section_id);
-            console.log('initializing sections')    
             window.location.href = "./create_quiz2.html?class_id="+class_id+"&section_id=" + section_id+"&is_graded="+last_section;  
         }
         

@@ -54,15 +54,18 @@
           <li><a class="active" href="index.html">Home</a></li>
           <li><a href="delete_course.html">Delete Courses</a></li>
           <li><a href="create_course.html">Create Course</a></li>
-          <li><a href="assignLearners.html">Assign Learners</a></li>
-          <li><a href="assignTrainer.html">Assign Trainers</a></li>
-
-         
+          <li><a href="courses.html">View Courses</a></li>
+          <li><a href="enrollment_Approval.html">Approve Enrollments</a></li>
+          <li><a href="withdrawLearner.html">Withdraw Learner</a></li>
+          <li class="dropdown"><a href="#"><span>Assign</span> <i class="bi bi-chevron-right"></i></a>
+            <ul>
+              <li><a href="assignLearners.html">Learner</a></li>
+              <li><a href="assignTrainer.html">Trainer</a></li>
+            </ul>
+          </li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
-
-      <a href="courses.html" class="get-started-btn">Get Started</a>
 
     </div>
   </header><!-- End Header -->
@@ -101,82 +104,6 @@
 
   </main><!-- End #main -->
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6 footer-contact">
-            <h3>Mentor</h3>
-            <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
-            </p>
-          </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="container d-md-flex py-4">
-
-      <div class="me-md-auto text-center text-md-start">
-        <div class="copyright">
-          &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-      </div>
-      <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
-
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -200,7 +127,6 @@
           .then(res  => 
             {
                 records = res.data.data.record;
-                // console.log(records);
                 lrnr_id_arr = [];
                 let value = `<table class = 'table' id = 'myTable'>
                             <thead class = 'thead-dark'>
@@ -236,12 +162,9 @@
                 value+= `</tbody></table>`;
                 let body = document.getElementById('all_learners');
                 body.innerHTML = value; 
-                // console.log(lrnr_id_arr);
                 for(let lrnr_id of lrnr_id_arr){
-                  // console.log(lrnr_id);
                   buttonToAssign = 'buttonToAssignUser_' + lrnr_id;
                   el = document.getElementById(buttonToAssign);
-                  // console.log(el)
                   el.addEventListener('click',function(event){
                     getEligibleCoursesForLearner(lrnr_id);
                   }) 
@@ -255,13 +178,11 @@
 
       function getEligibleCoursesForLearner(userid){
         document.getElementById("displayEligibleCourses").innerHTML = '';
-        console.log(userid);
         axios
         .post('http://localhost:5000/eligible_classes',{user_id:userid})
         .then(res =>{
         
                   records = res.data.data.record;
-                  console.log(res);
                   buttonIdArr = []
                   let crs_id = []
                   
@@ -277,9 +198,6 @@
                                   <th>Assign</th>
                               </tr></thead><tbody>`;
                   for(record of records){
-                    
-                    
-                    console.log(record);
                     let course_description = record.course_description;
                     let course_id = record.course_id;
                     let course_name = record.course_name;
@@ -291,7 +209,6 @@
 
                     if(!buttonIdArr.includes(course_id)){
                       let buttonId = 'buttonAssignCourse_' + course_id;
-                      console.log(buttonIdArr);
                       buttonIdArr.push(course_id);
                     value += `<tr>
                               <td>${course_id}</td>
@@ -300,15 +217,6 @@
                               <td><button id = ${buttonId}>Assign</button><td>
                               </tr>`;
                     }
-                    // let buttonId = 'buttonAssignCourse_' + course_id;
-                    // console.log(buttonIdArr);
-                    // buttonIdArr.push(course_id);
-                    // value += `<tr>
-                    //           <td>${course_id}</td>
-                    //           <td>${course_name}</td>
-                    //           <td>${course_description}</td>  
-                    //           <td><button id = ${buttonId}>Assign</button><td>
-                    //           </tr>`;
                     
                     
                   
@@ -321,7 +229,6 @@
                   for(let c_id of buttonIdArr){
                     b_id =  'buttonAssignCourse_' + c_id;
                     el = document.getElementById(b_id);
-                    // console.log(el)
                     el.addEventListener('click',function(event){
                       getClassesForEligibleCourses(c_id,userid);
                     })
@@ -348,7 +255,6 @@
                   body.innerHTML = ''; 
 
                   records = res.data.data.record;
-                  console.log(records);
                   classId_arr = [];
 
                   value = `<table class = 'table'>
@@ -364,7 +270,6 @@
                               </tr></thead><tbody>`;
 
                   for(record of records){
-                    console.log(record);
                     let course_id = record.course_id;
                     let class_id = record.class_id;
                     let slots = record.slots;
@@ -427,7 +332,6 @@
       
       function send_application(course_id,class_id,lrnr_id){
             // add additional test cases later to check for missing values (or just do it in python)
-            console.log(course_id, class_id, lrnr_id);
             axios
             .post('http://localhost:5000/assign_course_learner',
                 {
@@ -440,7 +344,6 @@
             .then(res =>
                 {
                     data = res.data;
-                    console.log(data);
                     alert("This learner has successfully been assigned a class");
                     window.location.reload();
                 }

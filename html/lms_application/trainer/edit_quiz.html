@@ -268,33 +268,9 @@
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="courses.html">Courses</a></li>
-          <li><a href="trainers.html">Trainers</a></li>
-          <li><a href="events.html">Events</a></li>
-
-          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="#">Drop Down 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Drop Down 2</a></li>
-              <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li>
-            </ul>
-          </li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
+          <li><a id="myCourses">Assigned Courses</a></li>
+          
       </nav><!-- .navbar -->
-
-      <a href="courses.html" class="get-started-btn">Get Started</a>
 
     </div>
   </header><!-- End Header -->
@@ -336,40 +312,11 @@
     
 
   </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-
-    
-
-    <div class="container d-md-flex py-4">
-
-      <div class="me-md-auto text-center text-md-start">
-        <div class="copyright">
-          &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-      </div>
-      <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
+  
   <script>
         let params = new URLSearchParams(location.search);
         section_id = params.get('section_id');
         class_id = params.get('class_id');
-        console.log('class,id is ',class_id);
         quiz_id = params.get('quiz_id');
         is_graded = params.get('is_graded');
         var counter = 0;
@@ -395,17 +342,13 @@
             // Change serviceURL to your own
             var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
             try {
-                console.log('fetching');
                 const response = await fetch(
                 serviceURL, { method: 'GET' }
                 );
                 const result = await response.json();
                 // Data is present,see it on console
-                console.log(result);
-                console.log(response.status);
                 if (response.status === 200) {
                     //display time
-                    console.log('getting time...2');
                     
                     time = result.data.time_limit;
                    
@@ -440,17 +383,13 @@
                 );
                 const result1 = await response.json();
                 // Data is present,see it on console
-                // console.log(result);
                 if (response.status === 200) {
                 //display time
                     questions = result1.data;
                     arr_length = questions.length;
-                    console.log(serviceURL2);
-                    console.log('fetching quiz_id..',result1.data);
                     
                     var row_id ="row";
                     for (i=0;i<arr_length;i++){
-                        console.log(questions[i].question_type ,i);
                         if (questions[i].question_type =='TF'){
                             
                             q_id_tf = questions[i].question_id;
@@ -459,9 +398,7 @@
                                         url: serviceURL3,
                                         method: 'GET',
                                     }).done(function(data){
-                                            console.log(data);
                                             result3 = data;
-                                            console.log(theRequest.responseText);
                                             tfquestion = result3.data;
                                             question = tfquestion[0].question;
                                             card_type = 'TF';
@@ -500,9 +437,9 @@
                                         var question ='';
                                         
                                         mcq_question_1 =  questions[temp].question;
-                                        mcq_question = data.data;
-                                        console.log(data.data);
-                                        console.log(theRequest.responseText);
+                                       
+                                      
+                                        mcq_question = data.data
                                         answer =0;
                                         for (j=0;j<4;j++){
                                             if(mcq_question[j].correct_option == true){
@@ -662,7 +599,7 @@
                         url: serviceURL,
                         method: 'GET',
                     }).done(function(data){
-                            console.log(data);
+                            // console.log(data);
                            
                     });
                 }
@@ -733,7 +670,7 @@
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log(data);
+                                        // console.log(data);
                                        
                             });
                             }
@@ -945,7 +882,6 @@
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log(data);
                                         if(x==len)
                                             {
                                                 window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
@@ -972,7 +908,6 @@
                                             var opt2 = document.getElementsByClassName('mcqoption2');
                                             var opt3 = document.getElementsByClassName('mcqoption3');
                                             var opt4 = document.getElementsByClassName('mcqoption4');
-                                            console.log('mcq_iter_counter',is_mcq_counter);
                                             qopt1= opt1[is_mcq_counter].innerHTML;
                                             qopt2= opt2[is_mcq_counter].innerHTML;
                                             qopt3= opt3[is_mcq_counter].innerHTML;
@@ -981,7 +916,6 @@
                                             var answer = document.getElementsByClassName('mcq_answer');
                                             var actual_ans = answer[is_mcq_counter].innerHTML;
                                             qn_id = data.id;
-                                            console.log(qn_id);
                                             base_mcq_counter =0;
                                             if (actual_ans == qopt1)
                                             {
@@ -998,7 +932,6 @@
                                                 method: 'GET',
                                             }).done(function(data){
                                                     base_mcq_counter +=1;
-                                                    console.log(data);
                                                         
                                         });
                                             if (actual_ans == qopt2)
@@ -1010,13 +943,11 @@
                                             {
                                                 serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
                                             }
-                                            console.log(serviceURL);
                                             var theRequest = $.ajax({
                                                 url: serviceURL,
                                                 method: 'GET',
                                             }).done(function(data){
                                                 base_mcq_counter +=1;
-                                                    console.log(data);
                                                 
                                         });
                                             if (actual_ans == qopt3)
@@ -1029,13 +960,11 @@
                                             {
                                                 serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
                                             }
-                                            console.log(serviceURL);
                                             var theRequest = $.ajax({
                                                 url: serviceURL,
                                                 method: 'GET',
                                             }).done(function(data){
                                                     base_mcq_counter +=1;
-                                                    console.log(data);
                                                     
                                         });
                                             if (actual_ans == qopt4)
@@ -1047,13 +976,11 @@
                                             {
                                                 serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
                                             }
-                                            console.log(serviceURL);
                                             var theRequest = $.ajax({
                                                 url: serviceURL,
                                                 method: 'GET',
                                             }).done(function(data){
                                                     base_mcq_counter +=1;
-                                                    console.log(data);
                                         }); 
                                         if(x==len & base_mcq_counter ==4)
                                                         {

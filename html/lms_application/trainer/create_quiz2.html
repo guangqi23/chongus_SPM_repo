@@ -183,14 +183,9 @@
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="courses.html">Courses</a></li>
-          <li><a href="trainers.html">Trainers</a></li>
-       
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
+          <li><a id="myCourses">Assigned Courses</a></li>
+          
       </nav><!-- .navbar -->
-
 
     </div>
   </header><!-- End Header -->
@@ -227,19 +222,12 @@
 
   </main><!-- End #main -->
 
-
   <script>
         let params = new URLSearchParams(location.search);
-        console.log('getting section_id...');
         section_id = params.get('section_id');
         class_id = params.get('class_id');
         is_graded = params.get('is_graded');
         var counter = 0;
-        //$('#TrueFalse').on('hidden.bs.modal', '.modal', function () {
-            //console.log("modal closed");
-            //$(this).remove();
-        //});
-                //make modal appear onload
         
         $(window).on('load', function() {
         $('#CreateQuiz').modal('show');
@@ -266,7 +254,6 @@
         function create_quiz()
         {
             var time_limit = $('#time_limit').val()
-            console.log(time_limit);
             
             ///create_quiz 
             $(async() => {          
@@ -278,11 +265,8 @@
                 serviceURL, { method: 'GET' }
                 );
                 const result = await response.json();
-                // Data is present,see it on console
-                // console.log(result);
             
              if (response.status === 200) {
-                console.log("quiz module created");
                 quiz_id = result.quiz_id;
                 $('#CreateQuiz').modal('hide');
                     throw response.status;
@@ -315,22 +299,16 @@
         {
             counter +=1;
             var question =$('#tf_question1').val();
-            console.log(question);
-            //alert($('input[name=tf-options]:checked').val());
-            //var selected =document.querySelector('input[name="tf-options"]:checked').value
-            //console.log(selected);
             var answer ;
             var choice;
             var  selected = $("#tf_options1");
 
             if (selected[0].checked == 0){
-                console.log('answer is: False')
                 choice = 0;
                 answer = 'False'
             }
             else
             {
-                console.log('answer is: True')
                 choice = 1;
                 answer = 'True'
             }
@@ -339,22 +317,16 @@
             
             card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = "width:100%!;margin-top;margin-left:30px;margin-right:30px" ><div class = ' p-2' style = 'max-width:100%'><div class="course-item" id = ${quiz_card}><div class="course-content" style = 'width:100%'><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="answer" target = ${choice}>Answer: ${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div></div></div>`
             $("#quiz_card").append(card);
-            console.log('appended');
         }
 
 
         function create_mcq(){
             counter +=1;
             var question =$('#mcq_question1').val();
-            console.log(question);
-            //alert($('input[name=tf-options]:checked').val());
-            //var selected =document.querySelector('input[name="tf-options"]:checked').value
-            //console.log(selected);
             var opt_text1 =$('#mcq_text1').val();
             var opt_text2 =$('#mcq_text2').val();
             var opt_text3 =$('#mcq_text3').val();
             var opt_text4 =$('#mcq_text4').val();
-            console.log(opt_text4);
             var answer ;
             var choice;
             var  opt1 = $("#mcq_options1");
@@ -387,7 +359,6 @@
             //card += question+`</h5><br><p id = "question_type" value = ${card_type}></p><p class="card-text">`+`<p>Option 1:`+opt_text1+`</p>`+`<p>Option 2:`+opt_text2+`</p>`+`<p>Option 3:`+opt_text3+`</p>`+`<p>Option 4:`+opt_text4+`</p>`+`</br></br><p id = "tf_answer" style = "font-weight:bold" value = ${answer}> Answer: `+answer+'</p></p><a href="#" class="btn btn-primary">Delete</a> </div></div></tr></td>';
             card = `<div class="row" data-aos="zoom-in" data-aos-delay="100" style = 'width:100%!;margin-top;margin-left:30px;margin-right:30px' ><div class = ' p-2' style = ><div class="course-item"><div class="course-content" ><div class="d-flex justify-content-between align-items-center mb-3"><h4 class = 'question_type' target = ${card_type}>${card_type}</h4><p class="mcq_answer" target = ${answer}>${answer}</p></div><h3>Question</h3><p class = 'question' target = ${question}>${question}</p></div><label style = 'display:inline'>A) </label><div  style = 'display:inline' class ="mcqoption1" target =  ${opt_text1}>${opt_text1}</div><p></p><label  style = 'display:inline' >B) </label><div   style = 'display:inline' class ="mcqoption2"target =  ${opt_text2}>${opt_text2}</div><p></p><label  style = 'display:inline'>C) </label><div  style = 'display:inline' class ="mcqoption3"target =  ${opt_text3}>${opt_text3}</div><p></p><label style = 'display:inline' >D) </label><div  style = 'display:inline' class ="mcqoption4" target =  ${opt_text4}>${opt_text4}</div></div></div>`
             $("#quiz_card").append(card);
-            console.log('appended');
 
         }
 
@@ -432,12 +403,10 @@
                         url: serviceURL,
                         method: 'GET',
                     }).done(function(data){
-                            console.log(data);
-                            console.log(theRequest.responseText);
                     if(x==len)
-                                {
-                                    window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
-                                }
+                        {
+                            window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
+                        }
                     });
                 }
                 else
@@ -445,16 +414,6 @@
                     
                     var question = document.getElementsByClassName('question');
                     qqn = 'MCQ';
-                    /*var serviceURL="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
-                    var theRequest = $.ajax({
-                        url: serviceURL,
-                        method: 'GET',
-                    }).done(function(data){
-                            console.log(data);
-                            qn_id = data.mcq_id;
-                            console.log(qn_id);
-                            console.log(theRequest.responseText);
-                    });*/
                     qn_id =0;
                     mcq_qquestion = question[x].textContent;
                     var question = document.getElementsByClassName('question');
@@ -470,7 +429,6 @@
                                 var opt2 = document.getElementsByClassName('mcqoption2');
                                 var opt3 = document.getElementsByClassName('mcqoption3');
                                 var opt4 = document.getElementsByClassName('mcqoption4');
-                                console.log('mcq_iter_counter',is_mcq_counter);
                                 qopt1= opt1[is_mcq_counter].innerHTML;
                                 qopt2= opt2[is_mcq_counter].innerHTML;
                                 qopt3= opt3[is_mcq_counter].innerHTML;
@@ -480,14 +438,7 @@
                                 
                                 var actual_ans = answer[is_mcq_counter].innerHTML;
                                 
-                                console.log(actual_ans);
-                                console.log(opt3);
-                                console.log(data);
                                 qn_id = data.id;
-                                console.log(qn_id);
-                                /*var answer = document.getElementsByClassName('answer');
-                                actual_ans =  answer[x].text;
-                                console.log('ANSWER',actual_ans);*/
                                 
                                 if (actual_ans == qopt1)
                                 {
@@ -498,14 +449,10 @@
                                 {
                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+1+"&option_content="+qopt1+"&correct_option="+0;
                                 }
-                                console.log(serviceURL);
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log('added MCQ');
-                                        console.log(data);
-                                        console.log(theRequest.responseText);
                                 if(x==len)
                                 {
                                     window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
@@ -520,13 +467,10 @@
                                 {
                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+2+"&option_content="+qopt2+"&correct_option="+0;
                                 }
-                                console.log(serviceURL);
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log('added MCQ');
-                                        console.log(data);
                                 if(x==len)
                                 {
                                     window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
@@ -542,14 +486,10 @@
                                 {
                                     serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+3+"&option_content="+qopt3+"&correct_option="+0;
                                 }
-                                console.log(serviceURL);
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log('added MCQ');
-                                        console.log(data);
-                                        console.log(theRequest.responseText);
                                 if(x==len)
                                 {
                                     window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id
@@ -565,14 +505,10 @@
                                 {
                                      serviceURL="http://localhost:5000/add_MCQ_Options?question_id="+qn_id+"&option_order="+4+"&option_content="+qopt4+"&correct_option="+0;
                                 }
-                                console.log(serviceURL);
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',
                                 }).done(function(data){
-                                        console.log('added MCQ');
-                                        console.log(data);
-                                        console.log(theRequest.responseText);
                                 if(x==len)
                                 {
                                     window.location.href='./view_sections2.html?class_id='+class_id+'&section_id='+section_id

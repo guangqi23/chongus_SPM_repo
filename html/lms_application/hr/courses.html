@@ -27,7 +27,7 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <!-- =======================================================
   * Template Name: Mentor - v4.6.0
@@ -73,7 +73,7 @@
     <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs">
       <div class="container">
-        <h2>Delete Courses</h2>
+        <h2>Courses</h2>
       </div>
     </div><!-- End Breadcrumbs -->
 
@@ -159,14 +159,13 @@
                 </div>
               </div>
             </div>
-          </div>  -->
+          </div> End Course Item
 
-        </div>
-        <div class="my-3" id="status_output"></div>
+        </div> -->
+
       </div>
-      
     </section><!-- End Courses Section -->
-    
+
   </main><!-- End #main -->
 
   <div id="preloader"></div>
@@ -182,7 +181,7 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script>
-    function retrieve_all_courses(){
+     function retrieve_all_courses(){
         axios
         .get("http://localhost:5000/courses")
         .then(res =>
@@ -196,11 +195,14 @@
                         <img src="assets/img/course-1.jpg" class="img-fluid" alt="...">
                         <div class="course-content">
                           <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 id="${record.course_id}">Delete Course</h4>
+                            <h4 id="${record.course_id}">Edit Course Information</h4>
                           </div>
 
                           <h3><a href="course-details.html">${record.course_name}</a></h3>
                           <p>${record.course_description}</p>
+                          <p>Start Enrollment Date: <span id="${record.course_id}_start">${record.startenrollmentdate}</span></p>
+                          <p>End Enrollment Date: <span id="${record.course_id}_end">${record.endenrollmentdate}</span></p>
+                          <div id="${record.course_id}_change_date"></div>
                         </div>
                       </div>
                     </div>
@@ -212,40 +214,59 @@
                 for(record of records){
                   let course_id = record.course_id
                   document.getElementById(course_id).addEventListener('click', function(){
-                    delete_selected_course(course_id)
+                    change_date(course_id)
                   })
                 }
             }
         )
     }
-    
-    function delete_selected_course(course_id){
-        axios
-        .post("http://localhost:5000/delete_course",
-            {
-                "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
-                "course_id": course_id // have to be careful of which course to delete. You cannot delete a course that has been assigned as a prerequisite. Remove it as a prerequisite first before the course can be deleted
-            }
-        )
-        .then(res =>
-            {
-              data = res.data;
-              if(data["code"] == 200){
-                output = `<div class="alert alert-success" role="alert">
-                  ${data["message"]}
-                </div>`
-              }
-              else if(data["code"] == 500){
-                output = `<div class="alert alert-danger" role="alert">
-                  The course cannot be deleted as there are still dependent classes of this course
-                </div>`
-              }
-              
-              document.getElementById("status_output").innerHTML = output
-              document.getElementById("card_"+course_id).outerHTML = ""
-            }
-        )
-        .catch(error => console.error(error.response.data));
+
+    function change_date(course_id){
+      start = document.getElementById(course_id + "_start")
+      end = document.getElementById(course_id + "_end")
+
+      ori_start_date = start.innerHTML
+      ori_end_date = end.innerHTML
+
+      start.innerHTML = '<input type="date" id="' + course_id + '_start_enrollment" placeholder="Start Enrollment Date">'
+      end.innerHTML = '<input type="date" id="' + course_id + '_end_enrollment" placeholder="End Enrollment Date">'
+      document.getElementById(course_id + "_change_date").innerHTML = '<button id="' + course_id + '_submit" type="submit">Confirm Changes</button>'
+
+      document.getElementById(course_id + "_submit").addEventListener('click', function(event){
+        event.preventDefault();
+        submit_date_changes(course_id, ori_start_date, ori_end_date);
+      })
+    }
+
+    function submit_date_changes(course_id, ori_start_date, ori_end_date){
+      start_date = document.getElementById(course_id + "_start_enrollment").value
+      end_date = document.getElementById(course_id + "_end_enrollment").value
+      
+      axios
+      .post("http://localhost:5000/change_course_start_end_date",
+        {
+          "course_id": course_id,
+          "start_date": start_date,
+          "end_date": end_date
+        }
+      )
+      .then( res=>
+        {
+          data = res.data
+          if(data['code'] == 200){
+            new_start_date = new Date(start_date).toUTCString()
+            new_end_date = new Date(end_date).toUTCString()
+            document.getElementById(course_id + "_start").innerHTML = new_start_date
+            document.getElementById(course_id + "_end").innerHTML = new_end_date
+            document.getElementById(course_id + "_change_date").innerHTML = '<div class="alert alert-success" role="alert">' + data['message']
+          }
+          else{
+            document.getElementById(course_id + "_start").innerHTML = ori_start_date
+            document.getElementById(course_id + "_end").innerHTML = ori_end_date
+            document.getElementById(course_id + "_change_date").innerHTML = '<div class="alert alert-danger" role="alert">' + data['message']
+          }
+        }
+      )
     }
     
   </script>

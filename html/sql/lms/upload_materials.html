@@ -71,23 +71,12 @@
             if (!files.length) return
             this.createImage(files[0])
             ft = files[0].type
-            console.log('e-->')
-            console.log(files[0].name)
           },
           createImage (file) {
             // var image = new Image()
             let reader = new FileReader()
             reader.onload = (e) => {
-            /*  console.log('length: ', e.target.result.includes('data:image/jpeg'))
-              if (!e.target.result.includes('data:image/jpeg')) {
-                return alert('Wrong file type - JPG only.')
-              }
-              if (e.target.result.length > MAX_IMAGE_SIZE) {
-                return alert('Image is loo large.')
-              }*/
               this.image = e.target.result
-              console.log('printing file name...')
-              console.log(this.image)
               
             }
             reader.readAsDataURL(file)
@@ -95,21 +84,17 @@
 
 
           removeImage: function (e) {
-            console.log('Remove clicked')
             this.image = ''
           },
 
 
           uploadImage: async function (e) {
-            console.log('Upload clicked')
             // Get the presigned URL
             
             filetype = ft.toString()
             finaltype =''
-            console.log(filetype)
             let params = new URLSearchParams(location.search);
             section_id = params.get('response');
-            console.log(section_id);
             checkIfDoc = 'application/msword';
             checkIfPpt = 'mspowerpoint';
             checkIfPdf = 'pdf'
@@ -121,8 +106,6 @@
                   url: API_ENDPOINT
                 })
                 finaltype = 'application/pdf'
-                console.log('Response: ', response)
-            console.log('Uploading: ', this.image)
             let binary = atob(this.image.split(',')[1])
             let array = []
             for (var i = 0; i < binary.length; i++) {
@@ -130,23 +113,18 @@
             }
 
             filetype = ft.toString()
-            console.log('file type below!')
-            console.log(filetype)
 
             let blobData = new Blob([new Uint8Array(array)], {type: 'application/pdf'})
-            console.log('Uploading to: ', response.uploadURL)
             const result = await fetch(response.uploadURL, {
               method: 'PUT',
               body: blobData
             })
-            console.log('Result: ', result)
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
               material_type = 'pdf'
                $(async() => {           
               var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
-              console.log('hehe');
               try {
                   const response =
                   await fetch(
@@ -179,8 +157,6 @@
                   url: API_ENDPOINT
                 })
                 finaltype = 'application/word'
-                console.log('Response: ', response)
-            console.log('Uploading: ', this.image)
             let binary = atob(this.image.split(',')[1])
             let array = []
             for (var i = 0; i < binary.length; i++) {
@@ -188,23 +164,18 @@
             }
 
             filetype = ft.toString()
-            console.log('file type below!')
-            console.log(filetype)
 
             let blobData = new Blob([new Uint8Array(array)], {type: 'application/word'})
-            console.log('Uploading to: ', response.uploadURL)
             const result = await fetch(response.uploadURL, {
               method: 'PUT',
               body: blobData
             })
-            console.log('Result: ', result)
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
               material_type = 'doc'
                $(async() => {           
               var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
-              console.log('hehe');
               try {
                   const response =
                   await fetch(
@@ -235,9 +206,6 @@
                   method: 'GET',
                   url: API_ENDPOINT
                 })
-                
-                console.log('Response: ', response)
-            console.log('Uploading: ', this.image)
             let binary = atob(this.image.split(',')[1])
             let array = []
             for (var i = 0; i < binary.length; i++) {
@@ -245,23 +213,18 @@
             }
 
             filetype = ft.toString()
-            console.log('Preparing to upload ppt')
-            console.log(filetype)
 
             let blobData = new Blob([new Uint8Array(array)], {type: 'application/mspowerpoint'})
-            console.log('Uploading to: ', response.uploadURL)
             const result = await fetch(response.uploadURL, {
               method: 'PUT',
               body: blobData
             })
-            console.log('Result: ', result)
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
               material_type ='ppt'
                $(async() => {           
               var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
-              console.log('hehe');
               try {
                   const response =
                   await fetch(
@@ -294,8 +257,6 @@
                   url: API_ENDPOINT
                 })
                 
-                console.log('Response: ', response)
-            console.log('Uploading: ', this.image)
             let binary = atob(this.image.split(',')[1])
             let array = []
             for (var i = 0; i < binary.length; i++) {
@@ -303,23 +264,18 @@
             }
 
             filetype = ft.toString()
-            console.log('You are uploading a mp4:')
-            console.log(filetype)
 
             let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
-            console.log('Uploading to: ', response.uploadURL)
             const result = await fetch(response.uploadURL, {
               method: 'PUT',
               body: blobData
             })
-            console.log('Result: ', result)
             if (result.status == 200){
               material_content = result.url
               material_title =  document. getElementById("material_title").value;
               material_type = 'mp4'
                $(async() => {           
               var serviceURL = "http://127.0.0.1:5001/create_section_materials?section_id="+section_id+"&material_title="+material_title+"&material_content="+material_content+"&material_type="+material_type;
-              console.log('hehe');
               try {
                   const response =
                   await fetch(

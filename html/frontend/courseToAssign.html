@@ -28,7 +28,6 @@
             
             {
                 records = res.data.data.record;
-                console.log(records);
                 
                 let value = `<table class = 'table'>
                             <thead class = 'thead-dark'>
@@ -63,15 +62,12 @@
                 }
 
                 value+= `</tbody></table>`;
-                // console.log(value);
                 let body = document.getElementById('all_course');
                 body.innerHTML = value; 
-                console.log(listOfCourseIds);
 
                 for(id of listOfCourseIds){
 
                   button_id = "buttonForCourse_" + id;
-                  console.log(button_id)
 
                   document.getElementById(button_id).addEventListener('click',function(event){
                     getCourseDetails(id)
@@ -87,13 +83,11 @@
       
       
       function getCourseDetails(course_id){
-        console.log(course_id);
         axios
         .post('http://127.0.0.1:5000/prerequisitesbycourse',{course_id : course_id})
         .then(res =>{
                
                 records = res.data.data.record;
-                console.log(records);
 
                 value = '';
 
