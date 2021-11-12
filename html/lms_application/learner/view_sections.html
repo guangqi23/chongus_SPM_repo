@@ -211,7 +211,7 @@
         function checkIfSectionIsCompleted(section_id) //Verify if section is completed and marks it as completed if it is
         {
           $(async() => {
-          var completionURL = "http://localhost:5000/verify_section_completed?section_id="+section_id+"&user_id="+ sessionStorage["learner_id"];
+          var completionURL = "http://13.59.14.235:5000/verify_section_completed?section_id="+section_id+"&user_id="+ sessionStorage["learner_id"];
           await axios.get(completionURL)
                 .then(response => {
                     console.log("Result is:", response.data);
@@ -224,7 +224,7 @@
         {
           
           $(async() => {
-          var completionURL = "http://localhost:5000/check_section_completion?section_id="+section_id+"&user_id="+ sessionStorage["learner_id"];
+          var completionURL = "http://13.59.14.235:5000/check_section_completion?section_id="+section_id+"&user_id="+ sessionStorage["learner_id"];
           await axios.get(completionURL)
                 .then(response => {
                     if(response.data == "No")
@@ -243,7 +243,7 @@
 
         $(async() => {           
             // Change serviceURL to your own
-            var serviceURL = "http://localhost:5000/view_class_sections?class_id="+class_id;
+            var serviceURL = "http://13.59.14.235:5000/view_class_sections?class_id="+class_id;
     
             try {
                 const response =
@@ -271,7 +271,7 @@
                     
                     //Check if section is completed
                     //If not disable option
-                    sectionCheckURL = "http://localhost:5000/check_section_completion?user_id=" + sessionStorage["learner_id"] + "&section_id=" + section.section_id.toString();
+                    sectionCheckURL = "http://13.59.14.235:5000/check_section_completion?user_id=" + sessionStorage["learner_id"] + "&section_id=" + section.section_id.toString();
                     redirectURL1 = "./view_sections.html?class_id=" + class_id+"&section_id="+section.section_id.toString();
                     await axios.get(sectionCheckURL)
                       .then(response => {
@@ -343,7 +343,7 @@
 
         $(async() => {     
             // Change serviceURL to your own
-            var serviceURL = "http://localhost:5000/view_section_materials?section_id="+section_id;
+            var serviceURL = "http://13.59.14.235:5000/view_section_materials?section_id="+section_id;
           
             try {
                 const response =
@@ -371,7 +371,7 @@
 
                   material_id = section.material_id.toString();
                   //Check if material has been completed b4
-                  var materialCheckURL = "http://localhost:5000/check_material_completion?material_id="+material_id + "&user_id=" + sessionStorage["learner_id"];
+                  var materialCheckURL = "http://13.59.14.235:5000/check_material_completion?material_id="+material_id + "&user_id=" + sessionStorage["learner_id"];
                   await axios.get(materialCheckURL)
                     .then(response => {
                     let responseData = response.data;
@@ -426,7 +426,7 @@
 
             $(async() => {      
             // Change serviceURL to your own
-            var serviceURL = "http://localhost:5000/view_section_quiz?section_id="+section_id;
+            var serviceURL = "http://13.59.14.235:5000/view_section_quiz?section_id="+section_id;
             try {
                 const response =
                 await fetch(
@@ -444,7 +444,7 @@
                 var rows = "";
                 var count =0;
                 
-                var materialCheckURL = "http://localhost:5000/check_quiz_completion?quiz_id="+quiz_id + "&user_id=" + sessionStorage["learner_id"];
+                var materialCheckURL = "http://13.59.14.235:5000/check_quiz_completion?quiz_id="+quiz_id + "&user_id=" + sessionStorage["learner_id"];
                 await axios.get(materialCheckURL)
                   .then(response => {
                     responseQuiz = response.data;
@@ -499,7 +499,7 @@
             {
               //Send request to mark material as completed
               material_id = event.target.id;
-              var serviceURL = "http://localhost:5000/mark_material_completion?material_id="+material_id + "&user_id=" + sessionStorage["learner_id"] + "&section_id=" + section_id;
+              var serviceURL = "http://13.59.14.235:5000/mark_material_completion?material_id="+material_id + "&user_id=" + sessionStorage["learner_id"] + "&section_id=" + section_id;
 
               $(async() => {  
               await axios.get(serviceURL)

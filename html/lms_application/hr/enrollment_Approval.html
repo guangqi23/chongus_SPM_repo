@@ -174,7 +174,7 @@
   <script>
     function retrieve_all_enrollment_record(){
       axios
-        .get('http://localhost:5000/allEnrollmentsPending')
+        .get('http://13.59.14.235:5000/allEnrollmentsPending')
         .then(
           res => {
             records = res.data
@@ -201,7 +201,7 @@
         enrollment_id = row[0].childNodes[0].childNodes[0].data
         
         axios
-        .post('http://localhost:5000/changeEnrollmentStatus', {
+        .post('http://13.59.14.235:5000/changeEnrollmentStatus', {
           'enrollment_id': enrollment_id
         })
         .then(
@@ -222,7 +222,7 @@
         enrollment_id = row[0].childNodes[0].childNodes[0].data
         
         axios
-        .post('http://localhost:5000/rejectEnrollment', {
+        .post('http://13.59.14.235:5000/rejectEnrollment', {
           'enrollment_id': enrollment_id
         })
         .then(

@@ -506,7 +506,7 @@
                     qanswer = answer[x].getAttribute('target');
                     qquestion = question[x].getAttribute('target');
                    
-                    var serviceURL="http://localhost:5002/create_TrueFalse?answer="+qanswer+"&quiz_id="+quiz_id+"&question="+qqn_type+"&question_type="+qqn_type+"&qorder="+order;
+                    var serviceURL="http://13.59.14.235:5002/create_TrueFalse?answer="+qanswer+"&quiz_id="+quiz_id+"&question="+qqn_type+"&question_type="+qqn_type+"&qorder="+order;
                     var theRequest = $.ajax({
                         url: serviceURL,
                         method: 'GET',
@@ -532,7 +532,7 @@
                     qopt4= opt4[is_mcq_counter].getAttribute('target');
                     
                     $(async() => {           
-                    var serviceURL ="http://localhost:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
+                    var serviceURL ="http://13.59.14.235:5002/create_MCQ_Question?quiz_id="+quiz_id+"&qorder="+order+"&question_type="+qqn_type+"&question="+qquestion;
                     try {
                         const response =
                         await fetch(
@@ -574,7 +574,7 @@
                                 }
                                 
                                 opt_order = y+1;
-                                var serviceURL="http://localhost:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
+                                var serviceURL="http://13.59.14.235:5002/add_MCQ_Options?question_id="+qn_id+"&option_order="+opt_order+"&option_content="+option_list[y]+"&correct_option="+correct_option;
                                 var theRequest = $.ajax({
                                     url: serviceURL,
                                     method: 'GET',

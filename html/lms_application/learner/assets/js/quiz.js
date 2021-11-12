@@ -12,14 +12,14 @@ const quiz_title = document.getElementById('quiz_Title');
 
 let timeValue;
 
-timerURL = 'http://localhost:5000/get_Quiz_Timer?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
+timerURL = 'http://13.59.14.235:5000/get_Quiz_Timer?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
 axios.get(timerURL)
     .then(response => {
         timeValue = parseInt(response.data);
         //timeValue = 15; Use if want to test timeout function
     });
 
-timerURL = 'http://localhost:5000/get_Section_Title?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
+timerURL = 'http://13.59.14.235:5000/get_Section_Title?quiz_id=' + String(sessionStorage.getItem("quiz_id"));
 axios.get(timerURL)
     .then(response => {
         quiz_title.innerHTML = ("Section Quiz: " + String(response.data));
@@ -196,7 +196,7 @@ function showResultBox()
         let scoreTag = '<span>Sorry, you got only <p>'+ userScore +'</p> out of <p>' +questions.length+ '</p></span>'
         scoreText.innerHTML = scoreTag;
     }
-    var ungradSubmitUrl = new URL('http://localhost:5000/submitScore');
+    var ungradSubmitUrl = new URL('http://13.59.14.235:5000/submitScore');
     ungradSubmitUrl.search = new URLSearchParams({quiz_id: sessionStorage["quiz_id"] , user_id : sessionStorage["learner_id"], score: percentage})
     
     axios.post(ungradSubmitUrl)

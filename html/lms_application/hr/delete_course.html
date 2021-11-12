@@ -184,7 +184,7 @@
   <script>
     function retrieve_all_courses(){
         axios
-        .get("http://localhost:5000/courses")
+        .get("http://13.59.14.235:5000/courses")
         .then(res =>
             {
                 records = res.data.data.record
@@ -221,7 +221,7 @@
     
     function delete_selected_course(course_id){
         axios
-        .post("http://localhost:5000/delete_course",
+        .post("http://13.59.14.235:5000/delete_course",
             {
                 "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
                 "course_id": course_id // have to be careful of which course to delete. You cannot delete a course that has been assigned as a prerequisite. Remove it as a prerequisite first before the course can be deleted

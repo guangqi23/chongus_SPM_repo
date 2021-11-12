@@ -183,7 +183,7 @@
   <script>
      function retrieve_all_courses(){
         axios
-        .get("http://localhost:5000/courses")
+        .get("http://13.59.14.235:5000/courses")
         .then(res =>
             {
                 records = res.data.data.record
@@ -243,7 +243,7 @@
       end_date = document.getElementById(course_id + "_end_enrollment").value
       
       axios
-      .post("http://localhost:5000/change_course_start_end_date",
+      .post("http://13.59.14.235:5000/change_course_start_end_date",
         {
           "course_id": course_id,
           "start_date": start_date,

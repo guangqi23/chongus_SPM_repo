@@ -172,7 +172,7 @@
         var end_enrollment = document.getElementById("end_enrollment").value
 
         axios
-        .post('http://localhost:5000/create_course',
+        .post('http://13.59.14.235:5000/create_course',
             {
                 "user_id" : "1", // later on this will be replaced by windows session of the hr's logged in user id
                 "course_name": course_name,

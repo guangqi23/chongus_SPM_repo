@@ -110,7 +110,7 @@
     const class_id = new URLSearchParams(window.location.search).get('class_id');
     function get_all_trainers(){
         axios
-        .get('http://localhost:5000/get_all_trainers',{})
+        .get('http://13.59.14.235:5000/get_all_trainers',{})
         .then(res =>{
             records = res.data.data.record;
                 trnr_id_arr = [];
@@ -163,7 +163,7 @@
 
     function assignTrainer(course_id,class_id,trnr_id){
         axios
-        .post('http://localhost:5000/assign_course_trainer',
+        .post('http://13.59.14.235:5000/assign_course_trainer',
                 {
                   "hr_id" : "1",
                   "course_id" : course_id,

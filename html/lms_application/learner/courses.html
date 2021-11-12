@@ -84,7 +84,7 @@
 
           function viewAssignedCourses(userId) {
             axios
-              .post('http://localhost:5000/assigned_courses', {user_id: userId
+              .post('http://13.59.14.235:5000/assigned_courses', {user_id: userId
               })
               .then(res => 
                 {
@@ -125,7 +125,7 @@
           {
               //sessionStorage.setItem('class_id', class_id);
               $(async() => { 
-                  retrieveSectionId_URL = "http://localhost:5000/get_first_sectId?class_id=" + class_id;
+                  retrieveSectionId_URL = "http://13.59.14.235:5000/get_first_sectId?class_id=" + class_id;
                   await axios.get(retrieveSectionId_URL)
                     .then(response => {
 
@@ -144,7 +144,7 @@
           <script>
           function viewEnrolledCourses(userId) {
             axios
-              .post('http://localhost:5000/enrolled_classes', {user_id: userId
+              .post('http://13.59.14.235:5000/enrolled_classes', {user_id: userId
               })
               .then(res => 
                 {
@@ -198,7 +198,7 @@
           viewEnrolledCourses(user_Id);
           function drop_class(course_id, userId, class_id){
             axios
-            .post('http://localhost:5000/drop_class', 
+            .post('http://13.59.14.235:5000/drop_class', 
                 {
                     user_id: userId,
                     course_id: course_id,
@@ -224,7 +224,7 @@
           <script>
             function viewEligibleCourses(userId) {
               axios
-                .post('http://localhost:5000/eligible_classes', {"user_id": userId
+                .post('http://13.59.14.235:5000/eligible_classes', {"user_id": userId
                 })
                 .then(res => 
                   {
@@ -281,7 +281,7 @@
             function enroll_into_class(course_id, class_id, userId){
               axios
                 .post(
-                  'http://localhost:5000/enroll', {user_id: userId, course_id: course_id, class_id: class_id
+                  'http://13.59.14.235:5000/enroll', {user_id: userId, course_id: course_id, class_id: class_id
                 }
                 )
                 .then(res =>
@@ -304,7 +304,7 @@
           <script>
             function viewCompletedCourses(userId) {
               axios
-                .post('http://localhost:5000/completed_courses', {user_id: userId
+                .post('http://13.59.14.235:5000/completed_courses', {user_id: userId
                 })
                 .then(res => 
                   {
@@ -343,7 +343,7 @@
           <script>
             function viewUneligibleClasses(userId) {
               axios
-                .post('http://localhost:5000/uneligible_classes', {user_id: userId
+                .post('http://13.59.14.235:5000/uneligible_classes', {user_id: userId
                 })
                 .then(res => 
                   {

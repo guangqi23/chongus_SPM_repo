@@ -172,7 +172,7 @@
         
         //let params = new URLSearchParams(location.search);
        // trainer_id = params.get('trainer_id');
-        classesURL = 'http://localhost:5000/get_classes_of_trainer?trainer_id='+trainer_id;
+        classesURL = 'http://13.59.14.235:5000/get_classes_of_trainer?trainer_id='+trainer_id;
         axios.get(classesURL)
             .then(response => {
                 classes = response.data;

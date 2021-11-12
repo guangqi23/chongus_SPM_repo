@@ -151,7 +151,7 @@
 
 <script>
         
-        classesURL = 'http://localhost:5000/get_classes_of_learner?learner_id='+ sessionStorage["learner_id"];
+        classesURL = 'http://13.59.14.235:5000/get_classes_of_learner?learner_id='+ sessionStorage["learner_id"];
         axios.get(classesURL)
             .then(response => {
                 classes = response.data;

@@ -108,7 +108,7 @@
     
     function getEnrolledCourses(learner_id){
       axios
-      .post("http://localhost:5000/get_all_enrolled_classes_of_user",{user_id:learner_id})
+      .post("http://13.59.14.235:5000/get_all_enrolled_classes_of_user",{user_id:learner_id})
       .then(res => {
           records = res.data.data.record;
           let cc_arr = []
@@ -171,7 +171,7 @@
 
     function getAssignedCourses(learner_id){
       axios
-      .post("http://localhost:5000/get_all_assigned_classes_of_user",{user_id : learner_id})
+      .post("http://13.59.14.235:5000/get_all_assigned_classes_of_user",{user_id : learner_id})
       .then(res => {
           records = res.data.data.record;
           let cc_arr = []
@@ -234,7 +234,7 @@
 
     function send_application(course_id,class_id,user_id){
       axios
-      .post("http://localhost:5000/delete_assigned_classes",{course_id:course_id,class_id:class_id,user_id:learner_id})
+      .post("http://13.59.14.235:5000/delete_assigned_classes",{course_id:course_id,class_id:class_id,user_id:learner_id})
       .then(res => {
             data = res.data;
             alert("This learner has successfully been withdrawned a class");
@@ -244,7 +244,7 @@
 
     function send_dropenrolled_application(course_id,class_id,user_id){
       axios
-      .post("http://localhost:5000/drop_class",{course_id:course_id,class_id:class_id,user_id:learner_id})
+      .post("http://13.59.14.235:5000/drop_class",{course_id:course_id,class_id:class_id,user_id:learner_id})
       .then(res => {
             data = res.data;
             alert("This learner has successfully been withdrawned a enrolled class");
